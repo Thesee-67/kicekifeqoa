@@ -16,22 +16,15 @@ Créez un fichier nommé `Dockerfile` à la racine de votre projet avec le conte
 # Utiliser une image de base officielle de Conda
 FROM continuumio/miniconda3
 
-# Mettre à jour Conda
-RUN conda update -n base -c defaults conda
-
-# Installer les dépendances spécifiées dans environment.yml
-COPY environment.yml /tmp/environment.yml
-RUN conda env create -f /tmp/environment.yml
-
-# Définir l'environnement Conda par défaut
-ENV PATH /opt/conda/envs/myenv/bin:\$PATH
-
 # Copier le code du projet dans le conteneur
 COPY . /app
 WORKDIR /app
 
-# Installer les dépendances Python supplémentaires si nécessaire
-# RUN pip install -r requirements.txt
+# Installer les dépendances avec Conda
+RUN conda env create -f environment.yml
+
+# Activer l'environnement Conda
+SHELL ["conda", "run", "-n", "myenv", "/bin/bash", "-c"]
 
 # Commande par défaut pour exécuter l'application
 CMD ["python", "main.py"]
