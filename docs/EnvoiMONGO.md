@@ -18,7 +18,7 @@ from pymongo.server_api import ServerApi
 from datetime import datetime
 
 # URI de connexion à MongoDB
-uri = "mongodb+srv://evaaaaanh:nONBELsIvoWWJSnJ@cluster0.iptlw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+uri = "mongodb+srv://"
 
 # Créez un nouveau client et connectez-vous au serveur
 client = MongoClient(uri, server_api=ServerApi('1'))
@@ -90,6 +90,7 @@ python send_to_mongodb.py
 
 - [Documentation officielle de MongoDB](https://docs.mongodb.com/)
 - [Documentation officielle de pymongo](https://pymongo.readthedocs.io/en/stable/)
+- [Documentation officielle de Conda](https://docs.conda.io/en/latest/)
 - [Documentation officielle de Python](https://docs.python.org/3/)
 
 ---
