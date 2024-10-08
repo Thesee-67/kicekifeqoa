@@ -9,4 +9,4 @@ Etape 2 Ouvrir Pycharm :
 
 Puis dans paramètre pycharm -> Python Interpreteur 
 Allez sur l'icone d'engrenage -> add
-Conda environnement -> new environnement -> cochez "make available to all projet"  -> metter la bonne version de python "3.11" -> OK
+Conda environnement -> new environnement -> (si elle y est cochez "make available to all projet")  -> metter la bonne version de python "3.11" -> OK
