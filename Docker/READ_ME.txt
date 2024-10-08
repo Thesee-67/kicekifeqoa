@@ -1,5 +1,10 @@
 pour lancer le docker:
 
+ ----    Lancé start_kicekifeqoa.exe    ----
+
+
+si le start_kicekifeqoa.exe ne fonctionne pas, merci de passé en manuelle :
+
 - avoir docker desktop installé sur son pc
 - allé dans le fichier dédier ( dans le terminal taper : cd docker)
 
