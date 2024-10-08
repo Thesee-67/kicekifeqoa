@@ -1,10 +1,10 @@
 <?php
 // Charger les informations de connexion à partir d'un fichier de configuration (optionnel) ou définir directement ici
 $config = [
-    'host' => 'sqlXXX.epizy.com', // Remplacez par votre hôte MySQL
-    'dbname' => 'nom_de_la_base',  // Remplacez par le nom de votre base de données
-    'username' => 'nom_utilisateur',  // Remplacez par votre nom d'utilisateur MySQL
-    'password' => 'mot_de_passe'  // Remplacez par votre mot de passe MySQL
+    'host' => 'sql202.infinityfree.com', // Remplacez par l'adresse IP de votre serveur MySQL
+    'dbname' => 'if0_37470678_Todolist',  // Remplacez par le nom de votre base de données
+    'username' => 'if0_37470678',  // Remplacez par votre nom d'utilisateur MySQL
+    'password' => 'Kicekifeqoa123'  // Remplacez par votre mot de passe MySQL
 ];
 
 try {
