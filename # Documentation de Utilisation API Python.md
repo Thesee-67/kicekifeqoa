@@ -44,10 +44,76 @@ get_data("test", "alpha,beta")
 
 - **Paramètres :**
   - `table` : Le nom de la table dans laquelle ajouter des données.
-  - `data` : Un dictionnaire contenant les données à ajouter, où les clés sont les noms des colonnes et les valeurs sont les valeurs à insérer.
+  - `data` : Un dictionnaire contenant les données à ajouter, où les clés sont les noms des colonnes et les valeurs sont les valeurs à insérer. Le premier mot correspond au nom de la colonne et après le `:` le mot correspond à la valeur, et il faut mettre une virgule entre chaque ajout d'information.
 
 **Exemple d'utilisation :**
 
 ```python
 add_data("test", {"alpha": "tic", "beta": "fax"})
+```
+### 3. Mettre à jour des données (UPDATE)
+
+**Fonction :** `update_data(table, data, column, value)`
+
+- **Paramètres :**
+  - `table` : Le nom de la table à mettre à jour.
+  - `data` : Un dictionnaire contenant les nouvelles valeurs à mettre à jour.
+  - `column` : Le nom de la colonne à utiliser pour identifier la ligne à mettre à jour.
+  - `value` : La valeur de la colonne pour identifier la ligne à mettre à jour.
+
+**Exemple d'utilisation :**
+
+```python
+update_data("test", {"beta": "test"}, "beta", "fax")
+````
+### 4. Supprimer des données (DELETE)
+
+**Fonction :** `delete_data(table, column, value)`
+
+- **Paramètres :**
+  - `table` : Le nom de la table d'où supprimer des données.
+  - `column` : Le nom de la colonne à utiliser pour identifier la ligne à supprimer.
+  - `value` : La valeur de la colonne pour identifier la ligne à supprimer.
+
+**Exemple d'utilisation :**
+
+```python
+delete_data("test", "beta", "fax")
+```
+
+# Comment utiliser le code
+
+Lorsque vous souhaitez utiliser tout ou partie du code, suivez les étapes ci-dessous :
+
+### 1. Prenez les imports nécessaires :
+
+```python
+import requests
+import json
+```
+### 2. Définissez l'URL de l'API :
+
+```python
+url = "http://votre-url-api.com/api.php"
+```
+### 3. Choisissez la fonction (définition) qui vous intéresse :
+
+- Récupérer des données (GET) : `get_data`
+- Ajouter des données (POST) : `add_data`
+- Mettre à jour des données (UPDATE) : `update_data`
+- Supprimer des données (DELETE) : `delete_data`
+
+### 4. Utilisez la commande correspondante pour l'action que vous souhaitez effectuer.
+
+**Exemple pour ajouter des données :**
+
+```python
+add_data("nom_de_la_table", {"colonne1": "valeur1", "colonne2": "valeur2"})
+```
+
+
+
+
+
+
 
