@@ -94,7 +94,7 @@ import json
 ### 2. Définissez l'URL de l'API :
 
 ```python
-url = "http://votre-url-api.com/api.php"
+url = "http://kicekifeqoa.alwaysdata.net/api.php"
 ```
 ### 3. Choisissez la fonction (définition) qui vous intéresse :
 
