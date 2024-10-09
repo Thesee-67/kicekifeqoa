@@ -11,10 +11,10 @@ config = {
 
 # Connexion à la base de donnée
 conn = connection.MySQLConnection(**config)
-def delete_task(id):
+def delete_users(id):
     cursor = conn.cursor()
     cursor.execute("""
-        DELETE FROM Task
-        WHERE id_task = %s
+        DELETE FROM Users
+        WHERE id_users = %s
     """, (id,))
     conn.commit()
