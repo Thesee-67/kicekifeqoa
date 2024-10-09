@@ -42,6 +42,6 @@ if __name__ == "__main__":
 
     # Exemple d'insertion de données
     new_group = {
-        'name': 'Nouveau Groupe'  # Remplace par le nom du groupe que tu veux ajouter
+        'name': 'test'  # Remplace par le nom du groupe que tu veux ajouter
     }
     post_data("Group", new_group)  # Remplace "Group" par la table cible
