@@ -17,7 +17,7 @@ Créez un fichier nommé `Dockerfile` à la racine de votre projet avec le conte
 FROM continuumio/miniconda3
 
 # Copier le code du projet dans le conteneur
-COPY . /app
+COPY .. /app
 WORKDIR /app
 
 # Installer les dépendances avec Conda
