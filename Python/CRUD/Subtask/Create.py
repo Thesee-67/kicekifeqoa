@@ -62,8 +62,8 @@ def check_task_exists(id_affected_task,cursor):
         return False
 
 # Exemple d'utilisation
-id_affected_task = 2
-name = "Finir projet"
+id_affected_task = 1
+name = "Appli"
 end_date = datetime(2024, 10, 15, 18, 0)  # Exemple de date et heure de fin
 checked = 0  # 0 pour non vérifié, 1 pour vérifié
 priority = 2  # Niveau de priorité
