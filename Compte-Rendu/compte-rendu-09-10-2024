@@ -1,0 +1,18 @@
+Compte Rendu Reunion 09/10/2024 : 
+
+Liste des paquets à intaller dans l'environnement conda : 
+	requests
+	pymysql
+	mysqlconnector
+
+
+Accord commun sur la façon de programmer :
+	Langage utilisé : Anglais
+	Une classe main appelle les autres fonctions.
+	Indentation CLasse : MyClasse
+	Indentation fonction : myfunction
+	Python 3.11 comme version à utiliser pour le projet. 
+
+
+Définition du Sprint du jour : 
+	Trouver un hébergeur SQL puis réussir à connecter l'application à la base en ligne. 
