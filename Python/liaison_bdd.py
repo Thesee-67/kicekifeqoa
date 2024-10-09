@@ -1,32 +1,47 @@
 import requests
 import json
 
-# URL de ton API PHP
+# URL de l'API PHP
 base_url = "http://kicekifeqoa.alwaysdata.net/api.php"
 
-def fetch_data(table_name, columns):
+
+def get_data(table, columns='*'):
+    """Récupère les données d'une table spécifique."""
+    url = f"{base_url}?table={table}&columns={columns}"
+
     try:
-        # Construire l'URL avec les paramètres de table et colonnes
-        url = f"{base_url}?table={table_name}&columns={columns}"
-
-        # Envoyer une requête GET
         response = requests.get(url, timeout=10)
-
-        # Afficher le contenu brut de la réponse
-        print("Contenu brut de la réponse :")
-        print(response.text)
-
-        # Vérifier si la requête a réussi
         if response.status_code == 200:
-            # Convertir la réponse JSON en objet Python
             data = response.json()
-            # Afficher les données récupérées
-            print(f"Données récupérées depuis la table {table_name} :")
-            print(json.dumps(data, indent=4))  # Affichage formatée
+            print(f"Données récupérées depuis la table '{table}':")
+            print(json.dumps(data, indent=4))  # Affichage formaté
         else:
-            print(f"Erreur : {response.status_code} - {response.text}")
+            print(f"Erreur lors de la récupération : {response.status_code} - {response.text}")
     except requests.exceptions.RequestException as e:
         print(f"Erreur lors de la requête : {e}")
 
-# Appel de la fonction pour récupérer uniquement le champ 'name'
-fetch_data('Group', 'name')
+
+def post_data(table, data):
+    """Insère des données dans une table spécifique."""
+    url = f"{base_url}?table={table}"
+
+    try:
+        response = requests.post(url, json=data, timeout=10)
+        if response.status_code == 201:
+            print("Données insérées avec succès :")
+            print(response.json())
+        else:
+            print(f"Erreur lors de l'insertion : {response.status_code} - {response.text}")
+    except requests.exceptions.RequestException as e:
+        print(f"Erreur lors de la requête : {e}")
+
+
+if __name__ == "__main__":
+    # Exemple de récupération de données
+    get_data("Group", "name")  # Remplace "Group" et "name" par la table et les colonnes souhaitées
+
+    # Exemple d'insertion de données
+    new_group = {
+        'name': 'Nouveau Groupe'  # Remplace par le nom du groupe que tu veux ajouter
+    }
+    post_data("Group", new_group)  # Remplace "Group" par la table cible

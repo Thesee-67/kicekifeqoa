@@ -1,10 +1,10 @@
 <?php
-// Charger les informations de connexion à partir d'un fichier de configuration (optionnel) ou définir directement ici
+// Charger les informations de connexion
 $config = [
-    'host' => 'mysql-kicekifeqoa.alwaysdata.net', // Remplacez par l'adresse IP de votre serveur MySQL
-    'dbname' => 'kicekifeqoa_todolist',  // Remplacez par le nom de votre base de données
-    'username' => '379269_admin',  // Remplacez par votre nom d'utilisateur MySQL
-    'password' => 'Kicekifeqoa123*'  // Remplacez par votre mot de passe MySQL
+    'host' => 'mysql-kicekifeqoa.alwaysdata.net',
+    'dbname' => 'kicekifeqoa_todolist',
+    'username' => '379269_admin',
+    'password' => 'Kicekifeqoa123*'
 ];
 
 try {
@@ -12,7 +12,7 @@ try {
     $pdo = new PDO("mysql:host={$config['host']};dbname={$config['dbname']}", $config['username'], $config['password']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    // En cas d'erreur de connexion, renvoyer une réponse avec un message d'erreur
+    // En cas d'erreur de connexion
     http_response_code(500);
     echo json_encode(["error" => "Échec de la connexion à la base de données : " . $e->getMessage()]);
     exit();
@@ -20,23 +20,58 @@ try {
 
 // Vérifier la méthode de la requête
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // (Récupération des données, comme montré précédemment)
+    // Vérifier si un paramètre `table` a été passé
+    $table = isset($_GET['table']) ? $_GET['table'] : '';
+    $columns = isset($_GET['columns']) ? $_GET['columns'] : '*'; // Par défaut, toutes les colonnes
+
     try {
-        // Préparer et exécuter une requête pour récupérer toutes les données d'une table (exemple : 'ma_table')
-        $stmt = $pdo->prepare("SELECT * FROM `Group`"); // Remplacez par votre table
+        if ($table === 'Group') {
+            $stmt = $pdo->prepare("SELECT $columns FROM `Group`");
+        } elseif ($table === 'Task_has_Users') {
+            $stmt = $pdo->prepare("SELECT $columns FROM `Task_has_Users`");
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "Table non valide. Utilisez 'Group' ou 'Task_has_Users'."]);
+            exit();
+        }
+
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Envoyer la réponse avec les données au format JSON
         header('Content-Type: application/json');
         echo json_encode($result);
     } catch (PDOException $e) {
-        // En cas d'erreur d'exécution de la requête, renvoyer un message d'erreur
         http_response_code(500);
         echo json_encode(["error" => "Erreur lors de la récupération des données : " . $e->getMessage()]);
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Gérer l'insertion de données
+    $table = isset($_GET['table']) ? $_GET['table'] : '';
+
+    // Lire le corps de la requête pour obtenir les données
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    try {
+        if ($table === 'Group') {
+            // Préparer une requête d'insertion
+            $stmt = $pdo->prepare("INSERT INTO `Group` (name) VALUES (:name)");
+            $stmt->bindParam(':name', $data['name']); // Assurez-vous que 'name' est dans le corps de la requête
+            $stmt->execute();
+
+            // Renvoie une réponse de succès
+            http_response_code(201); // Créé
+            echo json_encode(["message" => "Groupe créé avec succès."]);
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "Table non valide. Utilisez 'Group' pour l'insertion."]);
+            exit();
+        }
+    } catch (PDOException $e) {
+        http_response_code(500);
+        echo json_encode(["error" => "Erreur lors de l'insertion des données : " . $e->getMessage()]);
+    }
 } else {
-    // Si la méthode n'est pas GET, renvoyer une erreur 405 (méthode non autorisée)
     http_response_code(405);
-    echo json_encode(["error" => "Méthode non autorisée. Utilisez GET."]);
+    echo json_encode(["error" => "Méthode non autorisée. Utilisez GET ou POST."]);
 }
 ?>
