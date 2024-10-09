@@ -2,10 +2,10 @@ import pymysql
 
 # Informations de connexion
 config = {
-    'host': 'sql202.infinityfree.com',
-    'user': 'if0_37470678',
-    'password': 'Kicekifeqoa123',
-    'database': 'if0_37470678_Todolist'
+    'host': 'mysql-kicekifeqoa.alwaysdata.net',
+    'user': '379269_admin',
+    'password': 'Kicekifeqoa123*',
+    'database': 'kicekifeqoa_todolist'
 }
 
 
@@ -23,7 +23,7 @@ def create_connection():
 def fetch_data(connection):
     """Récupérer des données de la base de données."""
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM test")  # Remplace 'ma_table' par le nom de ta table
+        cursor.execute("SELECT * FROM `Group`")  # Remplace 'ma_table' par le nom de ta table
         results = cursor.fetchall()
 
         for row in results:

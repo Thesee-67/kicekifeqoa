@@ -1,10 +1,10 @@
 <?php
 // Charger les informations de connexion à partir d'un fichier de configuration (optionnel) ou définir directement ici
 $config = [
-    'host' => 'sql202.infinityfree.com', // Remplacez par l'adresse IP de votre serveur MySQL
-    'dbname' => 'if0_37470678_Todolist',  // Remplacez par le nom de votre base de données
-    'username' => 'if0_37470678',  // Remplacez par votre nom d'utilisateur MySQL
-    'password' => 'Kicekifeqoa123'  // Remplacez par votre mot de passe MySQL
+    'host' => 'mysql-kicekifeqoa.alwaysdata.net', // Remplacez par l'adresse IP de votre serveur MySQL
+    'dbname' => 'kicekifeqoa_todolist',  // Remplacez par le nom de votre base de données
+    'username' => '379269_admin',  // Remplacez par votre nom d'utilisateur MySQL
+    'password' => 'Kicekifeqoa123*'  // Remplacez par votre mot de passe MySQL
 ];
 
 try {
@@ -22,7 +22,7 @@ try {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         // Préparer et exécuter une requête pour récupérer toutes les données d'une table (exemple : 'ma_table')
-        $stmt = $pdo->prepare("SELECT * FROM ma_table"); // Remplacez par votre table
+        $stmt = $pdo->prepare("SELECT * FROM `Group`"); // Remplacez par votre table
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
