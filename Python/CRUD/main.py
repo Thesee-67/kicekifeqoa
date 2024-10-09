@@ -25,7 +25,7 @@ def main():
     # Connexion à la base de données
     conn = connect_db()
 
-    print("Bienvenue dans l'application de gestion de tâches kicekifekoa")
+    print("Bienvenue dans l'application de gestion de tâches kicekifeqoa")
     print("Veuillez choisir une option :")
     print("1. Créer une tâche")
     print("2. Lire une tâche")
@@ -65,7 +65,7 @@ def main():
     elif choice == "10":
         refresh_data(conn)
     elif choice == "11":
-        print("Merci d'avoir utilisé kicekifekoa. À bientôt !")
+        print("Merci d'avoir utilisé kicekifeqoa. À bientôt !")
         conn.close()
         exit()
     else:
