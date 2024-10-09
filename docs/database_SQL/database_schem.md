@@ -34,3 +34,4 @@ Le schéma de la base de données inclut les tables et leurs relations. Voici un
   - `group_id` : Identifiant du groupe auquel la tâche est assignée.
 
 
+

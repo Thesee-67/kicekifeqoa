@@ -124,3 +124,4 @@ add_data("nom_de_la_table", {"colonne1": "valeur1", "colonne2": "valeur2"})
 - [Documentation officielle de Python](https://docs.python.org/3/)
 
 ---
+
