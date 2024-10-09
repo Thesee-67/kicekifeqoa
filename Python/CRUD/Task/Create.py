@@ -3,16 +3,16 @@ from mysql.connector import (connection)
 from mysql.connector import Error
 from datetime import datetime
 
-def Connection_BDD():
-    config = {
-        'user': '379269_admin',
-        'password': 'Kicekifeqoa123*',
-        'host': 'mysql-kicekifeqoa.alwaysdata.net',
-        'database': 'kicekifeqoa_todolist',
-    }
+# Configuration de la connexion
+config = {
+    'user': '379269_admin',
+    'password': 'Kicekifeqoa123*',
+    'host': 'mysql-kicekifeqoa.alwaysdata.net',
+    'database': 'kicekifeqoa_todolist',
+}
 
-    # Connexion à la base de donnée
-    conn = connection.MySQLConnection(**config)
+# Connexion à la base de donnée
+conn = connection.MySQLConnection(**config)
 
 def Close_connection_BDD(conn,cursor):
     cursor.close()
@@ -21,7 +21,7 @@ def Close_connection_BDD(conn,cursor):
 def insert_task(name, end_date, checked, priority, tag):
     try:
         # Connexion à la base de données
-        cursor, conn = Connection_BDD()
+        cursor = conn.cursor()
 
         # Requête SQL d'insertion
         sql_insert_query = """
