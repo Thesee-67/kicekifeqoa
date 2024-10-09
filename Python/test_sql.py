@@ -1,4 +1,5 @@
 import mysql.connector
+from mysql.connector import (connection)
 
 # Configuration de la connexion
 config = {
@@ -9,7 +10,7 @@ config = {
 }
 
 # Connexion à la base de donnée
-conn = mysql.connector.connect(**config)
+conn = connection.MySQLConnection(**config)
 
 # Création d'un curseur
 cursor = conn.cursor()
