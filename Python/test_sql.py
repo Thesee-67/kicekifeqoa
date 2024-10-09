@@ -8,7 +8,7 @@ config = {
     'database': 'kicekifeqoa_todolist',
 }
 
-# Connexion à la base de données
+# Connexion à la base de donnée
 conn = mysql.connector.connect(**config)
 
 # Création d'un curseur
