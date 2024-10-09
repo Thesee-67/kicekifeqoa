@@ -1,5 +1,5 @@
 <?php
-// Charger les informations de connexion
+// Charger les informations de connexion à partir d'un fichier de configuration (optionnel) ou définir directement ici
 $config = [
     'host' => 'mysql-kicekifeqoa.alwaysdata.net',
     'dbname' => 'kicekifeqoa_todolist',
@@ -12,66 +12,93 @@ try {
     $pdo = new PDO("mysql:host={$config['host']};dbname={$config['dbname']}", $config['username'], $config['password']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    // En cas d'erreur de connexion
     http_response_code(500);
     echo json_encode(["error" => "Échec de la connexion à la base de données : " . $e->getMessage()]);
     exit();
 }
 
 // Vérifier la méthode de la requête
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // (Récupération des données, comme montré précédemment)
-    // Vérifier si un paramètre `table` a été passé
-    $table = isset($_GET['table']) ? $_GET['table'] : '';
-    $columns = isset($_GET['columns']) ? $_GET['columns'] : '*'; // Par défaut, toutes les colonnes
+$requestMethod = $_SERVER['REQUEST_METHOD'];
+switch ($requestMethod) {
+    case 'GET':
+        handleGet($pdo);
+        break;
+    case 'POST':
+        handlePost($pdo);
+        break;
+    case 'DELETE':
+        handleDelete($pdo);
+        break;
+    default:
+        http_response_code(405);
+        echo json_encode(["error" => "Méthode non autorisée. Utilisez GET, POST ou DELETE."]);
+}
 
-    try {
-        if ($table === 'Group') {
-            $stmt = $pdo->prepare("SELECT $columns FROM `Group`");
-        } elseif ($table === 'Task_has_Users') {
-            $stmt = $pdo->prepare("SELECT $columns FROM `Task_has_Users`");
-        } else {
-            http_response_code(400);
-            echo json_encode(["error" => "Table non valide. Utilisez 'Group' ou 'Task_has_Users'."]);
-            exit();
-        }
+function handleGet($pdo) {
+    $table = $_GET['table'] ?? null;
+    $columns = $_GET['columns'] ?? '*'; // Par défaut, on récupère toutes les colonnes
 
+    if ($table) {
+        // Utiliser des colonnes spécifiées ou toutes les colonnes
+        $stmt = $pdo->prepare("SELECT $columns FROM `$table`");
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         header('Content-Type: application/json');
         echo json_encode($result);
-    } catch (PDOException $e) {
-        http_response_code(500);
-        echo json_encode(["error" => "Erreur lors de la récupération des données : " . $e->getMessage()]);
+    } else {
+        http_response_code(400);
+        echo json_encode(["error" => "Nom de table manquant."]);
     }
-} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Gérer l'insertion de données
-    $table = isset($_GET['table']) ? $_GET['table'] : '';
+}
 
-    // Lire le corps de la requête pour obtenir les données
+function handlePost($pdo) {
     $data = json_decode(file_get_contents("php://input"), true);
+    $table = $data['table'] ?? null;
+    $action = $data['action'] ?? null;
 
-    try {
-        if ($table === 'Group') {
-            // Préparer une requête d'insertion
-            $stmt = $pdo->prepare("INSERT INTO `Group` (name) VALUES (:name)");
-            $stmt->bindParam(':name', $data['name']); // Assurez-vous que 'name' est dans le corps de la requête
-            $stmt->execute();
-
-            // Renvoie une réponse de succès
-            http_response_code(201); // Créé
-            echo json_encode(["message" => "Groupe créé avec succès."]);
+    if ($table && $action) {
+        if ($action === 'insert') {
+            // Gérer l'insertion
+            $columns = implode(", ", array_keys($data['data']));
+            $placeholders = implode(", ", array_fill(0, count($data['data']), '?'));
+            $stmt = $pdo->prepare("INSERT INTO `$table` ($columns) VALUES ($placeholders)");
+            $stmt->execute(array_values($data['data']));
+            echo json_encode(["message" => "Données ajoutées avec succès."]);
+        } elseif ($action === 'update') {
+            // Gérer la mise à jour
+            $set = [];
+            foreach ($data['data'] as $column => $value) {
+                $set[] = "$column = ?";
+            }
+            $set = implode(", ", $set);
+            $column = $data['column'];
+            $value = $data['value'];
+            $stmt = $pdo->prepare("UPDATE `$table` SET $set WHERE $column = ?");
+            $stmt->execute(array_merge(array_values($data['data']), [$value]));
+            echo json_encode(["message" => "Données mises à jour avec succès."]);
         } else {
             http_response_code(400);
-            echo json_encode(["error" => "Table non valide. Utilisez 'Group' pour l'insertion."]);
-            exit();
+            echo json_encode(["error" => "Action non reconnue."]);
         }
-    } catch (PDOException $e) {
-        http_response_code(500);
-        echo json_encode(["error" => "Erreur lors de l'insertion des données : " . $e->getMessage()]);
+    } else {
+        http_response_code(400);
+        echo json_encode(["error" => "Nom de table ou action manquante."]);
     }
-} else {
-    http_response_code(405);
-    echo json_encode(["error" => "Méthode non autorisée. Utilisez GET ou POST."]);
+}
+
+function handleDelete($pdo) {
+    $data = json_decode(file_get_contents("php://input"), true);
+    $table = $data['table'] ?? null;
+    $column = $data['column'] ?? null;
+    $value = $data['value'] ?? null;
+
+    if ($table && $column && $value) {
+        $stmt = $pdo->prepare("DELETE FROM `$table` WHERE $column = ?");
+        $stmt->execute([$value]);
+        echo json_encode(["message" => "Données supprimées avec succès."]);
+    } else {
+        http_response_code(400);
+        echo json_encode(["error" => "Table, colonne ou valeur manquante."]);
+    }
 }
 ?>
