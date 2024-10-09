@@ -36,7 +36,9 @@ def Verfication_doublon_email (E_mail, cursor):
 
 def Compliance_password(Password) :
     if len(Password) < 8:
-        return False, "Le mot de passe doit contenir au moins 8 caractères."
+        print("Le mot de passe doit contenir au moins 8 caractères.")
+        return False
+    #Il faut enlevé les , des false et mettre des print pour les erreurs
     """if not re.search(r"[A-Z]", Password):
         return False, "Le mot de passe doit contenir au moins une lettre majuscule."
     if not re.search(r"[a-z]", Password):
