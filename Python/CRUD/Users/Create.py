@@ -2,8 +2,7 @@ import re
 import dns.resolver
 from mysql.connector import (connection)
 from mysql.connector import Error
-conn = 0
-cursor = 0
+
 
 def Connection_BDD():
     config = {
