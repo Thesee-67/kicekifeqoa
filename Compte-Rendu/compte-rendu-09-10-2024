@@ -3,6 +3,7 @@ Compte Rendu Reunion 09/10/2024 :
 Liste des paquets à intaller dans l'environnement conda : 
 	requests
 	pymysql
+	mysqlconnector
 
 
 Accord commun sur la façon de programmer :
