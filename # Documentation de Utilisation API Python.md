@@ -37,7 +37,7 @@ Le script contient quatre fonctions principales :
 
 ```python
 get_data("test", "alpha,beta")
-
+````
 ### 2. Ajouter des données (POST)
 
 **Fonction :** `add_data(table, data)`
