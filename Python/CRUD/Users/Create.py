@@ -3,7 +3,6 @@ import dns.resolver
 from mysql.connector import (connection)
 from mysql.connector import Error
 
-
 def Connection_BDD():
     config = {
         'user': '379269_admin',
@@ -11,11 +10,9 @@ def Connection_BDD():
         'host': 'mysql-kicekifeqoa.alwaysdata.net',
         'database': 'kicekifeqoa_todolist',
     }
-    conn = connection.MySQLConnection(user='379269_admin', password='Kicekifeqoa123*',
-                                      host='mysql-kicekifeqoa.alwaysdata.net',
-                                      database='kicekifeqoa_todolist')
-    cursor = conn.cursor()
-    return cursor, conn
+
+    # Connexion à la base de donnée
+    conn = connection.MySQLConnection(**config)
 
 def Close_connection_BDD(conn,cursor):
     cursor.close()

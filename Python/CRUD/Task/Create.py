@@ -2,8 +2,6 @@ import mysql.connector
 from mysql.connector import (connection)
 from mysql.connector import Error
 from datetime import datetime
-conn = 0
-cursor = 0
 
 def Connection_BDD():
     config = {
@@ -12,11 +10,9 @@ def Connection_BDD():
         'host': 'mysql-kicekifeqoa.alwaysdata.net',
         'database': 'kicekifeqoa_todolist',
     }
-    conn = connection.MySQLConnection(user='379269_admin', password='Kicekifeqoa123*',
-                                      host='mysql-kicekifeqoa.alwaysdata.net',
-                                      database='kicekifeqoa_todolist')
-    cursor = conn.cursor()
-    return cursor, conn
+
+    # Connexion à la base de donnée
+    conn = connection.MySQLConnection(**config)
 
 def Close_connection_BDD(conn,cursor):
     cursor.close()
@@ -30,7 +26,8 @@ def insert_task(name, end_date, checked, priority, tag):
         # Requête SQL d'insertion
         sql_insert_query = """
         INSERT INTO Task (name, end_date, checked, priority, tag)
-        VALUES (%s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s)from mysql.connector import (connection)
+from mysql.connector import Error
         """
 
         # Données à insérer
