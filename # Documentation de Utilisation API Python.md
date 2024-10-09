@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Ce script Python permet d'interagir avec une API PHP pour gérer des opérations CRUD (Créer, Lire, Mettre à jour, Supprimer) sur une base de données. Le script utilise la bibliothèque `requests` pour effectuer des requêtes HTTP vers l'API.
+Ce script Python permet d'interagir avec une API PHP pour gérer des opérations CRUD (Créer, Lire, Mettre à jour, Supprimer) sur une base de données. Le script utilise la bibliothèque `requests` pour effectuer des requêtes HTTP vers l'API. Le code à récupérer se trouvent dans liaison_bdd.py.
 
 ## Prérequis
 
