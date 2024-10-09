@@ -15,7 +15,7 @@ conn = mysql.connector.connect(**config)
 cursor = conn.cursor()
 
 # Exécution d'une requête
-query = "SELECT * FROM `test`"
+query = "SELECT * FROM `Group`"
 cursor.execute(query)
 
 # Récupération des résultats
