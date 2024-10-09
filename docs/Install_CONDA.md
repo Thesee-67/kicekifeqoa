@@ -29,7 +29,7 @@ Ce guide vous explique comment installer Anaconda et configurer un environnement
 
 4. **Configurer l'environnement Conda** :
    - Cochez la case `Make available to all projects`.
-   - Sélectionnez la version de Python souhaitée, par exemple `3.12`.
+   - Sélectionnez la version de Python souhaitée, par exemple `3.11`.
    - Cliquez sur `OK` pour créer l'environnement.
 
 ## Ressources supplémentaires
