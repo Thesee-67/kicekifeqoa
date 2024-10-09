@@ -18,6 +18,3 @@ def delete_task(id):
         WHERE id_task = %s
     """, (id,))
     conn.commit()
-
-
-delete_task(1)
