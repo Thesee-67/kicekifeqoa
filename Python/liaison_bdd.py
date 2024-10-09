@@ -4,14 +4,9 @@ import json
 # URL de ton API PHP
 url = "http://kicekifeqoa.alwaysdata.net/api.php"
 
-# Ajouter un en-tête User-Agent
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, comme Gecko) Chrome/91.0.4472.124 Safari/537.36'
-}
-
 try:
-    # Envoyer une requête GET avec un User-Agent
-    response = requests.get(url, headers=headers, timeout=10)
+    # Envoyer une requête GET
+    response = requests.get(url, timeout=10)
 
     # Afficher le contenu brut de la réponse
     print("Contenu brut de la réponse :")
