@@ -3,6 +3,9 @@ from PySide6.QtCore import QUrl, QObject, Signal, Slot
 from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
 
+from Python.CRUD.Task.Create import insert_task
+
+
 class TaskHandler(QObject):
     def __init__(self):
         super().__init__()
@@ -51,6 +54,7 @@ class TaskHandler(QObject):
 
     @Slot()
     def print_all_info(self):
+        insert_task("Task", {"name": self.task_name,"end_date": "","checked": "0","priority": self.task_priority,"tag": self.tags})
         print("----- Task Information -----")
         print(f"Task - name: {self.task_name}")
         priority_labels = ["Priorité basse", "Priorité moyenne", "URGENT"]
