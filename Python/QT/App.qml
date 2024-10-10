@@ -3,56 +3,54 @@ import QtQuick.Controls 2.15
 
 ApplicationWindow {
     visible: true
-    width: 640
-    height: 480
+    width: 600
+    height: 400
     title: "Task Manager"
 
-    signal taskName(string name)
-    signal taskPriority(int priority)
+    signal updateTaskName(string name)
+    signal updateTaskPriority(int priority)
     signal addTag(string tag)
-    signal removeTag(string tag)
+    signal removeLastTag()
     signal addUser(string email)
-    signal removeUser(string email)
+    signal removeLastUser()
+    signal printAllInfo()
+
+    property var tagsListModel: []
+    property var usersListModel: []
 
     Column {
         anchors.centerIn: parent
         spacing: 20
 
-        // Row for Task Name
-        Row {
-            spacing: 10
-            TextField {
-                id: taskNameField
-                placeholderText: "Enter Task Name"
-                width: 200
-            }
-            Button {
-                text: "Submit Task Name"
-                onClicked: {
-                    taskName(taskNameField.text)
-                }
-            }
+        // Task Name Field with default text "Tache 1"
+        TextField {
+            id: taskNameField
+            width: 176
+            height: 20
+            text: "Tache 1"  // Default text value
+            placeholderText: "Enter Task Name"
         }
 
-        // Row for Task Priority
+        // Task Priority Slider
         Row {
             spacing: 10
             Slider {
                 id: prioritySlider
                 from: 0
-                to: 100
+                to: 2
                 stepSize: 1
                 width: 200
             }
-            Button {
-                text: "Submit Task Priority"
-                onClicked: {
-                    taskPriority(prioritySlider.value)
-                }
+
+            // Display priority level as text
+            Text {
+                text: prioritySlider.value === 0 ? "Priorité basse"
+                     : prioritySlider.value === 1 ? "Priorité moyenne"
+                     : "URGENT"
             }
         }
 
-        // Row for adding and removing tags
+        // Row for adding/removing tags
         Row {
             spacing: 10
             TextField {
@@ -64,17 +62,31 @@ ApplicationWindow {
                 text: "Add Tag"
                 onClicked: {
                     addTag(tagField.text)
+                    tagField.text = ""
                 }
             }
             Button {
-                text: "Remove Tag"
+                text: "Remove Last Tag"
                 onClicked: {
-                    removeTag(tagField.text)
+                    removeLastTag()
                 }
             }
         }
 
-        // Row for adding and removing users
+        // Display list of tags horizontally
+        Row {
+            width: parent.width
+            spacing: 10
+            Repeater {
+                model: tagsListModel
+                delegate: Text {
+                    text: modelData
+                    padding: 5
+                }
+            }
+        }
+
+        // Row for adding/removing users
         Row {
             spacing: 10
             TextField {
@@ -86,13 +98,35 @@ ApplicationWindow {
                 text: "Add User"
                 onClicked: {
                     addUser(userEmailField.text)
+                    userEmailField.text = ""
                 }
             }
             Button {
-                text: "Remove User"
+                text: "Remove Last User"
                 onClicked: {
-                    removeUser(userEmailField.text)
+                    removeLastUser()
                 }
+            }
+        }
+
+        // Display list of users vertically
+        ListView {
+            width: 200
+            height: 100
+            model: usersListModel
+            delegate: Text {
+                text: modelData
+            }
+        }
+
+        // Final button to print all information
+        Button {
+            text: "Print All Information"
+            onClicked: {
+                // Update the task name and priority when this button is pressed
+                updateTaskName(taskNameField.text)
+                updateTaskPriority(prioritySlider.value)
+                printAllInfo()
             }
         }
     }
