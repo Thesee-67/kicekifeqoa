@@ -5,26 +5,94 @@ ApplicationWindow {
     visible: true
     width: 640
     height: 480
-    title: "Test Application"
+    title: "Task Manager"
 
-    // Définition du signal dans le composant racine
-    signal buttonPressed()
+    signal taskName(string name)
+    signal taskPriority(int priority)
+    signal addTag(string tag)
+    signal removeTag(string tag)
+    signal addUser(string email)
+    signal removeUser(string email)
 
-    Rectangle {
-        id: rectangle
-        width: parent.width
-        height: parent.height
-        color: "#FFFFFF"
+    Column {
+        anchors.centerIn: parent
+        spacing: 20
 
-        Button {
-            id: button
-            text: qsTr("Press me")
-            anchors.centerIn: parent
-            checkable: true
+        // Row for Task Name
+        Row {
+            spacing: 10
+            TextField {
+                id: taskNameField
+                placeholderText: "Enter Task Name"
+                width: 200
+            }
+            Button {
+                text: "Submit Task Name"
+                onClicked: {
+                    taskName(taskNameField.text)
+                }
+            }
+        }
 
-            // Emission du signal buttonPressed lors du clic
-            onClicked: {
-                buttonPressed()  // Emission du signal
+        // Row for Task Priority
+        Row {
+            spacing: 10
+            Slider {
+                id: prioritySlider
+                from: 0
+                to: 100
+                stepSize: 1
+                width: 200
+            }
+            Button {
+                text: "Submit Task Priority"
+                onClicked: {
+                    taskPriority(prioritySlider.value)
+                }
+            }
+        }
+
+        // Row for adding and removing tags
+        Row {
+            spacing: 10
+            TextField {
+                id: tagField
+                placeholderText: "Enter Tag"
+                width: 200
+            }
+            Button {
+                text: "Add Tag"
+                onClicked: {
+                    addTag(tagField.text)
+                }
+            }
+            Button {
+                text: "Remove Tag"
+                onClicked: {
+                    removeTag(tagField.text)
+                }
+            }
+        }
+
+        // Row for adding and removing users
+        Row {
+            spacing: 10
+            TextField {
+                id: userEmailField
+                placeholderText: "Enter User Email"
+                width: 200
+            }
+            Button {
+                text: "Add User"
+                onClicked: {
+                    addUser(userEmailField.text)
+                }
+            }
+            Button {
+                text: "Remove User"
+                onClicked: {
+                    removeUser(userEmailField.text)
+                }
             }
         }
     }
