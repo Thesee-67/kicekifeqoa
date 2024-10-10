@@ -36,16 +36,16 @@ ApplicationWindow {
             spacing: 10
             Slider {
                 id: prioritySlider
-                from: 0
-                to: 2
+                from: 1
+                to: 3
                 stepSize: 1
                 width: 200
             }
 
             // Display priority level as text
             Text {
-                text: prioritySlider.value === 0 ? "Priorité basse"
-                     : prioritySlider.value === 1 ? "Priorité moyenne"
+                text: prioritySlider.value === 1 ? "Priorité basse"
+                     : prioritySlider.value === 2 ? "Priorité moyenne"
                      : "URGENT"
             }
         }

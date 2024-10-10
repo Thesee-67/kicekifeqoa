@@ -54,7 +54,7 @@ class TaskHandler(QObject):
         print("----- Task Information -----")
         print(f"Task - name: {self.task_name}")
         priority_labels = ["Priorité basse", "Priorité moyenne", "URGENT"]
-        print(f"Task - priority: {priority_labels[self.task_priority]}")
+        print(f"Task - priority: {self.task_priority}")
         print(f"Tags: {self.tags}")
         print(f"Users: {self.users}")
 
