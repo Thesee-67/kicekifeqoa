@@ -16,6 +16,13 @@ config = {
 
 # Connexion à la base de donnée
 conn = connection.MySQLConnection(**config)
+cursor = conn.cursor()
+
+def Close_connection_BDD(conn,cursor):
+    cursor.close()
+    conn.close()
+    print("La connexion à la base de données a été fermée.")
+
 def delete_group(table, column, value):
     post_data = {
         'table': table,
@@ -24,5 +31,6 @@ def delete_group(table, column, value):
     }
     response = requests.delete(url, json=post_data)
     print(response.json())
+    Close_connection_BDD(conn, cursor)
 
 #delete_group("Group", "id_group", "1")
