@@ -54,13 +54,26 @@ class TaskHandler(QObject):
 
     @Slot()
     def print_all_info(self):
-        insert_task("Task", {"name": self.task_name,"end_date": "","checked": "0","priority": self.task_priority,"tag": self.tags})
+        # Convertir la liste des tags en une chaîne brute séparée par des virgules
+        tags_as_string = ", ".join(self.tags)
+
+        # Appel à l'insertion dans la base de données avec les tags convertis
+        insert_task("Task", {
+            "name": self.task_name,
+            "end_date": "",
+            "checked": "0",
+            "priority": self.task_priority,
+            "tag": tags_as_string  # Utiliser la chaîne brute
+        })
+
+        # Afficher les informations dans la console
         print("----- Task Information -----")
         print(f"Task - name: {self.task_name}")
         priority_labels = ["Priorité basse", "Priorité moyenne", "URGENT"]
         print(f"Task - priority: {self.task_priority}")
-        print(f"Tags: {self.tags}")
+        print(f"Tags: {tags_as_string}")  # Affiche la chaîne brute des tags
         print(f"Users: {self.users}")
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
