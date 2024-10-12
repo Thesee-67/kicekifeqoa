@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
 Window {
     width: 600
@@ -20,8 +20,8 @@ Window {
                     console.error("Erreur lors de la création de Popup");
                 } else {
                     // Connexion des signaux après la création du popup
-                    popup.updateTaskName.connect(taskHandler.update_task_name);
-                    popup.updateTaskPriority.connect(taskHandler.update_task_priority);
+                    popup.addTaskName.connect(taskHandler.add_task_name);
+                    popup.addTaskPriority.connect(taskHandler.add_task_priority);
                     popup.addTag.connect(taskHandler.add_tag);
                     popup.removeLastTag.connect(taskHandler.remove_last_tag);
                     popup.addUser.connect(taskHandler.add_user);
