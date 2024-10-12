@@ -13,7 +13,7 @@ Window {
     signal removeLastTag()
     signal addUser(string email)
     signal removeLastUser()
-    signal printAllInfo()
+    signal validateinfo()
 
     property var tagsListModel: []
     property var usersListModel: []
@@ -74,7 +74,7 @@ Window {
         onClicked: {
             updateTaskName(tagname.text)
             updateTaskPriority(priorityslider.value)
-            printAllInfo()
+            validateinfo()
         }
     }
 

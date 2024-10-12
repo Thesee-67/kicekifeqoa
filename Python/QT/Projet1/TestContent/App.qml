@@ -26,7 +26,7 @@ Window {
                     popup.removeLastTag.connect(taskHandler.remove_last_tag);
                     popup.addUser.connect(taskHandler.add_user);
                     popup.removeLastUser.connect(taskHandler.remove_last_user);
-                    popup.printAllInfo.connect(taskHandler.print_all_info);
+                    popup.validateinfo.connect(taskHandler.validate_info);
                 }
             } else {
                 console.error("Erreur lors du chargement de Popup.qml");
