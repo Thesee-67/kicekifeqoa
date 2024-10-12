@@ -4,6 +4,7 @@ from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QObject, Signal, Property
 import mysql.connector
 from mysql.connector import connection, Error
+from autogen.settings import url, import_paths
 
 # Configuration pour la connexion MySQL
 config = {
