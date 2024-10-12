@@ -28,17 +28,41 @@ Le script contient quatre fonctions principales :
 
 ### 1. Récupérer des données (GET)
 
-**Fonction :** `get_data(table, columns='*')`
+**Fonction :** `get_data(table, columns='*', filter_column=None, filter_value=None)`
 
 - **Paramètres :**
   - `table` : Le nom de la table d'où récupérer les données.
   - `columns` : (Optionnel) Les colonnes spécifiques à récupérer, par défaut toutes les colonnes (`*`).
+  - `filter_column` : (Optionnel) La colonne à utiliser pour filtrer les résultats.
+  - `filter_value` : (Optionnel) La valeur de la colonne utilisée pour le filtre.
 
-**Exemple d'utilisation :**
+**Exemples d'utilisation :**
 
-```python
-get_data("test", "alpha,beta")
-```
+1. **Récupérer toutes les colonnes d'une table :**
+
+    ```python
+    get_data("test")
+    ```
+
+2. **Récupérer des colonnes spécifiques d'une table :**
+
+    ```python
+    get_data("test", "alpha,beta")
+    ```
+
+3. **Récupérer des colonnes spécifiques avec un filtre sur une valeur :**
+
+    ```python
+    get_data("test", "alpha,beta", filter_column="alpha", filter_value="tic")
+    ```
+
+4. **Récupérer des colonnes spécifiques avec une recherche par nom :**
+
+    Si vous voulez récupérer les informations pour un utilisateur en particulier (par exemple, en fonction de son adresse email ou de son nom) :
+
+    ```python
+    get_data("Users", "*", filter_column="email", filter_value="exemple@domaine.com")
+    ```
 
 ### 2. Ajouter des données (POST)
 
