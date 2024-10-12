@@ -1,11 +1,13 @@
 import os
 import sys
+from datetime import datetime
 from pathlib import Path
 
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QUrl, QObject, Signal, Slot
 
+from Python.CRUD.Subtask.Create import end_date
 from autogen.settings import url, import_paths
 from Python.CRUD.Task.Create import insert_task
 
@@ -20,8 +22,8 @@ class TaskHandler(QObject):
         self.users = []
 
     @Slot(str)
-    def add_task_name(self, name):
-        self.task_name = name
+    def add_task_name(self, taskname):
+        self.task_name = taskname
 
     @Slot(int)
     def add_task_priority(self, priority):
@@ -39,8 +41,8 @@ class TaskHandler(QObject):
         self.add_tags_in_qml()
 
     @Slot(str)
-    def add_user(self, email):
-        self.users.append(email)
+    def add_user(self, user):
+        self.users.append(user)
         self.add_users_in_qml()
 
     @Slot()
@@ -57,13 +59,23 @@ class TaskHandler(QObject):
         root_object = self.engine.rootObjects()[0]
         root_object.setProperty("usersListModel", self.users)
 
+    @Slot(str)
+    def add_start_date(self, startdate):
+        self.start_date = startdate
+
+    @Slot(str)
+    def add_end_date(self, enddate):
+        self.end_date = enddate
+
     @Slot()
     def validate_info(self):
         formatted_tags = ", ".join(self.tags)
+        formatted_startdate = datetime.strptime(self.start_date, "%d/%m/%Y").strftime("%Y-%m-%d 00:00:00")
+        formatted_enddate = datetime.strptime(self.end_date, "%d/%m/%Y").strftime("%Y-%m-%d 00:00:00")
 
         insert_task("Task", {
             "name": self.task_name,
-            "end_date": "",
+            "end_date": formatted_enddate,
             "checked": "0",
             "priority": self.task_priority,
             "tag": formatted_tags,
@@ -75,6 +87,9 @@ class TaskHandler(QObject):
         print(f"Task - priority: {self.task_priority}")
         print(f"Tags: {self.tags}")
         print(f"Users: {self.users}")
+        print(f"StartDate: {formatted_startdate}")
+        print(f"EndDate: {formatted_enddate}")
+
 
 
 if __name__ == '__main__':

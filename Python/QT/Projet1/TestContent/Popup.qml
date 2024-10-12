@@ -7,15 +7,17 @@ Window {
     height: 200
     title: "Nouvelle Tâche"
 
-    signal addTaskName(string tagname)
+    signal addTaskName(string taskname)
     signal addTaskPriority(int priority)
     signal addTag(string username)
     signal removeLastTag()
-    signal addUser(string email)
+    signal addUser(string user)
     signal removeLastUser()
+    signal addStartDate(string startdate)
+    signal addEndDate(string enddate)
     signal validateInfo()
 
-    // Déclaration des ListModels pour les utilisateurs et les tags
+
     ListModel {
         id: tagsListModel
     }
@@ -75,8 +77,10 @@ Window {
         text: "\u2713"
         font.pointSize: 15
         onClicked: {
-            addTaskName(taskname.text);  // Correction ici
+            addTaskName(taskname.text);
             addTaskPriority(priorityslider.value);
+            addStartDate(startdate.text)
+            addEndDate(enddate.text)
             validateInfo();
         }
     }
@@ -198,7 +202,7 @@ Window {
         font.pixelSize: 11
     }
 
-    // Ajouter Flickable pour rendre la liste de tags défilable
+
     Flickable {
         id: tagsFlickable
         x: 231
@@ -221,7 +225,7 @@ Window {
         }
     }
 
-    // Ajouter Flickable pour rendre la liste d'utilisateurs défilable
+
     Flickable {
         id: usersFlickable
         x: 231
