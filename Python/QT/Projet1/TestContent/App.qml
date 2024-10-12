@@ -18,6 +18,15 @@ Window {
                 var popup = component.createObject(parent); // Créer une nouvelle instance
                 if (popup === null) {
                     console.error("Erreur lors de la création de Popup");
+                } else {
+                    // Connexion des signaux après la création du popup
+                    popup.updateTaskName.connect(taskHandler.update_task_name);
+                    popup.updateTaskPriority.connect(taskHandler.update_task_priority);
+                    popup.addTag.connect(taskHandler.add_tag);
+                    popup.removeLastTag.connect(taskHandler.remove_last_tag);
+                    popup.addUser.connect(taskHandler.add_user);
+                    popup.removeLastUser.connect(taskHandler.remove_last_user);
+                    popup.printAllInfo.connect(taskHandler.print_all_info);
                 }
             } else {
                 console.error("Erreur lors du chargement de Popup.qml");
