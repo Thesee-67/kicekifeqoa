@@ -44,7 +44,7 @@ Le script contient quatre fonctions principales :
     get_data("test")
     ```
 
-2. **Récupérer des colonnes spécifiques d'une table :**
+2. **Récupérer des colonnes spécifiques d'une table (une ou plusieurs) :**
 
     ```python
     get_data("test", "alpha,beta")
