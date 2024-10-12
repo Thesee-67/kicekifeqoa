@@ -1,5 +1,5 @@
-import QtQuick
-import QtQuick.Controls
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 Window {
     visible: true
@@ -7,16 +7,22 @@ Window {
     height: 200
     title: "Nouvelle Tâche"
 
-    signal addTaskName(string name)
+    signal addTaskName(string tagname)
     signal addTaskPriority(int priority)
-    signal addTag(string tag)
+    signal addTag(string username)
     signal removeLastTag()
     signal addUser(string email)
     signal removeLastUser()
-    signal validateinfo()
+    signal validateInfo()
 
-    property var tagsListModel: []
-    property var usersListModel: []
+    // Déclaration des ListModels pour les utilisateurs et les tags
+    ListModel {
+        id: tagsListModel
+    }
+
+    ListModel {
+        id: usersListModel
+    }
 
     Slider {
         id: priorityslider
@@ -42,7 +48,8 @@ Window {
         text: "+"
         onClicked: {
             addTag(tagname.text)
-            tagname.text = ""
+            tagsListModel.append({"tag": tagname.text});
+            tagname.text = "";
         }
     }
 
@@ -54,15 +61,11 @@ Window {
         height: 20
         text: "-"
         onClicked: {
-            removeLastTag()
+            if (tagsListModel.count > 0) {
+                tagsListModel.remove(tagsListModel.count - 1)
+                removeLastTag();
+            }
         }
-    }
-
-    SwipeDelegate {
-        id: swipeDelegate
-        x: -858
-        y: 330
-        text: qsTr("Swipe Delegate")
     }
 
     RoundButton {
@@ -72,9 +75,9 @@ Window {
         text: "\u2713"
         font.pointSize: 15
         onClicked: {
-            addTaskName(tagname.text)
-            addTaskPriority(priorityslider.value)
-            validateinfo()
+            addTaskName(taskname.text);  // Correction ici
+            addTaskPriority(priorityslider.value);
+            validateInfo();
         }
     }
 
@@ -109,7 +112,8 @@ Window {
         text: "+"
         onClicked: {
             addUser(username.text)
-            username.text = ""
+            usersListModel.append({"user": username.text});
+            username.text = "";
         }
     }
 
@@ -121,7 +125,10 @@ Window {
         height: 20
         text: "-"
         onClicked: {
-            removeLastUser()
+            if (usersListModel.count > 0) {
+                usersListModel.remove(usersListModel.count - 1)
+                removeLastUser();
+            }
         }
     }
 
@@ -191,30 +198,59 @@ Window {
         font.pixelSize: 11
     }
 
-    ListView {
-        id: tagslist
+    // Ajouter Flickable pour rendre la liste de tags défilable
+    Flickable {
+        id: tagsFlickable
+        x: 231
+        y: 68
+        width: 150
+        height: 30
+        contentWidth: tagsRow.width
+        contentHeight: tagsRow.height
+        clip: true
+
+        Row {
+            id: tagsRow
+            spacing: 10
+            Repeater {
+                model: tagsListModel
+                delegate: Text {
+                    text: model.tag
+                }
+            }
+        }
+    }
+
+    // Ajouter Flickable pour rendre la liste d'utilisateurs défilable
+    Flickable {
+        id: usersFlickable
+        x: 231
+        y: 104
+        width: 150
+        height: 30
+        contentWidth: usersRow.width
+        contentHeight: usersRow.height
+        clip: true
+
+        Row {
+            id: usersRow
+            spacing: 10
+            Repeater {
+                model: usersListModel
+                delegate: Text {
+                    text: model.user
+                }
+            }
+        }
+    }
+
+    MouseArea {
+        id: mouseArea
         x: 231
         y: 63
-        width: 155
-        height: 30
-        model: tagsListModel
-        delegate: Text {
-            text: modelData
-        }
+        width: 150
+        height: 66
+        enabled: false
+        cursorShape: Qt.DragMoveCursor
     }
-
-
-    ListView {
-        id: userslist
-        x: 231
-        y: 99
-        width: 155
-        height: 30
-        model: usersListModel
-        delegate: Text {
-            text: modelData
-        }
-    }
-
-
 }

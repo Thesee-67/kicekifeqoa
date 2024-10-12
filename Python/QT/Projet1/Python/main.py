@@ -13,7 +13,7 @@ from Python.CRUD.Task.Create import insert_task
 class TaskHandler(QObject):
     def __init__(self, engine):
         super().__init__()
-        self.engine = engine  # Stocker l'instance de l'engine
+        self.engine = engine
         self.task_name = ""
         self.task_priority = 0
         self.tags = []
@@ -50,31 +50,30 @@ class TaskHandler(QObject):
         self.add_users_in_qml()
 
     def add_tags_in_qml(self):
-        root_object = self.engine.rootObjects()[0]  # Utiliser self.engine
+        root_object = self.engine.rootObjects()[0]
         root_object.setProperty("tagsListModel", self.tags)
 
     def add_users_in_qml(self):
-        root_object = self.engine.rootObjects()[0]  # Utiliser self.engine
+        root_object = self.engine.rootObjects()[0]
         root_object.setProperty("usersListModel", self.users)
 
     @Slot()
     def validate_info(self):
-        tags_as_string = ", ".join(self.tags)
+        formatted_tags = ", ".join(self.tags)
 
         insert_task("Task", {
             "name": self.task_name,
             "end_date": "",
             "checked": "0",
             "priority": self.task_priority,
-            "tag": tags_as_string
+            "tag": formatted_tags,
         })
 
-        # Afficher les informations dans la console
         print("----- Task Information -----")
         print(f"Task - name: {self.task_name}")
         priority_labels = ["Priorité basse", "Priorité moyenne", "URGENT"]
         print(f"Task - priority: {self.task_priority}")
-        print(f"Tags: {tags_as_string}")
+        print(f"Tags: {self.tags}")
         print(f"Users: {self.users}")
 
 
@@ -88,8 +87,7 @@ if __name__ == '__main__':
     for path in import_paths:
         engine.addImportPath(os.fspath(app_dir / path))
 
-    # Juste avant de charger l'engine
-    task_handler = TaskHandler(engine)  # Passer l'engine ici
+    task_handler = TaskHandler(engine)
     engine.rootContext().setContextProperty("taskHandler", task_handler)
 
     engine.load(os.fspath(app_dir / url))
