@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
 Window {
     visible: true
@@ -7,8 +7,8 @@ Window {
     height: 200
     title: "Nouvelle Tâche"
 
-    signal updateTaskName(string name)
-    signal updateTaskPriority(int priority)
+    signal addTaskName(string name)
+    signal addTaskPriority(int priority)
     signal addTag(string tag)
     signal removeLastTag()
     signal addUser(string email)
@@ -72,8 +72,8 @@ Window {
         text: "\u2713"
         font.pointSize: 15
         onClicked: {
-            updateTaskName(tagname.text)
-            updateTaskPriority(priorityslider.value)
+            addTaskName(tagname.text)
+            addTaskPriority(priorityslider.value)
             validateinfo()
         }
     }

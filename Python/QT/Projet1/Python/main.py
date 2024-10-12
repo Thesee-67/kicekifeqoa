@@ -20,40 +20,40 @@ class TaskHandler(QObject):
         self.users = []
 
     @Slot(str)
-    def update_task_name(self, name):
+    def add_task_name(self, name):
         self.task_name = name
 
     @Slot(int)
-    def update_task_priority(self, priority):
+    def add_task_priority(self, priority):
         self.task_priority = priority
 
     @Slot(str)
     def add_tag(self, tag):
         self.tags.append(tag)
-        self.update_tags_in_qml()
+        self.add_tags_in_qml()
 
     @Slot()
     def remove_last_tag(self):
         if self.tags:
             self.tags.pop()
-        self.update_tags_in_qml()
+        self.add_tags_in_qml()
 
     @Slot(str)
     def add_user(self, email):
         self.users.append(email)
-        self.update_users_in_qml()
+        self.add_users_in_qml()
 
     @Slot()
     def remove_last_user(self):
         if self.users:
             self.users.pop()
-        self.update_users_in_qml()
+        self.add_users_in_qml()
 
-    def update_tags_in_qml(self):
+    def add_tags_in_qml(self):
         root_object = self.engine.rootObjects()[0]  # Utiliser self.engine
         root_object.setProperty("tagsListModel", self.tags)
 
-    def update_users_in_qml(self):
+    def add_users_in_qml(self):
         root_object = self.engine.rootObjects()[0]  # Utiliser self.engine
         root_object.setProperty("usersListModel", self.users)
 
