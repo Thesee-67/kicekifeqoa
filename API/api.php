@@ -36,15 +36,31 @@ switch ($requestMethod) {
 
 function handleGet($pdo) {
     $table = $_GET['table'] ?? null;
-    $columns = $_GET['columns'] ?? '*'; // Par défaut, on récupère toutes les colonnes
+    $columns = $_GET['columns'] ?? '*'; // Par défaut, toutes les colonnes
+    $filterColumn = $_GET['filter_column'] ?? null;
+    $filterValue = $_GET['filter_value'] ?? null;
 
     if ($table) {
-        // Utiliser des colonnes spécifiées ou toutes les colonnes
-        $stmt = $pdo->prepare("SELECT $columns FROM `$table`");
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        header('Content-Type: application/json');
-        echo json_encode($result);
+        $query = "SELECT $columns FROM `$table`";
+
+        if ($filterColumn && $filterValue) {
+            // Si on a une colonne et une valeur à filtrer, on ajoute une condition WHERE
+            $query .= " WHERE $filterColumn = :filterValue";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':filterValue', $filterValue);
+        } else {
+            $stmt = $pdo->prepare($query);
+        }
+
+        try {
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            header('Content-Type: application/json');
+            echo json_encode($result);
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode(["error" => "Erreur lors de la récupération des données : " . $e->getMessage()]);
+        }
     } else {
         http_response_code(400);
         echo json_encode(["error" => "Nom de table manquant."]);
