@@ -28,13 +28,15 @@ Le script contient quatre fonctions principales :
 
 ### 1. Récupérer des données (GET)
 
-**Fonction :** `get_data(table, columns='*', filter_column=None, filter_value=None)`
+**Fonction :** `get_data(table, columns='*', filter_column=None, filter_value=None, join_table=None, join_condition=None)`
 
 - **Paramètres :**
   - `table` : Le nom de la table d'où récupérer les données.
   - `columns` : (Optionnel) Les colonnes spécifiques à récupérer, par défaut toutes les colonnes (`*`).
   - `filter_column` : (Optionnel) La colonne à utiliser pour filtrer les résultats.
   - `filter_value` : (Optionnel) La valeur de la colonne utilisée pour le filtre.
+  - `join_table` : (Optionnel) Le nom de la table à joindre. Peut être une chaîne ou une liste de chaînes si plusieurs tables sont jointes.
+  - `join_condition` : (Optionnel) La condition de jointure spécifiant comment les tables doivent être jointes. Peut être une chaîne ou une liste de chaînes si plusieurs conditions sont utilisées.
 
 **Exemples d'utilisation :**
 
@@ -64,6 +66,21 @@ Le script contient quatre fonctions principales :
     get_data("Users", "*", filter_column="email", filter_value="exemple@domaine.com")
     ```
 
+5. **Récupérer des données avec une jointure :**
+
+    Vous pouvez également récupérer des données en joignant plusieurs tables. Voici un exemple de récupération de noms de tâches et d'emails d'utilisateurs à partir des tables `Task` et `Users`, en utilisant une condition de jointure :
+
+    ```python
+    get_data(
+        "Task_has_Users",
+        "Task.name, Users.email",
+        join_table=["Task", "Users"],
+        join_condition=["Task_has_Users.task_id = Task.id_task", "Task_has_Users.user_id = Users.id_user"],
+        filter_column="Users.id_user",
+        filter_value="1"
+    )
+    ```
+    
 ### 2. Ajouter des données (POST)
 
 **Fonction :** `add_data(table, data)`
