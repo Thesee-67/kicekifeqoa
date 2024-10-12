@@ -2,21 +2,17 @@ import mysql.connector
 from mysql.connector import (connection)
 from mysql.connector import Error
 from datetime import datetime
-conn = 0
-cursor = 0
 
-def Connection_BDD():
-    config = {
-        'user': '379269_admin',
-        'password': 'Kicekifeqoa123*',
-        'host': 'mysql-kicekifeqoa.alwaysdata.net',
-        'database': 'kicekifeqoa_todolist',
-    }
-    conn = connection.MySQLConnection(user='379269_admin', password='Kicekifeqoa123*',
-                                      host='mysql-kicekifeqoa.alwaysdata.net',
-                                      database='kicekifeqoa_todolist')
-    cursor = conn.cursor()
-    return cursor, conn
+# Configuration de la connexion
+config = {
+    'user': '379269_admin',
+    'password': 'Kicekifeqoa123*',
+    'host': 'mysql-kicekifeqoa.alwaysdata.net',
+    'database': 'kicekifeqoa_todolist',
+}
+
+# Connexion à la base de donnée
+conn = connection.MySQLConnection(**config)
 
 def Close_connection_BDD(conn,cursor):
     cursor.close()
@@ -25,7 +21,7 @@ def Close_connection_BDD(conn,cursor):
 def Insert_sous_task(id_affected_task,name, end_date, checked):
     try:
         # Connexion à la base de données
-        cursor, conn = Connection_BDD()
+        cursor = conn.cursor()
         task_exists = check_task_exists(id_affected_task,cursor)
         if task_exists :
             # Requête SQL d'insertion
@@ -62,8 +58,8 @@ def check_task_exists(id_affected_task,cursor):
         return False
 
 # Exemple d'utilisation
-id_affected_task = 2
-name = "Finir projet"
+id_affected_task = 1
+name = "Appli"
 end_date = datetime(2024, 10, 15, 18, 0)  # Exemple de date et heure de fin
 checked = 0  # 0 pour non vérifié, 1 pour vérifié
 priority = 2  # Niveau de priorité

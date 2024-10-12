@@ -2,56 +2,42 @@ import mysql.connector
 from mysql.connector import (connection)
 from mysql.connector import Error
 from datetime import datetime
-conn = 0
-cursor = 0
+import requests
+import json
 
-def Connection_BDD():
-    config = {
-        'user': '379269_admin',
-        'password': 'Kicekifeqoa123*',
-        'host': 'mysql-kicekifeqoa.alwaysdata.net',
-        'database': 'kicekifeqoa_todolist',
-    }
-    conn = connection.MySQLConnection(user='379269_admin', password='Kicekifeqoa123*',
-                                      host='mysql-kicekifeqoa.alwaysdata.net',
-                                      database='kicekifeqoa_todolist')
-    cursor = conn.cursor()
-    return cursor, conn
+# URL de ton API PHP
+url = "http://kicekifeqoa.alwaysdata.net/api.php"
+
+# Configuration de la connexion
+config = {
+    'user': '379269_admin',
+    'password': 'Kicekifeqoa123*',
+    'host': 'mysql-kicekifeqoa.alwaysdata.net',
+    'database': 'kicekifeqoa_todolist',
+}
+
+# Connexion à la base de donnée
+conn = connection.MySQLConnection(**config)
+cursor = conn.cursor()
 
 def Close_connection_BDD(conn,cursor):
     cursor.close()
     conn.close()
+    print("La connexion à la base de données a été fermée.")
 
-def insert_task(name, end_date, checked, priority, tag):
+def insert_task(table, data):
     try:
-        # Connexion à la base de données
-        cursor, conn = Connection_BDD()
-
-        # Requête SQL d'insertion
-        sql_insert_query = """
-        INSERT INTO Task (name, end_date, checked, priority, tag)
-        VALUES (%s, %s, %s, %s, %s)
-        """
-
-        # Données à insérer
-        data = (name, end_date, checked, priority, tag)
-
-        # Exécuter la requête et valider les changements
-        cursor.execute(sql_insert_query, data)
-        conn.commit()
-
-        print(f"Tâche '{name}' ajoutée avec succès.")
-        Close_connection_BDD(cursor, conn)
-
+        post_data = {
+            'table': table,
+            'action': 'insert',
+            'data': data
+        }
+        response = requests.post(url, json=post_data)
+        print(response.json())
+        Close_connection_BDD(conn, cursor)
     except Error as e:
         print(f"Erreur lors de l'insertion : {e}")
 
-
-# Exemple d'utilisation
-name = "Finir projet"
-end_date = datetime(2024, 10, 15, 18, 0)  # Exemple de date et heure de fin
-checked = 0  # 0 pour non vérifié, 1 pour vérifié
-priority = 2  # Niveau de priorité
-tag = "Travail"  # Exemple de tag
-
-insert_task(name, end_date, checked, priority, tag)
+# Ajouter des données
+#add_data("Task", {"name": "tache","end_date": "","checked": "0","priority": "0","tag": "Travail"})
+insert_task("Task", {"name": "Tache2","end_date": "2024-10-10 22:02:00","checked": "0","priority": "0","tag": "Travail"})

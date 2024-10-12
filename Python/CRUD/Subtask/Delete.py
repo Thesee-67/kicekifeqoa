@@ -1,5 +1,10 @@
 import mysql.connector
 from mysql.connector import (connection)
+import requests
+import json
+
+# URL de ton API PHP
+url = "http://kicekifeqoa.alwaysdata.net/api.php"
 
 # Configuration de la connexion
 config = {
@@ -11,10 +16,21 @@ config = {
 
 # Connexion à la base de donnée
 conn = connection.MySQLConnection(**config)
-def delete_subtask(id):
-    cursor = conn.cursor()
-    cursor.execute("""
-        DELETE FROM Subtask
-        WHERE id_subtask = %s
-    """, (id,))
-    conn.commit()
+cursor = conn.cursor()
+
+def Close_connection_BDD(conn,cursor):
+    cursor.close()
+    conn.close()
+    print("La connexion à la base de données a été fermée.")
+
+def delete_subtask(table, column, value):
+    post_data = {
+        'table': table,
+        'column': column,
+        'value': value
+    }
+    response = requests.delete(url, json=post_data)
+    print(response.json())
+    Close_connection_BDD(conn, cursor)
+
+#delete_subtask("Subtask", "id_subtask", "1")

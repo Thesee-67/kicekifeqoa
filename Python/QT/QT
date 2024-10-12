@@ -1,0 +1,99 @@
+- Lance App principal
+
+Authentification
+	login
+		zone de texte
+	mot de passe
+		zone de texte (******** si possible)
+	bouton validation 											Users - email , password
+		OK
+			charge le tableau principal
+		NON
+			message d'erreur
+
+
+bouton ajouter
+	fenetre pop-up 											- Lance QML Pop-up carte ajout
+		nom de tache
+			zone de texte										Task - name
+		priorité
+			barre glissoire (pas urgent -> urgent)							Task - priority
+		etiquette (optionnel)
+			bouton plus
+				zone de texte 									get Task - tag
+					si existant ajouter							Task - tag
+					sinon creer nouvelle							Task - tag
+				couleur
+					color picker								???? - ????
+			bouton moins
+		user/groups (optionnel)
+			bouton plus										""Task_has_Users""
+				zone de texte									get Users - email
+			bouton moins
+		date de debut
+			calendrier (date actuel par défaut)							???? - ????
+		date de fin (optionnel)
+			calendrier										Task - end_date
+	valider
+		ajout dans la bdd										add ↑↑↑↑
+		ferme la pop-up
+	annuler
+		ferme la pop-up
+
+
+bouton modifier
+	fenetre pop-up 											 - Lance QML Pop-up carte modif
+		nom de tache
+			zone de texte										Task - name
+		priorité
+			barre glissoire (pas urgent -> urgent)							Task - priority
+		etiquette (optionnel)
+			bouton plus
+				zone de texte 									get Task - tag
+					si existant ajouter							Task - tag
+					sinon creer nouvelle							Task - tag
+				couleur
+					color picker								???? - ????
+			bouton moins
+		user/groups (optionnel)
+			bouton plus										""Task_has_Users""
+				zone de texte									get Users - email
+			bouton moins
+		date de debut
+			calendrier (date actuel par défaut)							???? - ????
+		date de fin (optionnel)
+			calendrier										Task - end_date
+		tache terminé
+			OK											Task - checked
+				deplace dans collone terminé							???? - ????
+			NON (par defaut)									Task - checked
+	valider
+		modif dans la bdd										update ↑↑↑↑
+	annuler
+		ferme la pop-up
+
+
+bouton supprimer
+	fenetre pop-up 											 - Lance QML Pop-up validation suppression
+		valider
+			suppression dans la bdd									del Task - id_task
+			ferme la pop-up
+		annuler
+			ferme la pop-up
+
+
+drag and drop
+	changement de la collone de la tache
+		modification dans la bdd									update ???? - ????
+
+	deplacement dans Terminé
+			modification dans la bdd								update Task - checked
+
+
+
+---------------------------------------------------------------
+4 QML
+App principal
+Pop-up carte ajout
+Pop-up carte modif
+Pop-up validation suppression

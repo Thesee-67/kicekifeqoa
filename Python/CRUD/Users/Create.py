@@ -3,19 +3,16 @@ import dns.resolver
 from mysql.connector import (connection)
 from mysql.connector import Error
 
+# Configuration de la connexion
+config = {
+    'user': '379269_admin',
+    'password': 'Kicekifeqoa123*',
+    'host': 'mysql-kicekifeqoa.alwaysdata.net',
+    'database': 'kicekifeqoa_todolist',
+}
 
-def Connection_BDD():
-    config = {
-        'user': '379269_admin',
-        'password': 'Kicekifeqoa123*',
-        'host': 'mysql-kicekifeqoa.alwaysdata.net',
-        'database': 'kicekifeqoa_todolist',
-    }
-    conn = connection.MySQLConnection(user='379269_admin', password='Kicekifeqoa123*',
-                                      host='mysql-kicekifeqoa.alwaysdata.net',
-                                      database='kicekifeqoa_todolist')
-    cursor = conn.cursor()
-    return cursor, conn
+# Connexion à la base de donnée
+conn = connection.MySQLConnection(**config)
 
 def Close_connection_BDD(conn,cursor):
     cursor.close()
@@ -36,7 +33,9 @@ def Verfication_doublon_email (E_mail, cursor):
 
 def Compliance_password(Password) :
     if len(Password) < 8:
-        return False, "Le mot de passe doit contenir au moins 8 caractères."
+        print("Le mot de passe doit contenir au moins 8 caractères.")
+        return False
+    #Il faut enlevé les , des false et mettre des print pour les erreurs
     """if not re.search(r"[A-Z]", Password):
         return False, "Le mot de passe doit contenir au moins une lettre majuscule."
     if not re.search(r"[a-z]", Password):
@@ -70,7 +69,7 @@ def is_valid_email(email):
 def Creation_user (E_mail,Password):
     try:
         # Connexion à la base de données
-        cursor, conn = Connection_BDD()
+        cursor = conn.cursor()
         if (Verfication_doublon_email (E_mail,cursor)
                 and Compliance_password(Password) and is_valid_email(E_mail)):
 
