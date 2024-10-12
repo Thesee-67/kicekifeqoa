@@ -5,7 +5,7 @@ Window {
     width: 600
     height: 400
     visible: true
-    title: "Test"
+    title: "Kicekifeqoa"
 
     // Bouton rond pour ajouter une nouvelle tâche
     RoundButton {
