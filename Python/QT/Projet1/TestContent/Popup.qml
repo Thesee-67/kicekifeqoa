@@ -3,9 +3,9 @@ import QtQuick.Controls 2.15
 
 Window {
     visible: true
-    width: 600
-    height: 400
-    title: "Task Manager"
+    width: 400
+    height: 200
+    title: "Nouvelle Tâche"
 
     signal updateTaskName(string name)
     signal updateTaskPriority(int priority)
@@ -18,150 +18,203 @@ Window {
     property var tagsListModel: []
     property var usersListModel: []
 
-    // Task Name Field with default text "Tache 1"
+    Slider {
+        id: priorityslider
+        x: 271
+        y: 12
+        width: 115
+        height: 30
+        value: 0
+        stepSize: 1
+        live: true
+        to: 2
+        hoverEnabled: true
+        enabled: true
+        topPadding: 6
+    }
+
+    RoundButton {
+        id: tagadd
+        x: 177
+        y: 68
+        width: 20
+        height: 20
+        text: "+"
+        onClicked: {
+            addTag(tagname.text)
+            tagname.text = ""
+        }
+    }
+
+    RoundButton {
+        id: tagremove
+        x: 203
+        y: 68
+        width: 20
+        height: 20
+        text: "-"
+        onClicked: {
+            removeLastTag()
+        }
+    }
+
+    SwipeDelegate {
+        id: swipeDelegate
+        x: -858
+        y: 330
+        text: qsTr("Swipe Delegate")
+    }
+
+    RoundButton {
+        id: validate
+        x: 352
+        y: 152
+        text: "\u2713"
+        font.pointSize: 15
+        onClicked: {
+            updateTaskName(tagname.text)
+            updateTaskPriority(priorityslider.value)
+            printAllInfo()
+        }
+    }
+
+    Text {
+        id: prioritytext
+        x: 271
+        y: 40
+        width: 115
+        height: 16
+        font.pixelSize: 12
+        horizontalAlignment: Text.AlignHCenter
+        text: priorityslider.value === 0 ? "Priorité basse"
+             : priorityslider.value === 1 ? "Priorité moyenne"
+             : "URGENT"
+    }
+
     TextField {
-        id: taskNameField
-        width: 176
-        text: "Tache 1"  // Default text value
-        placeholderText: "Enter Task Name"
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.top
-        anchors.topMargin: 38
-        anchors.horizontalCenterOffset: -194
+        id: tagname
+        x: 16
+        y: 63
+        width: 155
+        height: 30
+        placeholderText: qsTr("Etiquettes")
     }
 
-    // Task Priority Slider
-    Row {
-        id: row
-        spacing: 10
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: taskNameField.bottom
-        anchors.topMargin: -40
-        anchors.horizontalCenterOffset: 101
-
-        Slider {
-            id: prioritySlider
-            from: 1
-            to: 3
-            stepSize: 1
-            width: 200
-        }
-
-        // Display priority level as text
-        Text {
-            text: "Priorité basse"
-            anchors.top: parent.top
-            anchors.topMargin: 10
+    RoundButton {
+        id: useradd
+        x: 177
+        y: 104
+        width: 20
+        height: 20
+        text: "+"
+        onClicked: {
+            addUser(username.text)
+            username.text = ""
         }
     }
 
-    // Row for adding/removing tags
-    Row {
-        y: 114
-        spacing: 10
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: prioritySlider.bottom
-        anchors.topMargin: 20
-        anchors.horizontalCenterOffset: 12
-
-        TextField {
-            id: tagField
-            placeholderText: "Enter Tag"
-            width: 200
-        }
-
-        Button {
-            text: "Add Tag"
-            onClicked: {
-                addTag(tagField.text)
-                tagField.text = ""
-            }
-        }
-
-        Button {
-            text: "Remove Last Tag"
-            onClicked: {
-                removeLastTag()
-            }
+    RoundButton {
+        id: userremove
+        x: 203
+        y: 104
+        width: 20
+        height: 20
+        text: "-"
+        onClicked: {
+            removeLastUser()
         }
     }
 
-    // Display list of tags horizontally
-    Row {
-        y: 26
-        spacing: 10
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: tagField.bottom
-        anchors.topMargin: 20
-        anchors.horizontalCenterOffset: 1
-
-        Repeater {
-            model: tagsListModel
-            delegate: Text {
-                text: modelData
-                padding: 5
-            }
-        }
+    TextField {
+        id: username
+        x: 16
+        y: 99
+        width: 155
+        height: 30
+        placeholderText: qsTr("Utilisateurs / Groupes")
     }
 
-    // Row for adding/removing users
-    Row {
-        y: 172
-        spacing: 10
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: tagField.bottom
-        anchors.topMargin: 40
-        anchors.horizontalCenterOffset: 14
-
-        TextField {
-            id: userEmailField
-            placeholderText: "Enter User Email"
-            width: 200
-        }
-
-        Button {
-            text: "Add User"
-            onClicked: {
-                addUser(userEmailField.text)
-                userEmailField.text = ""
-            }
-        }
-
-        Button {
-            text: "Remove Last User"
-            onClicked: {
-                removeLastUser()
-            }
-        }
+    TextField {
+        id: taskname
+        x: 16
+        y: 12
+        width: 181
+        height: 30
+        placeholderText: qsTr("Nom de la tâche")
     }
 
-    // Display list of users vertically
+    TextField {
+        id: startdate
+        x: 16
+        y: 157
+        width: 95
+        height: 30
+        horizontalAlignment: Text.AlignHCenter
+        placeholderText: qsTr("--/--/----")
+    }
+
+    TextField {
+        id: enddate
+        x: 128
+        y: 157
+        width: 95
+        height: 30
+        horizontalAlignment: Text.AlignHCenter
+        placeholderText: qsTr("--/--/----")
+    }
+
+    Text {
+        id: _text3
+        x: 115
+        y: 157
+        text: qsTr("-")
+        font.pixelSize: 20
+    }
+
+    Text {
+        id: _text4
+        x: 16
+        y: 143
+        width: 95
+        height: 15
+        text: qsTr("Date de début :")
+        font.pixelSize: 11
+    }
+
+    Text {
+        id: _text5
+        x: 128
+        y: 143
+        width: 95
+        height: 15
+        text: qsTr("Date de fin :")
+        font.pixelSize: 11
+    }
+
     ListView {
-        y: 218
-        width: 200
-        height: 100
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: userEmailField.bottom
-        anchors.topMargin: 20
-        anchors.horizontalCenterOffset: -100
+        id: tagslist
+        x: 231
+        y: 63
+        width: 155
+        height: 30
+        model: tagsListModel
+        delegate: Text {
+            text: modelData
+        }
+    }
+
+
+    ListView {
+        id: userslist
+        x: 231
+        y: 99
+        width: 155
+        height: 30
         model: usersListModel
         delegate: Text {
             text: modelData
         }
     }
 
-    // Final button to print all information
-    Button {
-        y: 330
-        text: "Print All Information"
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: ListView.bottom
-        anchors.topMargin: 20
-        anchors.horizontalCenterOffset: 1
-        onClicked: {
-            updateTaskName(taskNameField.text)
-            updateTaskPriority(prioritySlider.value)
-            printAllInfo()
-        }
-    }
+
 }

@@ -1,5 +1,5 @@
-import QtQuick
-import QtQuick.Controls 6.7
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 Window {
     width: 600

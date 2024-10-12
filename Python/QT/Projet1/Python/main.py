@@ -58,7 +58,7 @@ class TaskHandler(QObject):
         root_object.setProperty("usersListModel", self.users)
 
     @Slot()
-    def print_all_info(self):
+    def validate(self):
         tags_as_string = ", ".join(self.tags)
 
         insert_task("Task", {
