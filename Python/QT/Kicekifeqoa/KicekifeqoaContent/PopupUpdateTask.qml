@@ -7,14 +7,14 @@ Window {
     height: 200
     title: "Modifier Tâche"
 
-    signal updateTaskName(string taskname)
-    signal updateTaskPriority(int priority)
-    signal addTag(string tagname)
+    signal updateTaskName(string updatetaskname)
+    signal updateTaskPriority(int updatepriority)
+    signal addTag(string tag)
     signal removeLastTag()
-    signal addUser(string username)
+    signal addUser(string user)
     signal removeLastUser()
-    signal updateStartDate(string startdate)
-    signal updateEndDate(string enddate)
+    signal updateStartDate(string updatestartdate)
+    signal updateEndDate(string updateenddate)
     signal taskCompleted(int status)
     signal validateUpdateInfo()
 

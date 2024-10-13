@@ -31,17 +31,17 @@ Window {
                     // Connexion des signaux du PopupCreateTask aux slots Python de TaskHandler
                     // Ces signaux sont utilisés pour transférer des données de la vue QML vers la logique Python
 
-                    if (taskHandler) {  // S'assurer que taskHandler est disponible
-                        PopupCreateTask.addTaskName.connect(taskHandler.add_task_name);
-                        PopupCreateTask.addTaskPriority.connect(taskHandler.add_task_priority);
-                        PopupCreateTask.addTag.connect(taskHandler.add_tag);
-                        PopupCreateTask.removeLastTag.connect(taskHandler.remove_last_tag);
-                        PopupCreateTask.addUser.connect(taskHandler.add_user);
-                        PopupCreateTask.removeLastUser.connect(taskHandler.remove_last_user);
-                        PopupCreateTask.addStartDate.connect(taskHandler.add_start_date);
-                        PopupCreateTask.addEndDate.connect(taskHandler.add_end_date);
-                        PopupCreateTask.taskCompleted.connect(taskHandler.task_completed);
-                        PopupCreateTask.validateInfo.connect(taskHandler.validate_info);
+                    if (taskHandlerCreate) {  // S'assurer que taskHandler est disponible
+                        PopupCreateTask.addTaskName.connect(taskHandlerCreate.add_task_name);
+                        PopupCreateTask.addTaskPriority.connect(taskHandlerCreate.add_task_priority);
+                        PopupCreateTask.addTag.connect(taskHandlerCreate.add_tag);
+                        PopupCreateTask.removeLastTag.connect(taskHandlerCreate.remove_last_tag);
+                        PopupCreateTask.addUser.connect(taskHandlerCreate.add_user);
+                        PopupCreateTask.removeLastUser.connect(taskHandlerCreate.remove_last_user);
+                        PopupCreateTask.addStartDate.connect(taskHandlerCreate.add_start_date);
+                        PopupCreateTask.addEndDate.connect(taskHandlerCreate.add_end_date);
+                        PopupCreateTask.taskCompleted.connect(taskHandlerCreate.task_completed);
+                        PopupCreateTask.validateInfo.connect(taskHandlerCreate.validate_info);
                     } else {
                         console.error("Erreur : TaskHandler est introuvable.");
                     }
@@ -63,12 +63,12 @@ Window {
         // Action au clic du bouton
         onClicked: {
             // Chargement dynamique de l'élément PopupUpdateTask à partir de PopupUpdateTask.qml
-            var component2 = Qt.createComponent("PopupUpdateTask.qml");
+            var component = Qt.createComponent("PopupUpdateTask.qml");
 
             // Vérification que le fichier QML a été chargé correctement
-            if (component2.status === Component.Ready) {
+            if (component.status === Component.Ready) {
                 // Création d'une instance de l'élément PopupUpdateTask
-                var PopupUpdateTask = component2.createObject(parent);
+                var PopupUpdateTask = component.createObject(parent);
 
                 // Si l'objet PopupUpdateTask n'a pas pu être créé, afficher un message d'erreur
                 if (PopupUpdateTask === null) {
@@ -77,16 +77,17 @@ Window {
                     // Connexion des signaux du PopupUpdateTask aux slots Python de TaskHandler
                     // Ces signaux sont utilisés pour transférer des données de la vue QML vers la logique Python
 
-                    if (taskHandler) {  // S'assurer que taskHandler est disponible
-                        PopupUpdateTask.UpdateTaskName.connect(taskHandler.update_task_name);
-                        PopupUpdateTask.UpdateTaskPriority.connect(taskHandler.update_task_priority);
-                        PopupUpdateTask.addTag.connect(taskHandler.add_tag);
-                        PopupUpdateTask.removeLastTag.connect(taskHandler.remove_last_tag);
-                        PopupUpdateTask.addUser.connect(taskHandler.add_user);
-                        PopupUpdateTask.removeLastUser.connect(taskHandler.remove_last_user);
-                        PopupUpdateTask.UpdateStartDate.connect(taskHandler.update_start_date);
-                        PopupUpdateTask.UpdateEndDate.connect(taskHandler.update_end_date);
-                        PopupUpdateTask.validateUpdateInfo.connect(taskHandler.validate_update_info);
+                    if (taskHandlerUpdate) {  // S'assurer que taskHandler est disponible
+                        PopupUpdateTask.updateTaskName.connect(taskHandlerUpdate.update_task_name);
+                        PopupUpdateTask.updateTaskPriority.connect(taskHandlerUpdate.update_task_priority);
+                        PopupUpdateTask.addTag.connect(taskHandlerUpdate.add_tag);
+                        PopupUpdateTask.removeLastTag.connect(taskHandlerUpdate.remove_last_tag);
+                        PopupUpdateTask.addUser.connect(taskHandlerUpdate.add_user);
+                        PopupUpdateTask.removeLastUser.connect(taskHandlerUpdate.remove_last_user);
+                        PopupUpdateTask.updateStartDate.connect(taskHandlerUpdate.update_start_date);
+                        PopupUpdateTask.updateEndDate.connect(taskHandlerUpdate.update_end_date);
+                        PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
+                        PopupUpdateTask.validateUpdateInfo.connect(taskHandlerUpdate.validate_update_info);
                     } else {
                         console.error("Erreur : TaskHandler est introuvable.");
                     }

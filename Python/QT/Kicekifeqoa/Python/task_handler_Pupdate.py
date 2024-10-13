@@ -6,32 +6,32 @@ class TaskHandler(QObject):
     def __init__(self, engine):
         super().__init__()
         self.engine = engine
-        self.update_task_name = ""
-        self.update_task_priority = 0
+        self.task_name = ""
+        self.task_priority = 0
         self.tags = []
         self.users = []
-        self.update_start_date = None
-        self.update_end_date = None
+        self.start_date = ""
+        self.end_date = ""
         self.checked = 0
 
     @Slot(str)
     def update_task_name(self, updatetaskname):
         if updatetaskname.strip():
-            self.update_task_name = updatetaskname
+            self.task_name = updatetaskname
         else:
             print("Erreur : Le nom de la tâche ne peut pas être vide.")
 
     @Slot(int)
     def update_task_priority(self, updatepriority):
         if updatepriority in [0, 1, 2]:
-            self.update_task_priority = updatepriority
+            self.task_priority = updatepriority
         else:
             print("Erreur : Priorité invalide.")
 
     @Slot(str)
-    def add_tag(self, tag):
-        if tag.strip():
-            self.tags.append(tag)
+    def add_tag(self, tagname):
+        if tagname.strip():
+            self.tags.append(tagname)
             self._update_tags_in_qml()
         else:
             print("Erreur : Tag invalide.")
@@ -43,9 +43,9 @@ class TaskHandler(QObject):
             self._update_tags_in_qml()
 
     @Slot(str)
-    def add_user(self, user):
-        if user.strip():
-            self.users.append(user)
+    def add_user(self, username):
+        if username.strip():
+            self.users.append(username)
             self._update_users_in_qml()
         else:
             print("Erreur : Utilisateur invalide.")
@@ -67,14 +67,14 @@ class TaskHandler(QObject):
     @Slot(str)
     def update_start_date(self, updatestartdate):
         try:
-            self.update_start_date = self._validate_date_format(updatestartdate)
+            self.start_date = self._validate_date_format(updatestartdate)
         except ValueError as e:
             print(f"Erreur : {e}")
 
     @Slot(str)
-    def add_end_date(self, updateenddate):
+    def update_end_date(self, updateenddate):
         try:
-            self.update_end_date = self._validate_date_format(updateenddate)
+            self.end_date = self._validate_date_format(updateenddate)
         except ValueError as e:
             print(f"Erreur : {e}")
 
@@ -85,11 +85,10 @@ class TaskHandler(QObject):
     def _check_dates_consistency(self):
         if self.start_date and self.end_date:
             from format_date import check_dates_consistency
-            check_dates_consistency(self.update_start_date, self.update_end_date)
+            check_dates_consistency(self.start_date, self.end_date)
 
     @Slot(int)
     def task_completed(self, status):
-        """Mise à jour de l'état de la tâche en fonction de l'état de la CheckBox."""
         self.checked = status
 
     @Slot()
@@ -102,22 +101,22 @@ class TaskHandler(QObject):
             self._check_dates_consistency()
             formatted_tags = ", ".join(self.tags)
 
-            insert_task("Task", {
-                "name": self.update_task_name,
-                "end_date": self.update_end_date,
-                "checked": self.checked,
-                "priority": self.update_task_priority,
-                "tag": formatted_tags,
-            })
+            #insert_task("Task", {
+            #    "name": self.task_name,
+            #    "end_date": self.end_date,
+            #    "checked": self.checked,
+            #    "priority": self.task_priority,
+            #    "tag": formatted_tags,
+            #})
 
             print("----- Informations sur la tâche -----")
             priority_labels = ["Priorité basse", "Priorité moyenne", "URGENT"]
-            print(f"Nom de la tâche : {self.update_task_name}")
-            print(f"Priorité : {priority_labels[self.update_task_priority]}")
+            print(f"Nom de la tâche : {self.task_name}")
+            print(f"Priorité : {priority_labels[self.task_priority]}")
             print(f"Tags : {self.tags}")
             print(f"Utilisateurs : {self.users}")
-            print(f"Date de début : {self.update_start_date}")
-            print(f"Date de fin : {self.update_end_date}")
+            print(f"Date de début : {self.start_date}")
+            print(f"Date de fin : {self.end_date}")
             print(f"Checked : {self.checked}")
 
         except ValueError as e:

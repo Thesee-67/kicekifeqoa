@@ -9,9 +9,9 @@ Window {
 
     signal addTaskName(string taskname)
     signal addTaskPriority(int priority)
-    signal addTag(string username)
+    signal addTag(string tagname)
     signal removeLastTag()
-    signal addUser(string user)
+    signal addUser(string username)
     signal removeLastUser()
     signal addStartDate(string startdate)
     signal addEndDate(string enddate)
@@ -81,8 +81,8 @@ Window {
         onClicked: {
             addTaskName(taskname.text);
             addTaskPriority(priorityslider.value);
-            addStartDate(startdate.text)
-            addEndDate(enddate.text)
+            addStartDate(startdate.text);
+            addEndDate(enddate.text);
             taskCompleted(checkBox.checked ? 1 : 0);
             validateInfo();
         }

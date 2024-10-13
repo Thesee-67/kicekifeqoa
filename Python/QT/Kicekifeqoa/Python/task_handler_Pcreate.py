@@ -89,7 +89,6 @@ class TaskHandler(QObject):
 
     @Slot(int)
     def task_completed(self, status):
-        """Mise à jour de l'état de la tâche en fonction de l'état de la CheckBox."""
         self.checked = status
 
     @Slot()
