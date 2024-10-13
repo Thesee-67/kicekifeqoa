@@ -5,18 +5,18 @@ Window {
     visible: true
     width: 400
     height: 200
-    title: "Nouvelle Tâche"
+    title: "Modifier Tâche"
 
-    signal addTaskName(string taskname)
-    signal addTaskPriority(int priority)
-    signal addTag(string username)
+    signal updateTaskName(string taskname)
+    signal updateTaskPriority(int priority)
+    signal addTag(string tagname)
     signal removeLastTag()
-    signal addUser(string user)
+    signal addUser(string username)
     signal removeLastUser()
-    signal addStartDate(string startdate)
-    signal addEndDate(string enddate)
-    signal validateInfo()
-
+    signal updateStartDate(string startdate)
+    signal updateEndDate(string enddate)
+    signal taskCompleted(int status)
+    signal validateUpdateInfo()
 
     ListModel {
         id: tagsListModel
@@ -77,11 +77,12 @@ Window {
         text: "\u2713"
         font.pointSize: 15
         onClicked: {
-            addTaskName(taskname.text);
-            addTaskPriority(priorityslider.value);
-            addStartDate(startdate.text)
-            addEndDate(enddate.text)
-            validateInfo();
+            updateTaskName(taskname.text);
+            updateTaskPriority(priorityslider.value);
+            updateStartDate(startdate.text);
+            updateEndDate(enddate.text);
+            taskCompleted(checkBox.checked ? 1 : 0);
+            validateUpdateInfo();
         }
     }
 
@@ -200,8 +201,18 @@ Window {
         height: 15
         text: qsTr("Date de fin :")
         font.pixelSize: 11
-    }
 
+        CheckBox {
+            id: checkBox
+            x: 97
+            y: 13
+            width: 150
+            height: 30
+            text: qsTr("Tache Terminée")
+            scale: 0.8
+            checkState: Qt.Unchecked
+        }
+    }
 
     Flickable {
         id: tagsFlickable
@@ -224,7 +235,6 @@ Window {
             }
         }
     }
-
 
     Flickable {
         id: usersFlickable
