@@ -39,12 +39,24 @@ function handleGet($pdo) {
     $columns = $_GET['columns'] ?? '*'; // Par défaut, toutes les colonnes
     $filterColumn = $_GET['filter_column'] ?? null;
     $filterValue = $_GET['filter_value'] ?? null;
+    $joinTables = $_GET['join_table'] ?? null; // Pour les tables à joindre
+    $joinConditions = $_GET['join_condition'] ?? null; // Pour les conditions de jointure
 
     if ($table) {
+        // Début de la requête SQL
         $query = "SELECT $columns FROM `$table`";
 
+        // Ajouter des jointures si spécifié
+        if ($joinTables && $joinConditions) {
+            $joinTablesArray = explode(",", $joinTables);
+            $joinConditionsArray = explode(",", $joinConditions);
+            foreach ($joinTablesArray as $index => $joinTable) {
+                $query .= " JOIN `$joinTable` ON $joinConditionsArray[$index]";
+            }
+        }
+
+        // Ajouter un filtre si une colonne et une valeur de filtre sont spécifiées
         if ($filterColumn && $filterValue) {
-            // Si on a une colonne et une valeur à filtrer, on ajoute une condition WHERE
             $query .= " WHERE $filterColumn = :filterValue";
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(':filterValue', $filterValue);
