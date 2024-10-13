@@ -9,8 +9,6 @@ from PySide6.QtCore import qInstallMessageHandler, QtMsgType
 from task_handler_Pcreate import TaskHandler as TaskHandlerCreate
 from task_handler_Pupdate import TaskHandler as TaskHandlerUpdate
 
-
-
 def message_handler(mode, context, message):
     if mode == QtMsgType.QtDebugMsg:
         print(f"Debug: {message}")

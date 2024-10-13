@@ -10,8 +10,8 @@ class TaskHandler(QObject):
         self.task_priority = 0
         self.tags = []
         self.users = []
-        self.start_date = ""
-        self.end_date = ""
+        self.start_date = None
+        self.end_date = None
         self.checked = 0
 
     @Slot(str)
@@ -94,9 +94,9 @@ class TaskHandler(QObject):
     @Slot()
     def validate_update_info(self):
         try:
-            if not self.update_task_name:
+            if not self.task_name:
                 raise ValueError("Le nom de la tâche ne peut pas être vide.")
-            if not self.update_start_date or not self.update_end_date:
+            if not self.start_date or not self.end_date:
                 raise ValueError("Les dates de début et de fin doivent être renseignées.")
             self._check_dates_consistency()
             formatted_tags = ", ".join(self.tags)
