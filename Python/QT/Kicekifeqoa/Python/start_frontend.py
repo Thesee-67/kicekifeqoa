@@ -6,9 +6,9 @@ from PySide6.QtQml import QQmlApplicationEngine
 from autogen.settings import url, import_paths
 from PySide6.QtCore import qInstallMessageHandler, QtMsgType
 
-from task_handler_Pcreate import TaskHandler as TaskHandlerCreate
-from task_handler_Pupdate import TaskHandler as TaskHandlerUpdate
-from task_handler_Pdelete import TaskHandler as TaskHandlerDelete
+from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
+from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pupdate import TaskHandler as TaskHandlerUpdate
+from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pdelete import TaskHandler as TaskHandlerDelete
 
 def message_handler(mode, context, message):
     if mode == QtMsgType.QtDebugMsg:
