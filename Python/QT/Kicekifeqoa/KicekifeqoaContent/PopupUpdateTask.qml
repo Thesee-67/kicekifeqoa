@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 
 Window {
+    id: popupupdate
     visible: true
     width: 400
     height: 200
@@ -83,6 +84,7 @@ Window {
             updateEndDate(enddate.text);
             taskCompleted(checkBox.checked ? 1 : 0);
             validateUpdateInfo();
+            popupupdate.close();
         }
     }
 

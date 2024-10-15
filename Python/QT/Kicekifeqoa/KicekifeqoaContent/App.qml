@@ -10,7 +10,7 @@ Window {
     // Bouton rond pour ajouter une nouvelle tâche
     RoundButton {
         id: addcard
-        x: 280
+        x: 240
         y: 180
         text: "+"
 
@@ -56,7 +56,7 @@ Window {
     // Bouton rond pour ajouter une nouvelle tâche
     RoundButton {
         id: editcard
-        x: 320
+        x: 280
         y: 180
         text: "🖌️"
 
@@ -95,6 +95,35 @@ Window {
             } else {
                 // Gestion d'erreur en cas de problème lors du chargement du fichier QML
                 console.error("Erreur lors du chargement de PopupUpdateTask.qml");
+            }
+        }
+    }
+
+    RoundButton {
+        id: deletecard
+        x: 321
+        y: 180
+        text: "🗑️"
+
+        // Action au clic du bouton
+        onClicked: {
+            // Chargement dynamique de l'élément PopupDeleteTask à partir de PopupDeleteTask.qml
+            var component = Qt.createComponent("PopupDeleteTask.qml");
+
+            // Vérification que le fichier QML a été chargé correctement
+            if (component.status === Component.Ready) {
+                // Création d'une instance de l'élément PopupDeleteTask
+                var PopupDeleteTask = component.createObject(parent);
+
+                // Si l'objet PopupDeleteTask n'a pas pu être créé, afficher un message d'erreur
+                if (PopupDeleteTask === null) {
+                    console.error("Erreur lors de la création de PopupDeleteTask");
+                } else {
+                   //AJOUTER ICI
+                }
+            } else {
+                // Gestion d'erreur en cas de problème lors du chargement du fichier QML
+                console.error("Erreur lors du chargement de PopupDeleteTask.qml");
             }
         }
     }
