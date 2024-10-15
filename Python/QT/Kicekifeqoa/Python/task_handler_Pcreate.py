@@ -1,4 +1,3 @@
-from datetime import datetime
 from PySide6.QtCore import QObject, Slot
 from Python.CRUD.Task.Create import insert_task
 
