@@ -9,6 +9,8 @@ Window {
     height: 100
     title: "Supprimer Tâche"
 
+    signal validateDeleteInfo();
+
     Rectangle {
         id: root
         width: 200
@@ -29,6 +31,9 @@ Window {
             width: 25
             height: 24
             text: "\u2705"
+            onClicked: {
+                validateDeleteInfo();
+            }
         }
 
         RoundButton {
@@ -49,7 +54,7 @@ Window {
             y: 30
             width: 158
             height: 25
-            text: qsTr("")
+            text: qsTr("taskname")
             font.pixelSize: 18
             horizontalAlignment: Text.AlignHCenter
         }

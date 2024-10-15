@@ -8,6 +8,7 @@ from PySide6.QtCore import qInstallMessageHandler, QtMsgType
 
 from task_handler_Pcreate import TaskHandler as TaskHandlerCreate
 from task_handler_Pupdate import TaskHandler as TaskHandlerUpdate
+from task_handler_Pdelete import TaskHandler as TaskHandlerDelete
 
 def message_handler(mode, context, message):
     if mode == QtMsgType.QtDebugMsg:
@@ -37,9 +38,11 @@ if __name__ == '__main__':
 
     task_handler_create = TaskHandlerCreate(engine)
     task_handler_update = TaskHandlerUpdate(engine)
+    task_handler_delete = TaskHandlerDelete(engine)
 
     engine.rootContext().setContextProperty("taskHandlerCreate", task_handler_create)
     engine.rootContext().setContextProperty("taskHandlerUpdate", task_handler_update)
+    engine.rootContext().setContextProperty("taskHandlerDelete", task_handler_delete)
 
     engine.load(os.fspath(app_dir / url))
     if not engine.rootObjects():

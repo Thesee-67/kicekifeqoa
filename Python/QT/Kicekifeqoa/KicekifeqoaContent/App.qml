@@ -28,8 +28,6 @@ Window {
                 if (PopupCreateTask === null) {
                     console.error("Erreur lors de la création de PopupCreateTask");
                 } else {
-                    // Connexion des signaux du PopupCreateTask aux slots Python de TaskHandler
-                    // Ces signaux sont utilisés pour transférer des données de la vue QML vers la logique Python
 
                     if (taskHandlerCreate) {  // S'assurer que taskHandler est disponible
                         PopupCreateTask.addTaskName.connect(taskHandlerCreate.add_task_name);
@@ -74,8 +72,6 @@ Window {
                 if (PopupUpdateTask === null) {
                     console.error("Erreur lors de la création de PopupUpdateTask");
                 } else {
-                    // Connexion des signaux du PopupUpdateTask aux slots Python de TaskHandler
-                    // Ces signaux sont utilisés pour transférer des données de la vue QML vers la logique Python
 
                     if (taskHandlerUpdate) {  // S'assurer que taskHandler est disponible
                         PopupUpdateTask.updateTaskName.connect(taskHandlerUpdate.update_task_name);
@@ -118,8 +114,14 @@ Window {
                 // Si l'objet PopupDeleteTask n'a pas pu être créé, afficher un message d'erreur
                 if (PopupDeleteTask === null) {
                     console.error("Erreur lors de la création de PopupDeleteTask");
-                } else {
-                   //AJOUTER ICI
+
+                    } else {
+                        if (taskHandlerDelete) {
+                            PopupDeleteTask.validateDeleteInfo.connect(taskHandlerDelete.validate_delete_info);
+
+                        } else {
+                        console.error("Erreur : TaskHandler est introuvable.");
+                    }
                 }
             } else {
                 // Gestion d'erreur en cas de problème lors du chargement du fichier QML
