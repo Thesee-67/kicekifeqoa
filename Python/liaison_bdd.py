@@ -2,7 +2,7 @@ import requests
 import json
 
 # URL de ton API PHP
-url = "http://kicekifeqoa.alwaysdata.net/api.php"
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
 
 def get_data(table, columns='*', filter_column=None, filter_value=None, join_table=None, join_condition=None):
@@ -56,7 +56,7 @@ def delete_data(table, column, value):
 
 # Exemples d'utilisation
 # 1. Récupérer toutes les colonnes d'une table
-#et_data("Users")
+#get_data("Users")
 
 # 2. Récupérer des colonnes spécifiques
 #get_data("Users", "email")
