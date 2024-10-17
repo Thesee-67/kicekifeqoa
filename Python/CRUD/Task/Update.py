@@ -2,6 +2,7 @@ import mysql.connector
 from mysql.connector import (connection)
 from mysql.connector import Error
 from datetime import datetime
+
 conn = 0
 cursor = 0
 
@@ -18,10 +19,9 @@ def Connection_BDD():
     cursor = conn.cursor()
     return cursor, conn
 
-def Close_connection_BDD(conn,cursor):
+def Close_connection_BDD(conn, cursor):
     cursor.close()
     conn.close()
-
 
 def Update_task(task_id, name=None, end_date=None, checked=None, priority=None, tag=None):
     try:
@@ -53,12 +53,12 @@ def Update_task(task_id, name=None, end_date=None, checked=None, priority=None, 
         if not update_fields:
             print("Aucune mise à jour n'a été spécifiée.")
             return
+
         sql_update_query = f"""
         UPDATE Task
         SET {', '.join(update_fields)}
-        WHERE id = %s
+        WHERE id_task = %s
         """
-
         values.append(task_id)
         cursor.execute(sql_update_query, tuple(values))
         conn.commit()
@@ -68,3 +68,7 @@ def Update_task(task_id, name=None, end_date=None, checked=None, priority=None, 
 
     except Error as e:
         print(f"Erreur lors de la mise à jour : {e}")
+
+# Exemple d'utilisation avec une date correcte au format datetime
+end_date = datetime(2024, 10, 10, 22, 2, 0)  # La date doit être un objet datetime
+Update_task(159, name="Tache2", end_date=end_date, checked=1, priority=1, tag="Travail")
