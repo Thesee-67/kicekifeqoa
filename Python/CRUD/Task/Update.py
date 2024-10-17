@@ -53,14 +53,13 @@ def update_task(task_id, name=None, end_date=None, checked=None, priority=None, 
         if not update_fields:
             print("Aucune mise à jour n'a été spécifiée.")
             return
-
         sql_update_query = f"""
         UPDATE Task
         SET {', '.join(update_fields)}
         WHERE id = %s
         """
-        values.append(task_id)
 
+        values.append(task_id)
         cursor.execute(sql_update_query, tuple(values))
         conn.commit()
 
