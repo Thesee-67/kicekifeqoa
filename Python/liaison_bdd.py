@@ -80,7 +80,6 @@ def count_data(table, filter_column, filter_value):
 # 4. Récupérer toutes les informations liées à une valeur spécifique (par exemple, nom de personne)
 #get_data("Users", "*", filter_column="id_user", filter_value="1")
 
-
 # 5. Récupérer des données avec une jointure:
 #get_data("Task_has_Users", "Task.name,Users.email", join_table="Task,Users", join_condition="Task_has_Users.task_id = Task.id_task,Task_has_Users.user_id = Users.id_user", filter_column="Users.id_user", filter_value="1")
 
