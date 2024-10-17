@@ -62,7 +62,7 @@ def delete_data(table, column, value):
 #get_data("Users", "email")
 
 # 3. Récupérer des colonnes spécifiques avec un filtre sur une valeur
-#get_data("Users", "id_user,email", filter_column="id_user", filter_value="1")
+#get_data("Task", filter_column="checked", filter_value="1")
 
 # 4. Récupérer toutes les informations liées à une valeur spécifique (par exemple, nom de personne)
 #get_data("Users", "*", filter_column="id_user", filter_value="1")
