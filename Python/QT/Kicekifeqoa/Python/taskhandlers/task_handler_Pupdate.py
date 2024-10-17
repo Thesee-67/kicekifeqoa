@@ -1,5 +1,7 @@
 from PySide6.QtCore import QObject, Slot
-#from Python.CRUD.Task.Update import update_task
+from Python.CRUD.Task.Update import update_task
+
+#task_id = input("Veuillez entrer l'ID de la tâche à mettre à jour : ")
 
 class TaskHandler(QObject):
     def __init__(self, engine):
@@ -101,13 +103,13 @@ class TaskHandler(QObject):
             formatted_tags = ", ".join(self.tags)
 
             #update_task(task_id, name=None, end_date=None, checked=None, priority=None, tag=None)
-            #insert_task("Task", {
-            #    "name": self.task_name,
-            #    "end_date": self.end_date,
-            #    "checked": self.checked,
-            #    "priority": self.task_priority,
-            #    "tag": formatted_tags,
-            #})
+            '''update_task(task_id, {
+                "name": self.task_name,
+                "end_date": self.end_date,
+                "checked": self.checked,
+                "priority": self.task_priority,
+                "tag": formatted_tags,
+            })'''
 
             print("----- Informations sur la tâche -----")
             priority_labels = ["Priorité basse", "Priorité moyenne", "URGENT"]

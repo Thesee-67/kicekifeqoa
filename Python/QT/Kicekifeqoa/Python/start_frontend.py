@@ -6,10 +6,10 @@ from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import qInstallMessageHandler, QtMsgType, QObject, Slot, Signal
 from autogen.settings import url, import_paths
 
-from Python.QT.Kicekifeqoa1.Python.taskhandlers.task_handler_AppRead import get_tasks
-from Python.QT.Kicekifeqoa1.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
-from Python.QT.Kicekifeqoa1.Python.taskhandlers.task_handler_Pupdate import TaskHandler as TaskHandlerUpdate
-from Python.QT.Kicekifeqoa1.Python.taskhandlers.task_handler_Pdelete import TaskHandler as TaskHandlerDelete
+from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_AppRead import get_tasks
+from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
+from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pupdate import TaskHandler as TaskHandlerUpdate
+from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pdelete import TaskHandler as TaskHandlerDelete
 
 class TaskHandlerBackend(QObject):
     # Signal pour renvoyer la liste des tâches vers QML
