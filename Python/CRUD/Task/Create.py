@@ -6,7 +6,7 @@ import requests
 import json
 
 # URL de ton API PHP
-url = "http://kicekifeqoa.alwaysdata.net/api.php"
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
 # Configuration de la connexion
 config = {

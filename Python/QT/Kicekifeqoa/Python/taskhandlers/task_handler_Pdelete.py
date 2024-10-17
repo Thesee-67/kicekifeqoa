@@ -5,19 +5,27 @@ class TaskHandler(QObject):
     def __init__(self, engine):
         super().__init__()
         self.engine = engine
-        self.task_name = ""
+        self.task_id = ""
         self.delete_info = ""
 
+    @Slot(str)
+    def set_task_name(self, taskid):
+        if taskid.strip():
+            self.task_id = taskid
+            print(self.task_id)
+        else:
+            print("Erreur : Le nom de la tâche ne peut pas être vide.")
 
     @Slot()
     def validate_delete_info(self):
         try:
-            if not self.delete_info:
+            if not self.task_id:
                 raise ValueError("Aucune tache n'est selectionnée")
 
-            #delete_task("Task", "name", {self.task_name})
+            print(f"Table: Task, Column: name, Value: {self.task_id}")
+            delete_task("Task", "name", self.task_id)
 
-            print(f"Deleted : {self.task_name}")
+            print(f"Deleted : {self.task_id}")
 
         except ValueError as e:
             print(f"Erreur de validation : {e}")

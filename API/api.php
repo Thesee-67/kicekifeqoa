@@ -1,23 +1,57 @@
 <?php
-// Charger les informations de connexion à partir d'un fichier de configuration (optionnel) ou définir directement ici
-$config = [
-    'host' => 'mysql-kicekifeqoa.alwaysdata.net',
-    'dbname' => 'kicekifeqoa_todolist',
-    'username' => '379269_admin',
-    'password' => 'Kicekifeqoa123*'
-];
+// Clé de chiffrement utilisée pour chiffrer le fichier
+$key = hash('sha256', 'fd7fbf262118bc9631193efdab5e33adf88530610f7bc8bc7c19f7a3ca76f34d', true); // Clé de 32 octets
 
-try {
-    // Connexion à la base de données avec PDO
-    $pdo = new PDO("mysql:host={$config['host']};dbname={$config['dbname']}", $config['username'], $config['password']);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
+// Chemin vers le fichier chiffré
+$encryptedFile = __DIR__ . '/../db_config.enc';
+
+if (file_exists($encryptedFile)) {
+    // Lire et décoder le contenu du fichier chiffré
+    $encryptedData = file_get_contents($encryptedFile);
+
+    // Séparer l'IV et les données chiffrées
+    $iv = substr($encryptedData, 0, 16); // Les 16 premiers octets sont l'IV
+    $ciphertext = substr($encryptedData, 16); // Le reste est le texte chiffré
+
+    // Déchiffrer les données
+    $decryptedData = openssl_decrypt($ciphertext, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+
+    if ($decryptedData === false) {
+        http_response_code(500);
+        echo json_encode(["error" => "Échec du déchiffrement : " . openssl_error_string()]);
+        exit();
+    }
+
+    // Vérifiez si $decryptedData est bien une chaîne et contient des données
+    if (empty($decryptedData)) {
+        http_response_code(500);
+        echo json_encode(["error" => "Les données déchiffrées sont vides."]);
+        exit();
+    }
+
+    // Convertir les données déchiffrées en tableau PHP
+    $config = json_decode($decryptedData, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        http_response_code(500);
+        echo json_encode(["error" => "Erreur JSON : " . json_last_error_msg()]);
+        exit();
+    }
+
+    try {
+        // Connexion à la base de données avec PDO
+        $pdo = new PDO("mysql:host={$config['host']};dbname={$config['dbname']}", $config['username'], $config['password']);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+        http_response_code(500);
+        echo json_encode(["error" => "Échec de la connexion à la base de données : " . $e->getMessage()]);
+        exit();
+    }
+} else {
     http_response_code(500);
-    echo json_encode(["error" => "Échec de la connexion à la base de données : " . $e->getMessage()]);
+    echo json_encode(["error" => "Erreur interne, fichier de configuration manquant."]);
     exit();
 }
 
-// Vérifier la méthode de la requête
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 switch ($requestMethod) {
     case 'GET':
@@ -29,9 +63,12 @@ switch ($requestMethod) {
     case 'DELETE':
         handleDelete($pdo);
         break;
+    case 'COUNT':
+        handleCount($pdo);
+        break;
     default:
         http_response_code(405);
-        echo json_encode(["error" => "Méthode non autorisée. Utilisez GET, POST ou DELETE."]);
+        echo json_encode(["error" => "Méthode non autorisée. Utilisez GET, POST, DELETE ou COUNT."]);
 }
 
 function handleGet($pdo) {
@@ -56,10 +93,16 @@ function handleGet($pdo) {
         }
 
         // Ajouter un filtre si une colonne et une valeur de filtre sont spécifiées
-        if ($filterColumn && $filterValue) {
+        if ($filterColumn && $filterValue !== null) {
             $query .= " WHERE $filterColumn = :filterValue";
             $stmt = $pdo->prepare($query);
-            $stmt->bindParam(':filterValue', $filterValue);
+
+            // Déterminer le type de la colonne pour binder la valeur
+            if (is_numeric($filterValue)) {
+                $stmt->bindValue(':filterValue', (int)$filterValue, PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue(':filterValue', $filterValue, PDO::PARAM_STR);
+            }
         } else {
             $stmt = $pdo->prepare($query);
         }
@@ -127,6 +170,32 @@ function handleDelete($pdo) {
     } else {
         http_response_code(400);
         echo json_encode(["error" => "Table, colonne ou valeur manquante."]);
+    }
+}
+
+function handleCount($pdo) {
+    $table = $_GET['table'] ?? null;
+    $filterColumn = $_GET['filter_column'] ?? null;
+    $filterValue = $_GET['filter_value'] ?? null;
+
+    if ($table && $filterColumn) {
+        // Requête pour compter les occurrences
+        $query = "SELECT COUNT(*) AS count FROM `$table` WHERE $filterColumn = :filterValue";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindValue(':filterValue', $filterValue);
+
+        try {
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            header('Content-Type: application/json');
+            echo json_encode($result);
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode(["error" => "Erreur lors du comptage des données : " . $e->getMessage()]);
+        }
+    } else {
+        http_response_code(400);
+        echo json_encode(["error" => "Nom de table ou colonne de filtre manquante."]);
     }
 }
 ?>

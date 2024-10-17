@@ -2,7 +2,7 @@ import requests
 import json
 
 # URL de ton API PHP
-url = "http://kicekifeqoa.alwaysdata.net/api.php"
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
 
 def get_data(table, columns='*', filter_column=None, filter_value=None, join_table=None, join_condition=None):
@@ -54,19 +54,31 @@ def delete_data(table, column, value):
     response = requests.delete(url, json=post_data)
     print(response.json())
 
+def count_data(table, filter_column, filter_value):
+    params = {
+        'table': table,
+        'filter_column': filter_column,
+        'filter_value': filter_value
+    }
+    response = requests.request("COUNT", url, params=params)
+    if response.status_code == 200:
+        print("Nombre d'occurrences :")
+        print(json.dumps(response.json(), indent=4))
+    else:
+        print(f"Erreur : {response.status_code} - {response.text}")
+
 # Exemples d'utilisation
 # 1. Récupérer toutes les colonnes d'une table
-#et_data("Users")
+#get_data("Group")
 
 # 2. Récupérer des colonnes spécifiques
 #get_data("Users", "email")
 
 # 3. Récupérer des colonnes spécifiques avec un filtre sur une valeur
-#get_data("Users", "id_user,email", filter_column="id_user", filter_value="1")
+#get_data("Task", filter_column="checked", filter_value="1")
 
 # 4. Récupérer toutes les informations liées à une valeur spécifique (par exemple, nom de personne)
 #get_data("Users", "*", filter_column="id_user", filter_value="1")
-
 
 # 5. Récupérer des données avec une jointure:
 #get_data("Task_has_Users", "Task.name,Users.email", join_table="Task,Users", join_condition="Task_has_Users.task_id = Task.id_task,Task_has_Users.user_id = Users.id_user", filter_column="Users.id_user", filter_value="1")
@@ -79,3 +91,7 @@ def delete_data(table, column, value):
 
 # Supprimer des données
 #delete_data("test", "beta", "fax")
+
+#Compter les Occurences
+#count_data("Group", "name", "ouioui")
+
