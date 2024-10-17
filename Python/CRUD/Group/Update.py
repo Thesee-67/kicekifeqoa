@@ -22,7 +22,7 @@ def Close_connection_BDD(conn, cursor):
     cursor.close()
     conn.close()
 
-def update_group(table, id_column, id_value, update_data):
+def Update_group(table, id_column, id_value, update_data):
     """
     Permet de mettre à jour un groupe dans la base de données.
 
@@ -34,7 +34,6 @@ def update_group(table, id_column, id_value, update_data):
         La valeur de cette colonne pour le groupe à mettre à jour (ex. l'ID du groupe).
     update_data : dict
         Un dictionnaire contenant les colonnes à mettre à jour et leurs nouvelles valeurs.
-        Ex. {"name": "Nouveau Groupe"}
     """
     try:
         post_data = {
