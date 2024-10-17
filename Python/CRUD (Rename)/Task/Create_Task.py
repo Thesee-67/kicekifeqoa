@@ -20,12 +20,12 @@ config = {
 conn = connection.MySQLConnection(**config)
 cursor = conn.cursor()
 
-def Close_connection_BDD(conn,cursor):
+def close_connection_BDD(conn,cursor):
     cursor.close()
     conn.close()
     print("La connexion à la base de données a été fermée.")
 
-def insert_task(table, data):
+def create_task(table, data):
     try:
         post_data = {
             'table': table,
@@ -34,7 +34,7 @@ def insert_task(table, data):
         }
         response = requests.post(url, json=post_data)
         print(response.json())
-        Close_connection_BDD(conn, cursor)
+        close_connection_BDD(conn, cursor)
     except Error as e:
         print(f"Erreur lors de l'insertion : {e}")
 
