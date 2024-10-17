@@ -1,4 +1,5 @@
 <?php
+// API Orginal
 // Charger les informations de connexion à partir d'un fichier de configuration (optionnel) ou définir directement ici
 $config = [
     'host' => 'mysql-kicekifeqoa.alwaysdata.net',
