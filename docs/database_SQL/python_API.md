@@ -160,7 +160,7 @@ add_data("nom_de_la_table", {"colonne1": "valeur1", "colonne2": "valeur2"})
 
 ### 5. Compter les occurrences (COUNT)
 
-**Fonction :** `count_occurrences(table, filter_column, filter_value)`
+**Fonction :** `count_data(table, filter_column, filter_value)`
 
 - **Paramètres :**
   - `table` : Le nom de la table dans laquelle compter les occurrences.
@@ -176,7 +176,7 @@ Cette fonction permet de compter le nombre d'occurrences d'une valeur spécifiqu
 Pour compter combien d'utilisateurs ont l'email `example@example.com` dans la table `Users`, vous pouvez utiliser la requête suivante :
 
 ```python
-count_occurrences("Users", "email", "example@example.com")
+count_data("Users", "email", "example@example.com")
 ```
 
 ## Ressources Supplémentaires
