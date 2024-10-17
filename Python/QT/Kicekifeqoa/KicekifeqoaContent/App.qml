@@ -117,6 +117,7 @@ Window {
 
                     } else {
                         if (taskHandlerDelete) {
+                            PopupDeleteTask.taskName.connect(taskHandlerDelete.set_task_name);
                             PopupDeleteTask.validateDeleteInfo.connect(taskHandlerDelete.validate_delete_info);
 
                         } else {
