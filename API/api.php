@@ -52,7 +52,6 @@ if (file_exists($encryptedFile)) {
     exit();
 }
 
-// Vérifier la méthode de la requête
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 switch ($requestMethod) {
     case 'GET':
@@ -64,9 +63,12 @@ switch ($requestMethod) {
     case 'DELETE':
         handleDelete($pdo);
         break;
+    case 'COUNT':
+        handleCount($pdo);
+        break;
     default:
         http_response_code(405);
-        echo json_encode(["error" => "Méthode non autorisée. Utilisez GET, POST ou DELETE."]);
+        echo json_encode(["error" => "Méthode non autorisée. Utilisez GET, POST, DELETE ou COUNT."]);
 }
 
 function handleGet($pdo) {
@@ -168,6 +170,32 @@ function handleDelete($pdo) {
     } else {
         http_response_code(400);
         echo json_encode(["error" => "Table, colonne ou valeur manquante."]);
+    }
+}
+
+function handleCount($pdo) {
+    $table = $_GET['table'] ?? null;
+    $filterColumn = $_GET['filter_column'] ?? null;
+    $filterValue = $_GET['filter_value'] ?? null;
+
+    if ($table && $filterColumn) {
+        // Requête pour compter les occurrences
+        $query = "SELECT COUNT(*) AS count FROM `$table` WHERE $filterColumn = :filterValue";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindValue(':filterValue', $filterValue);
+
+        try {
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            header('Content-Type: application/json');
+            echo json_encode($result);
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode(["error" => "Erreur lors du comptage des données : " . $e->getMessage()]);
+        }
+    } else {
+        http_response_code(400);
+        echo json_encode(["error" => "Nom de table ou colonne de filtre manquante."]);
     }
 }
 ?>

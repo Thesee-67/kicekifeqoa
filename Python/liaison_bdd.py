@@ -54,9 +54,22 @@ def delete_data(table, column, value):
     response = requests.delete(url, json=post_data)
     print(response.json())
 
+def count_data(table, filter_column, filter_value):
+    params = {
+        'table': table,
+        'filter_column': filter_column,
+        'filter_value': filter_value
+    }
+    response = requests.request("COUNT", url, params=params)
+    if response.status_code == 200:
+        print("Nombre d'occurrences :")
+        print(json.dumps(response.json(), indent=4))
+    else:
+        print(f"Erreur : {response.status_code} - {response.text}")
+
 # Exemples d'utilisation
 # 1. Récupérer toutes les colonnes d'une table
-#get_data("Users")
+#get_data("Group")
 
 # 2. Récupérer des colonnes spécifiques
 #get_data("Users", "email")
@@ -79,3 +92,7 @@ def delete_data(table, column, value):
 
 # Supprimer des données
 #delete_data("test", "beta", "fax")
+
+#Compter les Occurences
+#count_data("Group", "name", "ouioui")
+
