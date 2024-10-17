@@ -106,3 +106,31 @@ def get_task(id_task=None, name=None, end_date=None, checked=None, priority=None
                 return "no existing links"
         else:
             return get_data("Task")
+
+def get_task_user(id_task):
+    """
+    Retourne une liste de TOUT les utilisateur apparetenant a une tache
+
+    :param id_task: int
+    :return: Liste int des id d'utilisateur
+    """
+    user_list =[]
+    data = get_data("Task_has_Users", columns="Users.id_user", filter_column="task_id",
+                    filter_value=id_task, join_table="Users",join_condition="Users.id_user = Task_has_Users.user_id")
+    for user in data:
+        user_list.append(user['id_user'])
+    return user_list
+
+def get_task_group(id_task):
+    """
+    Retourne une liste de TOUT les groupe apparetenant a une tache
+
+    :param id_task: int
+    :return: Liste int des id de groupe
+    """
+    group_list =[]
+    data = get_data("Task_has_Group", columns="Group.id_group", filter_column="task_id",
+                    filter_value=id_task, join_table="Group",join_condition="Group.id_group = Task_has_Group.group_id")
+    for group in data:
+        group_list.append(group['id_group'])
+    return group_list
