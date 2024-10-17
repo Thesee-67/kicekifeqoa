@@ -1,0 +1,9 @@
+dnspython==2.3.0  # Pour dns.resolver
+mysql-connector-python==8.0.33  # Pour mysql.connector
+requests==2.25.1  # Pour les requêtes HTTP
+pytest==7.3.3  # Pour les tests unitaires
+iniconfig==2.0.0
+pluggy==1.5.0
+pytest-cov
+
+# Ajoutez toute autre bibliothèque nécessaire...
