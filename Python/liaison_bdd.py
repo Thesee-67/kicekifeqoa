@@ -2,7 +2,7 @@ import requests
 import json
 
 # URL de ton API PHP
-url = "http://kicekifeqoa.alwaysdata.net/api.php"
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
 
 def get_data(table, columns='*', filter_column=None, filter_value=None, join_table=None, join_condition=None):
