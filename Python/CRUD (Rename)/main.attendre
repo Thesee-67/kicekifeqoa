@@ -1,22 +1,26 @@
-from CRUD.Group.Create import create_group
-from CRUD.Group.Delete import delete_group
-from CRUD.Group.Read import read_group
-from CRUD.Group.Update import update_group
+from Group.Create_Group import create_group
+from Group.Delete_Group import delete_group
 
-from CRUD.Subtask.Create import create_subtask
-from CRUD.Subtask.Delete import delete_subtask
-from CRUD.Subtask.Read import read_subtask
-from CRUD.Subtask.Update import update_subtask
+#Vide ou incomplet donc erreur si decommente
+#from Group.Read_Group import read_group
+#from Group.Update_Group import update_group
 
-from CRUD.Task.Create import create_task, create_sub_task
-from CRUD.Task.Delete import delete_task
-from CRUD.Task.Read import read_task
-from CRUD.Task.Update import update_task
+from Subtask.Create_Subtask import create_sous_task
+from Subtask.Delete_Subtask import delete_subtask
+from Subtask.Read_Subtask import get_subtask
+#Vide ou incomplet donc erreur si decommente
+#from Subtask.Update_Subtask import update_subtask
 
-from CRUD.Users.Create import create_user
-from CRUD.Users.Delete import delete_user
-from CRUD.Users.Read import read_user
-from CRUD.Users.Update import update_user
+from Task.Create_Task import create_task
+from Task.Delete_Task import delete_task
+from Task.Read_Task import get_task
+from Task.Update_Task import update_task
+
+from Users.Create_User import create_user
+from Users.Delete_User import delete_user
+#Vide ou incomplet donc erreur si decommente
+#from Users.Read_User import read_user
+#from Users.Update_User import update_user
 
 from utils import connect_db, refresh_data, link_user_to_task, validate_input
 
@@ -45,17 +49,17 @@ def main():
     if choice == "1":
         create_task(conn)
     elif choice == "2":
-        read_task(conn)
+        get_task(conn)
     elif choice == "3":
         update_task(conn)
     elif choice == "4":
         delete_task(conn)
     elif choice == "5":
-        create_sub_task(conn)
+        create_task(conn)
     elif choice == "6":
-        read_subtask(conn)
-    elif choice == "7":
-        update_subtask(conn)
+        get_subtask(conn)
+    #elif choice == "7":
+        #update_subtask(conn)
     elif choice == "8":
         delete_subtask(conn)
     elif choice == "9":

@@ -14,11 +14,11 @@ config = {
 # Connexion à la base de donnée
 conn = connection.MySQLConnection(**config)
 
-def Close_connection_BDD(conn,cursor):
+def close_connection_BDD(conn,cursor):
     cursor.close()
     conn.close()
 
-def Verfication_doublon_email (E_mail, cursor):
+def verfication_doublon_email (E_mail, cursor):
     # Requête SQL pour vérifier l'existence de l'email
     query = "SELECT COUNT(*) FROM Users WHERE email = %s"
     cursor.execute(query, (E_mail,))
@@ -31,7 +31,7 @@ def Verfication_doublon_email (E_mail, cursor):
         print("The email already exists")
         return False  # L'email existe déjà
 
-def Compliance_password(Password) :
+def compliance_password(Password) :
     if len(Password) < 8:
         print("Le mot de passe doit contenir au moins 8 caractères.")
         return False
@@ -66,12 +66,12 @@ def is_valid_email(email):
         return False
     return True
 
-def Creation_user (E_mail,Password):
+def create_user (E_mail,Password):
     try:
         # Connexion à la base de données
         cursor = conn.cursor()
-        if (Verfication_doublon_email (E_mail,cursor)
-                and Compliance_password(Password) and is_valid_email(E_mail)):
+        if (verfication_doublon_email (E_mail,cursor)
+                and compliance_password(Password) and is_valid_email(E_mail)):
 
             # Requête SQL d'insertion
             sql_insert_query = """
@@ -86,7 +86,7 @@ def Creation_user (E_mail,Password):
             conn.commit()
 
             print(f"Creation user : {E_mail} succes.")
-            Close_connection_BDD(cursor, conn)
+            close_connection_BDD(cursor, conn)
 
     except Error as e:
         print(f"Erreur lors de l'insertion : {e}")
@@ -95,4 +95,4 @@ def Creation_user (E_mail,Password):
 # Exemple d'utilisation
 E_mail = "jorikbaumert86@gmail.com"
 Password = "12345678"
-Creation_user(E_mail,Password)
+create_user(E_mail,Password)

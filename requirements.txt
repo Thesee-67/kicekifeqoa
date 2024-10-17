@@ -7,5 +7,10 @@ pluggy==1.5.0
 PySide6
 pytest-cov
 flask
-
+utils
+datetime
+os
+sys
+pathlib
+autogen
 # Ajoutez toute autre bibliothèque nécessaire...
