@@ -1,6 +1,6 @@
 import requests
 
-url = "http://kicekifeqoa.alwaysdata.net/api.php"
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
 def get_data(table, columns='*', filter_column=None, filter_value=None, join_table=None, join_condition=None):
     params = {'table': table, 'columns': columns}
@@ -55,7 +55,11 @@ def get_task(id_task=None, name=None, end_date=None, checked=None, priority=None
         filters = {col: value for col, value in columns.items() if value is not None}
         if len(filters) == 1:
             col, val = next(iter(filters.items()))
-            return get_data("Task", filter_column=col, filter_value=val)
+            data = get_data("Task", filter_column=col, filter_value=val)
+            if data != []:
+                return data
+            else:
+                return 'no existing links'
         elif len(filters) == 2:
             list =[]
             filter_col, filter_val = zip(*filters.items())
