@@ -4,7 +4,7 @@ import requests
 import json
 
 # URL de ton API PHP
-url = "https://kicekifeqoa.alwaysdata.net/api.php"
+url = "http://kicekifeqoa.alwaysdata.net/api.php"
 
 # Configuration de la connexion
 config = {
@@ -23,7 +23,7 @@ def Close_connection_BDD(conn,cursor):
     conn.close()
     print("La connexion à la base de données a été fermée.")
 
-def delete_users(table, column, value):
+def delete_group(table, column, value):
     post_data = {
         'table': table,
         'column': column,
@@ -33,4 +33,4 @@ def delete_users(table, column, value):
     print(response.json())
     Close_connection_BDD(conn, cursor)
 
-#delete_users("Users", "id_user", "1")
+#delete_group("Group", "id_group", "1")

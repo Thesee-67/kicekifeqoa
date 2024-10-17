@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 Window {
     width: 600
@@ -7,11 +8,76 @@ Window {
     visible: true
     title: "Kicekifeqoa"
 
+    // Modèle pour gérer les données de la base de données Task
+    ListModel {
+        id: taskModel
+    }
+
+    // Charger les tâches lors du démarrage de l'application
+    Component.onCompleted: {
+        taskHandlerBackend.fetchTasks()
+    }
+
+    // Liste des tâches à afficher
+    ListView {
+        id: taskListView
+        model: taskModel
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: addcard.top  // La liste occupe tout l'espace au-dessus des boutons
+
+        delegate: Item {
+            width: parent.width
+            height: 50
+
+            RowLayout {
+                Text {
+                    text: model.name
+                    Layout.preferredWidth: 150
+                }
+                Text {
+                    text: "Priority: " + model.priority
+                    Layout.preferredWidth: 100
+                }
+                Text {
+                    text: "End: " + model.end_date
+                    Layout.preferredWidth: 150
+                }
+                Text {
+                    text: "Checked: " + model.checked
+                    Layout.preferredWidth: 100
+                }
+                Text {
+                    text: "Tag: " + model.tag
+                    Layout.preferredWidth: 150
+                }
+            }
+        }
+    }
+
+    Connections {
+        target: taskHandlerBackend
+        onTasksFetched: function(tasks) {
+            taskModel.clear()
+            for (var i = 0; i < tasks.length; i++) {
+                taskModel.append({
+                    "id_task": tasks[i].id_task,
+                    "name": tasks[i].name,
+                    "end_date": tasks[i].end_date,
+                    "checked": tasks[i].checked,
+                    "priority": tasks[i].priority,
+                    "tag": tasks[i].tag
+                })
+            }
+        }
+    }
+
     // Bouton rond pour ajouter une nouvelle tâche
     RoundButton {
         id: addcard
         x: 240
-        y: 180
+        y: 350
         text: "+"
 
         // Action au clic du bouton
@@ -51,11 +117,11 @@ Window {
         }
     }
 
-    // Bouton rond pour ajouter une nouvelle tâche
+    // Bouton rond pour modifier une tâche
     RoundButton {
         id: editcard
         x: 280
-        y: 180
+        y: 350
         text: "🖌️"
 
         // Action au clic du bouton
@@ -95,10 +161,11 @@ Window {
         }
     }
 
+    // Bouton rond pour supprimer une tâche
     RoundButton {
         id: deletecard
         x: 321
-        y: 180
+        y: 350
         text: "🗑️"
 
         // Action au clic du bouton
@@ -115,12 +182,10 @@ Window {
                 if (PopupDeleteTask === null) {
                     console.error("Erreur lors de la création de PopupDeleteTask");
 
+                } else {
+                    if (taskHandlerDelete) {
+                        PopupDeleteTask.validateDeleteInfo.connect(taskHandlerDelete.validate_delete_info);
                     } else {
-                        if (taskHandlerDelete) {
-                            PopupDeleteTask.taskName.connect(taskHandlerDelete.set_task_name);
-                            PopupDeleteTask.validateDeleteInfo.connect(taskHandlerDelete.validate_delete_info);
-
-                        } else {
                         console.error("Erreur : TaskHandler est introuvable.");
                     }
                 }

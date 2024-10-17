@@ -78,12 +78,12 @@ class TaskHandler(QObject):
             print(f"Erreur : {e}")
 
     def _validate_date_format(self, date_str):
-        from format_date import validate_date_format
+        from Python.QT.Kicekifeqoa.Python.format_date import validate_date_format
         return validate_date_format(date_str)
 
     def _check_dates_consistency(self):
         if self.start_date and self.end_date:
-            from format_date import check_dates_consistency
+            from Python.QT.Kicekifeqoa.Python.format_date import check_dates_consistency
             check_dates_consistency(self.start_date, self.end_date)
 
     @Slot(int)
