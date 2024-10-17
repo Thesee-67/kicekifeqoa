@@ -158,6 +158,27 @@ url = "http://kicekifeqoa.alwaysdata.net/api.php"
 add_data("nom_de_la_table", {"colonne1": "valeur1", "colonne2": "valeur2"})
 ```
 
+### 5. Compter les occurrences (COUNT)
+
+**Fonction :** `count_occurrences(table, filter_column, filter_value)`
+
+- **Paramètres :**
+  - `table` : Le nom de la table dans laquelle compter les occurrences.
+  - `filter_column` : Le nom de la colonne à filtrer pour le comptage.
+  - `filter_value` : La valeur à rechercher dans la colonne spécifiée.
+
+**Description :**
+
+Cette fonction permet de compter le nombre d'occurrences d'une valeur spécifique dans une colonne d'une table. C'est particulièrement utile pour vérifier si un enregistrement (comme un nom d'utilisateur ou un nom de groupe) existe déjà dans la base de données avant d'effectuer une insertion ou une mise à jour.
+
+**Exemple d'utilisation :**
+
+Pour compter combien d'utilisateurs ont l'email `example@example.com` dans la table `Users`, vous pouvez utiliser la requête suivante :
+
+```python
+count_occurrences("Users", "email", "example@example.com")
+```
+
 ## Ressources Supplémentaires
 
 - [Documentation officielle de MySQL](https://dev.mysql.com/doc/)
