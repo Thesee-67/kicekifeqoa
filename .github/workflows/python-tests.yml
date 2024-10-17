@@ -35,4 +35,4 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest --cov=Python /Python
+          pytest --cov=Python ./
