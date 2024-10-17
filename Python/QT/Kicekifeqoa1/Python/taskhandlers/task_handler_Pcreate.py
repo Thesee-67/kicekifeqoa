@@ -1,5 +1,5 @@
 from PySide6.QtCore import QObject, Slot
-#from Python.CRUD.Task.Update import update_task
+from Python.CRUD.Task.Create import insert_task
 
 class TaskHandler(QObject):
     def __init__(self, engine):
@@ -14,23 +14,23 @@ class TaskHandler(QObject):
         self.checked = 0
 
     @Slot(str)
-    def update_task_name(self, updatetaskname):
-        if updatetaskname.strip():
-            self.task_name = updatetaskname
+    def add_task_name(self, taskname):
+        if taskname.strip():
+            self.task_name = taskname
         else:
             print("Erreur : Le nom de la tâche ne peut pas être vide.")
 
     @Slot(int)
-    def update_task_priority(self, updatepriority):
-        if updatepriority in [0, 1, 2]:
-            self.task_priority = updatepriority
+    def add_task_priority(self, priority):
+        if priority in [0, 1, 2]:
+            self.task_priority = priority
         else:
             print("Erreur : Priorité invalide.")
 
     @Slot(str)
-    def add_tag(self, tagname):
-        if tagname.strip():
-            self.tags.append(tagname)
+    def add_tag(self, tag):
+        if tag.strip():
+            self.tags.append(tag)
             self._update_tags_in_qml()
         else:
             print("Erreur : Tag invalide.")
@@ -42,9 +42,9 @@ class TaskHandler(QObject):
             self._update_tags_in_qml()
 
     @Slot(str)
-    def add_user(self, username):
-        if username.strip():
-            self.users.append(username)
+    def add_user(self, user):
+        if user.strip():
+            self.users.append(user)
             self._update_users_in_qml()
         else:
             print("Erreur : Utilisateur invalide.")
@@ -64,26 +64,26 @@ class TaskHandler(QObject):
         root_object.setProperty("usersListModel", self.users)
 
     @Slot(str)
-    def update_start_date(self, updatestartdate):
+    def add_start_date(self, startdate):
         try:
-            self.start_date = self._validate_date_format(updatestartdate)
+            self.start_date = self._validate_date_format(startdate)
         except ValueError as e:
             print(f"Erreur : {e}")
 
     @Slot(str)
-    def update_end_date(self, updateenddate):
+    def add_end_date(self, enddate):
         try:
-            self.end_date = self._validate_date_format(updateenddate)
+            self.end_date = self._validate_date_format(enddate)
         except ValueError as e:
             print(f"Erreur : {e}")
 
     def _validate_date_format(self, date_str):
-        from Python.QT.Kicekifeqoa.Python.format_date import validate_date_format
+        from format_date import validate_date_format
         return validate_date_format(date_str)
 
     def _check_dates_consistency(self):
         if self.start_date and self.end_date:
-            from Python.QT.Kicekifeqoa.Python.format_date import check_dates_consistency
+            from format_date import check_dates_consistency
             check_dates_consistency(self.start_date, self.end_date)
 
     @Slot(int)
@@ -91,7 +91,7 @@ class TaskHandler(QObject):
         self.checked = status
 
     @Slot()
-    def validate_update_info(self):
+    def validate_info(self):
         try:
             if not self.task_name:
                 raise ValueError("Le nom de la tâche ne peut pas être vide.")
@@ -100,14 +100,13 @@ class TaskHandler(QObject):
             self._check_dates_consistency()
             formatted_tags = ", ".join(self.tags)
 
-            #update_task(task_id, name=None, end_date=None, checked=None, priority=None, tag=None)
-            #insert_task("Task", {
-            #    "name": self.task_name,
-            #    "end_date": self.end_date,
-            #    "checked": self.checked,
-            #    "priority": self.task_priority,
-            #    "tag": formatted_tags,
-            #})
+            insert_task("Task", {
+                "name": self.task_name,
+                "end_date": self.end_date,
+                "checked": self.checked,
+                "priority": self.task_priority,
+                "tag": formatted_tags,
+            })
 
             print("----- Informations sur la tâche -----")
             priority_labels = ["Priorité basse", "Priorité moyenne", "URGENT"]

@@ -1,54 +1,20 @@
 <?php
-// Clé de chiffrement utilisée pour chiffrer le fichier
-$key = hash('sha256', 'fd7fbf262118bc9631193efdab5e33adf88530610f7bc8bc7c19f7a3ca76f34d', true); // Clé de 32 octets
+// API Orginal
+// Charger les informations de connexion à partir d'un fichier de configuration (optionnel) ou définir directement ici
+$config = [
+    'host' => 'mysql-kicekifeqoa.alwaysdata.net',
+    'dbname' => 'kicekifeqoa_todolist',
+    'username' => '379269_admin',
+    'password' => 'Kicekifeqoa123*'
+];
 
-// Chemin vers le fichier chiffré
-$encryptedFile = __DIR__ . '/../db_config.enc';
-
-if (file_exists($encryptedFile)) {
-    // Lire et décoder le contenu du fichier chiffré
-    $encryptedData = file_get_contents($encryptedFile);
-
-    // Séparer l'IV et les données chiffrées
-    $iv = substr($encryptedData, 0, 16); // Les 16 premiers octets sont l'IV
-    $ciphertext = substr($encryptedData, 16); // Le reste est le texte chiffré
-
-    // Déchiffrer les données
-    $decryptedData = openssl_decrypt($ciphertext, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
-
-    if ($decryptedData === false) {
-        http_response_code(500);
-        echo json_encode(["error" => "Échec du déchiffrement : " . openssl_error_string()]);
-        exit();
-    }
-
-    // Vérifiez si $decryptedData est bien une chaîne et contient des données
-    if (empty($decryptedData)) {
-        http_response_code(500);
-        echo json_encode(["error" => "Les données déchiffrées sont vides."]);
-        exit();
-    }
-
-    // Convertir les données déchiffrées en tableau PHP
-    $config = json_decode($decryptedData, true);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(500);
-        echo json_encode(["error" => "Erreur JSON : " . json_last_error_msg()]);
-        exit();
-    }
-
-    try {
-        // Connexion à la base de données avec PDO
-        $pdo = new PDO("mysql:host={$config['host']};dbname={$config['dbname']}", $config['username'], $config['password']);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        http_response_code(500);
-        echo json_encode(["error" => "Échec de la connexion à la base de données : " . $e->getMessage()]);
-        exit();
-    }
-} else {
+try {
+    // Connexion à la base de données avec PDO
+    $pdo = new PDO("mysql:host={$config['host']};dbname={$config['dbname']}", $config['username'], $config['password']);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(["error" => "Erreur interne, fichier de configuration manquant."]);
+    echo json_encode(["error" => "Échec de la connexion à la base de données : " . $e->getMessage()]);
     exit();
 }
 
