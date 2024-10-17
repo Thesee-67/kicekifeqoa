@@ -3,8 +3,9 @@ import sys
 from pathlib import Path
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from autogen.settings import url, import_paths
 from PySide6.QtCore import qInstallMessageHandler, QtMsgType
+from autogen.settings import url, import_paths
+
 
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pupdate import TaskHandler as TaskHandlerUpdate
