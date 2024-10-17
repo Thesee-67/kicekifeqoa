@@ -56,10 +56,11 @@ function handleGet($pdo) {
         }
 
         // Ajouter un filtre si une colonne et une valeur de filtre sont spécifiées
-        if ($filterColumn && $filterValue) {
+        if ($filterColumn && $filterValue !== null) {
+            // Forcer la comparaison correcte pour les booléens (comme la colonne checked)
             $query .= " WHERE $filterColumn = :filterValue";
             $stmt = $pdo->prepare($query);
-            $stmt->bindParam(':filterValue', $filterValue);
+            $stmt->bindValue(':filterValue', (int)$filterValue, PDO::PARAM_INT); // Conversion en entier pour éviter les problèmes
         } else {
             $stmt = $pdo->prepare($query);
         }
