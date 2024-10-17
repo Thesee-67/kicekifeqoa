@@ -10,7 +10,7 @@ from autogen.settings import url, import_paths
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pupdate import TaskHandler as TaskHandlerUpdate
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pdelete import TaskHandler as TaskHandlerDelete
-z
+
 def message_handler(mode, context, message):
     if mode == QtMsgType.QtDebugMsg:
         print(f"Debug: {message}")
