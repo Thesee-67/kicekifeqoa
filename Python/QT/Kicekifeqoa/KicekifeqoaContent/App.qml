@@ -16,147 +16,116 @@ Window {
         taskHandlerBackend.fetchTasks()
     }
 
-    ListView {
-        id: taskListView
-        model: taskModel
+    Row {
         anchors.fill: parent
 
-        delegate: Rectangle {
-            id: root
-            width: 200
-            height: 100
-            color: "#bcbcbc"
+        ListView {
+            id: taskListView
+            model: taskModel
+            width: parent.width * 0.7
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
 
-            Text {
-                id: taskname
-                x: 4
-                y: 6
-                width: 33
-                height: 23
-                text: qsTr(model.name)
-                font.pixelSize: 17
-                font.styleName: "Gras"
-            }
+            delegate: Rectangle {
+                id: root
+                width: 200
+                height: 100
+                color: "#bcbcbc"
+                border.color: "red"
+                border.width: 2
 
-            Text {
-                id: enddate
-                x: 4
-                y: 57
-                text: model.end_date
-                font.pixelSize: 12
-                horizontalAlignment: Text.AlignHCenter
-            }
+                // Activation du glisser
+                Drag.active: dragArea.drag.active
+                Drag.hotSpot.x: dragArea.width / 2
+                Drag.hotSpot.y: dragArea.height / 2
+                Drag.source: dragArea
 
-            CheckBox {
-                id: checked
-                x: 168
-                y: 2
-                width: 30
-                height: 30
-                text: model.checked
-                hoverEnabled: true
-                icon.color: "#000000"
-                display: AbstractButton.TextBesideIcon
-                autoExclusive: false
-                checked: false
-                scale: 0.6
-            }
+                Text {
+                    id: taskname
+                    x: 4
+                    y: 6
+                    width: 33
+                    height: 23
+                    text: qsTr(model.name)
+                    font.pixelSize: 17
+                    font.styleName: "Gras"
+                }
 
-            Text {
-                id: priority
-                x: 56
-                y: 57
-                font.pixelSize: 12
-                text: {
-                    if (model.priority === 1) {
-                        return "🕐";
-                    } else if (model.priority === 2) {
-                        return "⚠️";
-                    } else {
-                        return "";
+                Text {
+                    id: enddate
+                    x: 4
+                    y: 57
+                    text: model.end_date
+                    font.pixelSize: 12
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                CheckBox {
+                    id: checked
+                    x: 152
+                    y: 2
+                    width: 60
+                    height: 30
+                    text: "Fini ?"
+                    hoverEnabled: true
+                    icon.color: "#000000"
+                    display: AbstractButton.TextBesideIcon
+                    autoExclusive: false
+                    checked: model.checked === 1
+                    scale: 1
+                }
+
+                Text {
+                    id: priority
+                    x: 65
+                    y: 57
+                    font.pixelSize: 12
+                    text: {
+                        if (model.priority === 1) {
+                            return "🕐";
+                        } else if (model.priority === 2) {
+                            return "⚠️";
+                        } else {
+                            return "";
+                        }
+                    }
+                }
+
+                Text {
+                    id: tag
+                    x: 4
+                    y: 35
+                    text: qsTr(model.tag)
+                    font.pixelSize: 12
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                MouseArea {
+                    id: dragArea
+                    anchors.fill: parent
+                    drag.target: root
+
+                    onReleased: {
+                        console.log("Item dropped!")
                     }
                 }
             }
+        }
 
-            Text {
-                id: tag
-                x: 4
-                y: 35
-                text: qsTr(model.tag)
-                font.pixelSize: 12
-                horizontalAlignment: Text.AlignHCenter
-            }
+        Column {
+            id: columndropArea
+            width: parent.width * 0.3
+            height: parent.height
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
 
-            RoundButton {
-                id: editcard
-                x: 132
-                y: 67
-                width: 30
-                height: 30
-                text: "🖌️"
-                font.pixelSize: 12
-
-                onClicked: {
-                    // Chargement dynamique de l'élément PopupUpdateTask à partir de PopupUpdateTask.qml
-                    var component = Qt.createComponent("PopupUpdateTask.qml");
-
-                    if (component.status === Component.Ready) {
-                        var PopupUpdateTask = component.createObject(parent);
-
-                        if (PopupUpdateTask === null) {
-                            console.error("Erreur lors de la création de PopupUpdateTask");
-                        } else {
-                            if (taskHandlerUpdate) {
-                                // Associer l'ID de la tâche en cours
-                                PopupUpdateTask.updateTaskName.connect(taskHandlerUpdate.update_task_name);
-                                PopupUpdateTask.updateTaskPriority.connect(taskHandlerUpdate.update_task_priority);
-                                PopupUpdateTask.addTag.connect(taskHandlerUpdate.add_tag);
-                                PopupUpdateTask.removeLastTag.connect(taskHandlerUpdate.remove_last_tag);
-                                PopupUpdateTask.addUser.connect(taskHandlerUpdate.add_user);
-                                PopupUpdateTask.removeLastUser.connect(taskHandlerUpdate.remove_last_user);
-                                PopupUpdateTask.updateStartDate.connect(taskHandlerUpdate.update_start_date);
-                                PopupUpdateTask.updateEndDate.connect(taskHandlerUpdate.update_end_date);
-                                PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
-                                PopupUpdateTask.validateUpdateInfo.connect(taskHandlerUpdate.validate_update_info);
-                            } else {
-                                console.error("Erreur : TaskHandler est introuvable.");
-                            }
-                        }
-                    } else {
-                        console.error("Erreur lors du chargement de PopupUpdateTask.qml");
-                    }
-                }
-            }
-
-            // Bouton pour supprimer la tâche
-            RoundButton {
-                id: deletecard
-                x: 165
-                y: 67
-                width: 30
-                height: 30
-                text: "🗑️"
-                font.pixelSize: 12
-
-                onClicked: {
-                    var component = Qt.createComponent("PopupDeleteTask.qml");
-
-                    if (component.status === Component.Ready) {
-                        var PopupDeleteTask = component.createObject(parent);
-
-                        if (PopupDeleteTask === null) {
-                            console.error("Erreur lors de la création de PopupDeleteTask");
-                        } else {
-                            if (taskHandlerDelete) {
-                                // Associer l'ID de la tâche en cours
-                                PopupDeleteTask.validateDeleteInfo.connect(taskHandlerDelete.validate_delete_info);
-                            } else {
-                                console.error("Erreur : TaskHandler est introuvable.");
-                            }
-                        }
-                    } else {
-                        console.error("Erreur lors du chargement de PopupDeleteTask.qml");
-                    }
+            DropArea {
+                id: dropArea
+                anchors.fill: parent
+                onDropped: {
+                    console.log("Item dropped in the column!")
                 }
             }
         }
