@@ -78,12 +78,12 @@ class TaskHandler(QObject):
             print(f"Erreur : {e}")
 
     def _validate_date_format(self, date_str):
-        from Python.QT.Kicekifeqoa.Python.format_date import validate_date_format
+        from format_date import validate_date_format
         return validate_date_format(date_str)
 
     def _check_dates_consistency(self):
         if self.start_date and self.end_date:
-            from Python.QT.Kicekifeqoa.Python.format_date import check_dates_consistency
+            from format_date import check_dates_consistency
             check_dates_consistency(self.start_date, self.end_date)
 
     @Slot(int)
@@ -100,7 +100,6 @@ class TaskHandler(QObject):
             self._check_dates_consistency()
             formatted_tags = ", ".join(self.tags)
 
-            #update_task(task_id, name=None, end_date=None, checked=None, priority=None, tag=None)
             #insert_task("Task", {
             #    "name": self.task_name,
             #    "end_date": self.end_date,

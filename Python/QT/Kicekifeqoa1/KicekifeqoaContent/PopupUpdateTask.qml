@@ -1,22 +1,31 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
 Window {
+    id: popupupdate
     visible: true
     width: 400
     height: 200
-    title: "Nouvelle Tâche"
+    title: "Modifier Tâche"
 
-    signal updateTaskName(string name)
-    signal updateTaskPriority(int priority)
+    signal updateTaskName(string updatetaskname)
+    signal updateTaskPriority(int updatepriority)
     signal addTag(string tag)
     signal removeLastTag()
-    signal addUser(string email)
+    signal addUser(string user)
     signal removeLastUser()
-    signal validateinfo()
+    signal updateStartDate(string updatestartdate)
+    signal updateEndDate(string updateenddate)
+    signal taskCompleted(int status)
+    signal validateUpdateInfo()
 
-    property var tagsListModel: []
-    property var usersListModel: []
+    ListModel {
+        id: tagsListModel
+    }
+
+    ListModel {
+        id: usersListModel
+    }
 
     Slider {
         id: priorityslider
@@ -42,7 +51,8 @@ Window {
         text: "+"
         onClicked: {
             addTag(tagname.text)
-            tagname.text = ""
+            tagsListModel.append({"tag": tagname.text});
+            tagname.text = "";
         }
     }
 
@@ -54,15 +64,11 @@ Window {
         height: 20
         text: "-"
         onClicked: {
-            removeLastTag()
+            if (tagsListModel.count > 0) {
+                tagsListModel.remove(tagsListModel.count - 1)
+                removeLastTag();
+            }
         }
-    }
-
-    SwipeDelegate {
-        id: swipeDelegate
-        x: -858
-        y: 330
-        text: qsTr("Swipe Delegate")
     }
 
     RoundButton {
@@ -72,9 +78,13 @@ Window {
         text: "\u2713"
         font.pointSize: 15
         onClicked: {
-            updateTaskName(tagname.text)
-            updateTaskPriority(priorityslider.value)
-            validateinfo()
+            updateTaskName(taskname.text);
+            updateTaskPriority(priorityslider.value);
+            updateStartDate(startdate.text);
+            updateEndDate(enddate.text);
+            taskCompleted(checkBox.checked ? 1 : 0);
+            validateUpdateInfo();
+            popupupdate.close();
         }
     }
 
@@ -109,7 +119,8 @@ Window {
         text: "+"
         onClicked: {
             addUser(username.text)
-            username.text = ""
+            usersListModel.append({"user": username.text});
+            username.text = "";
         }
     }
 
@@ -121,7 +132,10 @@ Window {
         height: 20
         text: "-"
         onClicked: {
-            removeLastUser()
+            if (usersListModel.count > 0) {
+                usersListModel.remove(usersListModel.count - 1)
+                removeLastUser();
+            }
         }
     }
 
@@ -189,32 +203,70 @@ Window {
         height: 15
         text: qsTr("Date de fin :")
         font.pixelSize: 11
+
+        CheckBox {
+            id: checkBox
+            x: 97
+            y: 13
+            width: 150
+            height: 30
+            text: qsTr("Tache Terminée")
+            scale: 0.8
+            checkState: Qt.Unchecked
+        }
     }
 
-    ListView {
-        id: tagslist
+    Flickable {
+        id: tagsFlickable
+        x: 231
+        y: 68
+        width: 150
+        height: 30
+        contentWidth: tagsRow.width
+        contentHeight: tagsRow.height
+        clip: true
+
+        Row {
+            id: tagsRow
+            spacing: 10
+            Repeater {
+                model: tagsListModel
+                delegate: Text {
+                    text: model.tag
+                }
+            }
+        }
+    }
+
+    Flickable {
+        id: usersFlickable
+        x: 231
+        y: 104
+        width: 150
+        height: 30
+        contentWidth: usersRow.width
+        contentHeight: usersRow.height
+        clip: true
+
+        Row {
+            id: usersRow
+            spacing: 10
+            Repeater {
+                model: usersListModel
+                delegate: Text {
+                    text: model.user
+                }
+            }
+        }
+    }
+
+    MouseArea {
+        id: mouseArea
         x: 231
         y: 63
-        width: 155
-        height: 30
-        model: tagsListModel
-        delegate: Text {
-            text: modelData
-        }
+        width: 150
+        height: 66
+        enabled: false
+        cursorShape: Qt.DragMoveCursor
     }
-
-
-    ListView {
-        id: userslist
-        x: 231
-        y: 99
-        width: 155
-        height: 30
-        model: usersListModel
-        delegate: Text {
-            text: modelData
-        }
-    }
-
-
 }
