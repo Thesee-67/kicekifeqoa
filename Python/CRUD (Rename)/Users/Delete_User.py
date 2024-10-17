@@ -18,12 +18,12 @@ config = {
 conn = connection.MySQLConnection(**config)
 cursor = conn.cursor()
 
-def Close_connection_BDD(conn,cursor):
+def close_connection_BDD(conn,cursor):
     cursor.close()
     conn.close()
     print("La connexion à la base de données a été fermée.")
 
-def delete_users(table, column, value):
+def delete_user(table, column, value):
     post_data = {
         'table': table,
         'column': column,
@@ -31,6 +31,6 @@ def delete_users(table, column, value):
     }
     response = requests.delete(url, json=post_data)
     print(response.json())
-    Close_connection_BDD(conn, cursor)
+    close_connection_BDD(conn, cursor)
 
 #delete_users("Users", "id_user", "1")

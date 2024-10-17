@@ -45,7 +45,7 @@ def verification_doublon_group(name_Group, cursor):
         print(f"Erreur lors de l'exécution de la requête : {err}")
         return None  # Indiquer qu'il y a eu une erreur
 
-def create_grp(name):
+def create_group(name):
     try:
         # Connexion à la base de données
         cursor, conn = connection_bdd()
@@ -78,4 +78,4 @@ checked = 0  # 0 pour non vérifié, 1 pour vérifié
 priority = 2  # Niveau de priorité
 tag = "Travail"  # Exemple de tag
 
-create_grp(name)
+create_group(name)

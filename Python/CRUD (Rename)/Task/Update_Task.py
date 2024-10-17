@@ -5,7 +5,7 @@ from datetime import datetime
 conn = 0
 cursor = 0
 
-def Connection_BDD():
+def connection_BDD():
     config = {
         'user': '379269_admin',
         'password': 'Kicekifeqoa123*',
@@ -18,14 +18,14 @@ def Connection_BDD():
     cursor = conn.cursor()
     return cursor, conn
 
-def Close_connection_BDD(conn,cursor):
+def close_connection_BDD(conn,cursor):
     cursor.close()
     conn.close()
 
 
 def update_task(task_id, name=None, end_date=None, checked=None, priority=None, tag=None):
     try:
-        cursor, conn = Connection_BDD()
+        cursor, conn = connection_BDD()
 
         update_fields = []
         values = []
@@ -64,7 +64,7 @@ def update_task(task_id, name=None, end_date=None, checked=None, priority=None, 
         conn.commit()
 
         print(f"Tâche avec ID {task_id} mise à jour avec succès.")
-        Close_connection_BDD(conn, cursor)
+        close_connection_BDD(conn, cursor)
 
     except Error as e:
         print(f"Erreur lors de la mise à jour : {e}")

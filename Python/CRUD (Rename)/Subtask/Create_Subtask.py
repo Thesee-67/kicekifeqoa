@@ -14,11 +14,11 @@ config = {
 # Connexion à la base de donnée
 conn = connection.MySQLConnection(**config)
 
-def Close_connection_BDD(conn,cursor):
+def close_connection_BDD(conn,cursor):
     cursor.close()
     conn.close()
 
-def Insert_sous_task(id_affected_task,name, end_date, checked):
+def create_sous_task(id_affected_task,name, end_date, checked):
     try:
         # Connexion à la base de données
         cursor = conn.cursor()
@@ -38,10 +38,10 @@ def Insert_sous_task(id_affected_task,name, end_date, checked):
             conn.commit()
 
             print(f"Sous-Tâche '{name}' ajoutée avec succès.")
-            Close_connection_BDD(cursor, conn)
+            close_connection_BDD(cursor, conn)
         else :
             print(f"L'ID {id_affected_task} n'existe pas dans la table Task.")
-            Close_connection_BDD(cursor, conn)
+            close_connection_BDD(cursor, conn)
 
     except Error as e:
         print(f"Erreur lors de l'insertion : {e}")
@@ -65,4 +65,4 @@ checked = 0  # 0 pour non vérifié, 1 pour vérifié
 priority = 2  # Niveau de priorité
 tag = "Travail"  # Exemple de tag
 
-Insert_sous_task(id_affected_task,name, end_date, checked)
+create_sous_task(id_affected_task,name, end_date, checked)
