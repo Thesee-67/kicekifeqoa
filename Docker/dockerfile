@@ -1,0 +1,26 @@
+# Utiliser une image officielle de Miniconda comme base
+FROM continuumio/miniconda3
+
+# Définir le répertoire de travail dans le conteneur
+WORKDIR /workspace
+
+# Copier le fichier environment.yml dans le conteneur
+COPY environment.yml .
+
+# Créer l'environnement Conda à partir du fichier environment.yml
+RUN conda env create -f environment.yml
+
+# Activer l'environnement Conda par défaut (facilite les commandes ultérieures)
+RUN echo "conda activate myenv" >> ~/.bashrc
+
+# S'assurer que conda est dans le PATH
+ENV PATH /opt/conda/envs/myenv/bin:$PATH
+
+# Copier tout le code de l'application dans le conteneur
+COPY . .
+
+# Exposer un port pour le serveur Flask ou autre si nécessaire
+EXPOSE 5000
+
+# Démarrer une session bash par défaut (pratique pour les tests)
+CMD ["conda", "run", "--no-capture-output", "-n", "Kicekifeqoa", "python", "app.py"]
