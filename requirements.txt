@@ -5,6 +5,7 @@ pytest==8.3.3  # Pour les tests unitaires
 iniconfig==2.0.0
 pluggy==1.5.0
 PySide6==6.5.0  # Assurez-vous de vérifier la version que vous souhaitez utiliser
+PySide6
 pytest-cov
 
 # Ajoutez toute autre bibliothèque nécessaire...
