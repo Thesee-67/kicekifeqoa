@@ -23,7 +23,7 @@ class TaskHandler(QObject):
             if not self.task_id:
                 raise ValueError("Aucune tâche n'est sélectionnée")
 
-            delete_task("Task", "name", self.task_id)
+            delete_task("Task", "id_task", self.task_id)
             print(f"Deleted : {self.task_id}")
 
         except ValueError as e:

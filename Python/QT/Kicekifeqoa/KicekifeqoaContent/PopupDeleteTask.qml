@@ -9,8 +9,9 @@ Window {
     title: "Supprimer Tâche"
 
     property string taskName: ""
+    property string taskID: ""
 
-    signal taskId(string taskName);
+    signal taskId(int taskID);
     signal validateDeleteInfo();
 
     Rectangle {
@@ -34,7 +35,7 @@ Window {
             height: 24
             text: "\u2705"
             onClicked: {
-                taskId(tasknametext.text);
+                taskId(taskID);
                 validateDeleteInfo();
                 popupdelete.close();
             }

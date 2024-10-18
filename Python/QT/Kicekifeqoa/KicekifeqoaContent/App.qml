@@ -57,6 +57,15 @@ ApplicationWindow {
                         font.pixelSize: 17
                         font.styleName: "Gras"
                     }
+                    Text {
+                        id: taskid
+                        x: 150
+                        y: 25
+                        color: "#bcbcbc"
+                        text: model.id_task
+                        font.pixelSize: 17
+                        font.styleName: "Gras"
+                    }
 
                     Text {
                         id: enddate
@@ -151,7 +160,8 @@ ApplicationWindow {
 
                             if (component.status === Component.Ready) {
                                 var PopupDeleteTask = component.createObject(parent, {
-                                    "taskName": taskname.text
+                                    "taskName": taskname.text,
+                                    "taskID": taskid.text
                                 });
 
                                 if (PopupDeleteTask === null) {
