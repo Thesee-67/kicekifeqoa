@@ -159,7 +159,10 @@ ApplicationWindow {
                                 } else {
                                     if (taskHandlerDelete) {
                                         PopupDeleteTask.taskId.connect(taskHandlerDelete.set_task_id);
-                                        PopupDeleteTask.validateDeleteInfo.connect(taskHandlerDelete.validate_delete_info);
+                                        PopupDeleteTask.validateDeleteInfo.connect(function() {
+                                            taskHandlerDelete.validate_delete_info();
+                                            taskHandlerBackend.fetchTasks();
+                                            });
                                     } else {
                                         console.error("Erreur : taskHandlerDelete n'est pas initialisé");
                                     }
