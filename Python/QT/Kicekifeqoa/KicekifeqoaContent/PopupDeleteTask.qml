@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Window
 
 Window {
     id: popupdelete
@@ -9,7 +8,9 @@ Window {
     height: 100
     title: "Supprimer Tâche"
 
-    signal taskName(string taskname);
+    property string taskName: ""
+
+    signal taskId(string taskName);
     signal validateDeleteInfo();
 
     Rectangle {
@@ -33,7 +34,7 @@ Window {
             height: 24
             text: "\u2705"
             onClicked: {
-                taskName(tasknametext.text);
+                taskId(tasknametext.text);
                 validateDeleteInfo();
                 popupdelete.close();
             }
@@ -57,7 +58,7 @@ Window {
             y: 30
             width: 158
             height: 25
-            text: qsTr("TESTTEST")
+            text: taskName
             font.pixelSize: 18
             horizontalAlignment: Text.AlignHCenter
         }

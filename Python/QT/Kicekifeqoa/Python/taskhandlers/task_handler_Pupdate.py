@@ -1,7 +1,5 @@
 from PySide6.QtCore import QObject, Slot
-from Python.CRUD.Task.Update import update_task
-
-#task_id = input("Veuillez entrer l'ID de la tâche à mettre à jour : ")
+#from Python.CRUD.Task.Update import update_task
 
 class TaskHandler(QObject):
     def __init__(self, engine):

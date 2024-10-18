@@ -150,21 +150,26 @@ ApplicationWindow {
                             var component = Qt.createComponent("PopupDeleteTask.qml");
 
                             if (component.status === Component.Ready) {
-                                var PopupDeleteTask = component.createObject(parent);
+                                var PopupDeleteTask = component.createObject(parent, {
+                                    "taskName": taskname.text
+                                });
 
                                 if (PopupDeleteTask === null) {
                                     console.error("Erreur lors de la création de PopupDeleteTask");
                                 } else {
                                     if (taskHandlerDelete) {
+                                        PopupDeleteTask.taskId.connect(taskHandlerDelete.set_task_id);
                                         PopupDeleteTask.validateDeleteInfo.connect(taskHandlerDelete.validate_delete_info);
                                     } else {
-                                        console.error("Erreur : TaskHandler est introuvable.");
+                                        console.error("Erreur : taskHandlerDelete n'est pas initialisé");
                                     }
                                 }
                             } else {
                                 console.error("Erreur lors du chargement de PopupDeleteTask.qml");
                             }
                         }
+
+
                     }
                 }
             }
