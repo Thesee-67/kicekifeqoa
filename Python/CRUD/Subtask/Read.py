@@ -93,3 +93,17 @@ def get_subtask(id_subtask=None,id_affected_task=None, name=None, end_date=None,
                 return "no existing links"
         else:
             return get_data("Subtask")
+
+def get_subtask_user(id_subtask):
+    """
+    Retourne une liste de TOUT les utilisateur apparetenant a une sous-tache
+
+    :param id_subtask: int
+    :return: Liste int des id d'utilisateur
+    """
+    user_list =[]
+    data = get_data("Subtask_has_Users", columns="Users.id_user", filter_column="subtask_id",
+                    filter_value=id_subtask, join_table="Users",join_condition="Users.id_user = Subtask_has_Users.user_id")
+    for user in data:
+        user_list.append(user['id_user'])
+    return user_list

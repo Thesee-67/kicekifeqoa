@@ -13,4 +13,5 @@ os
 sys
 pathlib
 autogen
+pytest-subprocess
 # Ajoutez toute autre bibliothèque nécessaire...
