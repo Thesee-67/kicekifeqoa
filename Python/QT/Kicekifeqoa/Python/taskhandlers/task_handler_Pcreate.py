@@ -118,5 +118,13 @@ class TaskHandler(QObject):
             print(f"Date de fin : {self.end_date}")
             print(f"Checked : {self.checked}")
 
+            self.task_name = ""
+            self.task_priority = 0
+            self.tags = []
+            self.users = []
+            self.start_date = None
+            self.end_date = None
+            self.checked = 0
+
         except ValueError as e:
             print(f"Erreur de validation : {e}")
