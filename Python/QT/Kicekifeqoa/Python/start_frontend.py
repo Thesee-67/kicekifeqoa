@@ -12,6 +12,7 @@ from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pdelete import TaskH
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_AppRead import TaskHandler as TaskHandlerBackend
 
 
+
 def message_handler(mode, context, message):
     if mode == QtMsgType.QtDebugMsg:
         print(f"Debug: {message}")
