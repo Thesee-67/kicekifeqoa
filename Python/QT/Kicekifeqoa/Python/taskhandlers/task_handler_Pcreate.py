@@ -1,5 +1,5 @@
 from PySide6.QtCore import QObject, Slot
-from Python.CRUD.Task.Create import insert_task
+from Python.CRUD.Task.Create_Task import create_task
 
 class TaskHandler(QObject):
     def __init__(self, engine):
@@ -100,7 +100,7 @@ class TaskHandler(QObject):
             self._check_dates_consistency()
             formatted_tags = ", ".join(self.tags)
 
-            insert_task("Task", {
+            create_task("Task", {
                 "name": self.task_name,
                 "end_date": self.end_date,
                 "checked": self.checked,

@@ -1,5 +1,5 @@
 from PySide6.QtCore import QObject, Slot
-from Python.CRUD.Task.Delete import delete_task
+from Python.CRUD.Task.Delete_Task import delete_task
 
 class TaskHandler(QObject):
     def __init__(self, engine):

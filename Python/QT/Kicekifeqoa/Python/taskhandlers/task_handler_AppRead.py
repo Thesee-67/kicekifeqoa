@@ -1,5 +1,5 @@
 from PySide6.QtCore import QObject, Slot, Signal
-from Python.CRUD.Task.Read import get_data
+from Python.CRUD.Task.Read_Task import get_data
 from Python.QT.Kicekifeqoa.Python.format_date import read_date_format
 
 class TaskHandler(QObject):
