@@ -3,10 +3,20 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 ApplicationWindow {
+    id: loginWindow  // Définition de l'identifiant
+
     visible: true
     width: 600
     height: 700
     title: qsTr("Login")
+
+    // Connexion du signal de succès de login pour fermer la fenêtre
+    Connections {
+        target: taskHandlerLogin
+        onLoginSuccess: {
+            loginWindow.close();  // Fermer la fenêtre login
+        }
+    }
 
     Rectangle {
         id: rectangle
