@@ -23,7 +23,7 @@ def Close_connection_BDD(conn,cursor):
     conn.close()
 
 
-def Update_task(task_id, name=None, end_date=None, checked=None, priority=None, tag=None):
+def update_task(task_id, name=None, end_date=None, checked=None, priority=None, tag=None):
     try:
         cursor, conn = Connection_BDD()
 

@@ -101,13 +101,13 @@ class TaskHandler(QObject):
             formatted_tags = ", ".join(self.tags)
 
             #update_task(task_id, name=None, end_date=None, checked=None, priority=None, tag=None)
-            #insert_task("Task", {
-            #    "name": self.task_name,
-            #    "end_date": self.end_date,
-            #    "checked": self.checked,
-            #    "priority": self.task_priority,
-            #    "tag": formatted_tags,
-            #})
+            '''update_task(task_id, {
+                "name": self.task_name,
+                "end_date": self.end_date,
+                "checked": self.checked,
+                "priority": self.task_priority,
+                "tag": formatted_tags,
+            })'''
 
             print("----- Informations sur la tâche -----")
             priority_labels = ["Priorité basse", "Priorité moyenne", "URGENT"]
