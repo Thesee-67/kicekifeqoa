@@ -16,13 +16,21 @@ ApplicationWindow {
         onLoginSuccess: {
             loginWindow.close();  // Fermer la fenêtre login
         }
+
+        onLoginpasswdfail: {
+            _text3.text = "Mot de passe incorrect";  // Affiche un message d'erreur pour le mot de passe
+        }
+
+        onLoginemailfail: {
+            _text3.text = "Email incorrect";  // Affiche un message d'erreur pour l'email
+        }
     }
 
     Rectangle {
         id: rectangle
         width: 600
         height: 700
-        color: "#94b9cf"
+        color: "#4E598C"
 
         Text {
             id: _text
@@ -54,7 +62,7 @@ ApplicationWindow {
             width: 226
             height: 36
             opacity: 1
-            color: "#cacece"
+            color: "#FFFFFF"
             clip: false
         }
 
@@ -88,7 +96,7 @@ ApplicationWindow {
                 width: 226
                 height: 36
                 opacity: 1
-                color: "#cacece"
+                color: "#FFFFFF"
                 clip: false
             }
         }
@@ -121,12 +129,22 @@ ApplicationWindow {
         }
 
         Button {
-            id: button1
+            id: registerButton
             x: 250
             y: 557
             width: 100
             height: 40
             text: qsTr("Register")
+            onClicked: {
+                // Chargement dynamique de l'élément PopupCreateTask à partir de PopupCreateTask.qml
+                var component = Qt.createComponent("Register.qml");
+
+                // Vérification que le fichier QML a été chargé correctement
+                if (component.status === Component.Ready) {
+                    // Création d'une instance de l'élément PopupCreateTask
+                    var PopupCreateTask = component.createObject(parent);
+                }
+            }
         }
 
         Image {
@@ -138,6 +156,17 @@ ApplicationWindow {
             source: "Pictures/ICON.ico"
             fillMode: Image.PreserveAspectFit
         }
+
+        Text {
+        id: _text3
+        x: 188
+        y: 415
+        width: 226
+        height: 30
+        color: "#e91717"
+        font.pixelSize: 20
+        horizontalAlignment: Text.AlignHCenter
+    }
 
         states: [
             State {
