@@ -43,11 +43,22 @@ ApplicationWindow {
                     id: root
                     width: 200
                     height: 100
-                    color: "#bcbcbc"
                     radius: 5
+                    color: selected ? "#9d9d9d" : "#bcbcbc" // Change la couleur si sélectionnée
                     border.width: 1
                     border.color: "gray"
                     anchors.horizontalCenter: parent.horizontalCenter
+
+                    property bool selected: false // Ajoute une propriété pour gérer la sélection
+
+                    MouseArea {
+                        id: mouseArea
+                        anchors.fill: parent
+                        onClicked: {
+                            root.selected = !root.selected // Change l'état de sélection
+                            console.log(taskid.text) // Affiche l'ID de la tâche dans le terminal
+                        }
+                    }
 
                     Text {
                         id: taskname
@@ -109,7 +120,6 @@ ApplicationWindow {
                         font.pixelSize: 12
                     }
 
-                    // Bouton de modification
                     RoundButton {
                         id: editcard
                         x: 132
@@ -147,7 +157,6 @@ ApplicationWindow {
                         }
                     }
 
-                    // Bouton pour supprimer la tâche
                     RoundButton {
                         id: deletecard
                         x: 165
@@ -191,24 +200,16 @@ ApplicationWindow {
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 anchors.margins: 10
-                // Action au clic du bouton
                 onClicked: {
-                    // Chargement dynamique de l'élément PopupCreateTask à partir de PopupCreateTask.qml
                     var component = Qt.createComponent("PopupCreateTask.qml");
 
-                    // Vérification que le fichier QML a été chargé correctement
                     if (component.status === Component.Ready) {
-                        // Création d'une instance de l'élément PopupCreateTask
                         var PopupCreateTask = component.createObject(parent);
 
-                        // Si l'objet PopupCreateTask n'a pas pu être créé, afficher un message d'erreur
                         if (PopupCreateTask === null) {
                             console.error("Erreur lors de la création de PopupCreateTask");
                         } else {
-                            // Connexion des signaux du PopupCreateTask aux slots Python de TaskHandler
-                            // Ces signaux sont utilisés pour transférer des données de la vue QML vers la logique Python
-
-                            if (taskHandlerCreate) {  // S'assurer que taskHandler est disponible
+                            if (taskHandlerCreate) {
                                 PopupCreateTask.addTaskName.connect(taskHandlerCreate.add_task_name);
                                 PopupCreateTask.addTaskPriority.connect(taskHandlerCreate.add_task_priority);
                                 PopupCreateTask.addTag.connect(taskHandlerCreate.add_tag);
@@ -219,25 +220,25 @@ ApplicationWindow {
                                 PopupCreateTask.addEndDate.connect(taskHandlerCreate.add_end_date);
                                 PopupCreateTask.taskCompleted.connect(taskHandlerCreate.task_completed);
                                 PopupCreateTask.validateInfo.connect(function() {
-                                            taskHandlerCreate.validate_info();
-                                            taskHandlerBackend.fetchTasks();
-                                        });
+                                    taskHandlerCreate.validate_info();
+                                    taskHandlerBackend.fetchTasks();
+                                });
                             } else {
                                 console.error("Erreur : TaskHandler est introuvable.");
                             }
                         }
                     } else {
-                        // Gestion d'erreur en cas de problème lors du chargement du fichier QML
                         console.error("Erreur lors du chargement de PopupCreateTask.qml");
                     }
                 }
             }
+
             Connections {
                 target: taskHandlerBackend
                 onTasksFetchedPriority2: function (tasks) {
                     taskModel.clear();  // Remplacer par taskModelPriority2
                     for (var i = 0; i < tasks.length; i++) {
-                        taskModel.append({  // Remplacer taskModel par taskModelPriority2
+                        taskModel.append({
                             "id_task": tasks[i].id_task,
                             "name": tasks[i].name,
                             "end_date": tasks[i].end_date,
@@ -249,6 +250,7 @@ ApplicationWindow {
                 }
             }
         }
+
 
         Rectangle {
             id: taskArea2
