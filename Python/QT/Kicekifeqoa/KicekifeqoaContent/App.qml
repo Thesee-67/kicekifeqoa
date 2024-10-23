@@ -1,13 +1,24 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Window 2.15
 
 Window {
     visible: true
     color: "#4e598c"
     width: 1000
     height: 900
-    title: "Colonne"
+    title: "Kicekifeqoa"
+    flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowSystemMenuHint | Qt.WindowCloseButtonHint
+    minimumWidth: 1000
+    maximumWidth: 1000
+    minimumHeight: 900
+    maximumHeight: 900
+
+    // Propriétés globales pour stocker la tâche sélectionnée et son délégué
+    property string selectedTaskName: ""
+    property string selectedTaskId: ""
+    property var selectedDelegate: null // Ajout de la référence au délégué sélectionné
 
     Rectangle {
         id: rectangle
@@ -71,19 +82,28 @@ Window {
                     width: 200
                     height: 100
                     radius: 5
-                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
+                    color: selected ? "#dcdcdc" : "#eeeeee"
                     border.width: 2
-                    border.color: "#b5b5b5"
+                    border.color: "#ffffff"
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    property bool selected: false // Ajoute une propriété pour gérer la sélection
+                    property bool selected: false
 
                     MouseArea {
                         id: mouseArea
                         anchors.fill: parent
                         onClicked: {
-                            root.selected = !root.selected // Change l'état de sélection
-                            console.log(taskid.text) // Affiche l'ID de la tâche dans le terminal
+                            if (selectedDelegate !== null) {
+                                selectedDelegate.selected = false
+                            }
+                            root.selected = true
+                            selectedDelegate = root
+
+                            selectedTaskId = taskid.text
+                            selectedTaskName = taskname.text
+
+                            console.log("Tâche sélectionnée ID:", selectedTaskId)
+                            console.log("Tâche sélectionnée Nom:", selectedTaskName)
                         }
                     }
 
@@ -95,6 +115,7 @@ Window {
                         font.pixelSize: 17
                         font.styleName: "Gras"
                     }
+
                     Text {
                         id: taskid
                         x: 150
@@ -151,9 +172,9 @@ Window {
 
             RoundButton {
                 id: addButton
+                x: 866
+                y: -101
                 text: "+"
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
                 anchors.margins: 10
                 onClicked: {
                     var component = Qt.createComponent("PopupCreateTask.qml");
@@ -208,28 +229,57 @@ Window {
             RoundButton {
                 id: modify
                 x: 833
-                y: -89
+                y: -69
                 text: "🖌️"
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.margins: 10
                 anchors.rightMargin: -648
-                anchors.bottomMargin: 773
+                anchors.bottomMargin: 753
             }
 
             RoundButton {
                 id: remove
                 x: 881
-                y: -88
+                y: -69
                 text: "🗑️"
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.margins: 10
                 anchors.rightMargin: -696
-                anchors.bottomMargin: 772
+                anchors.bottomMargin: 753
+                onClicked: {
+                    if (selectedTaskName !== "" && selectedTaskId !== "") {
+                        var component = Qt.createComponent("PopupDeleteTask.qml");
+
+                        if (component.status === Component.Ready) {
+                            var PopupDeleteTask = component.createObject(parent, {
+                                "taskName": selectedTaskName,
+                                "taskID": selectedTaskId
+                            });
+
+                            if (PopupDeleteTask === null) {
+                                console.error("Erreur lors de la création de PopupDeleteTask");
+                            } else {
+                                if (taskHandlerDelete) {
+                                    PopupDeleteTask.taskId.connect(taskHandlerDelete.set_task_id);
+                                    PopupDeleteTask.validateDeleteInfo.connect(function() {
+                                        taskHandlerDelete.validate_delete_info();
+                                        taskHandlerBackend.fetchTasks();
+                                    });
+                                } else {
+                                    console.error("Erreur : taskHandlerDelete n'est pas initialisé");
+                                }
+                            }
+                        } else {
+                            console.error("Erreur lors du chargement de PopupDeleteTask.qml");
+                        }
+                    } else {
+                        console.error("Erreur : Aucune tâche sélectionnée.");
+                    }
+                }
             }
         }
-
 
         Rectangle {
             id: taskArea2
@@ -263,17 +313,26 @@ Window {
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
                     border.width: 2
-                    border.color: "#b5b5b5"
+                    border.color: "#ffffff"
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    property bool selected: false // Ajoute une propriété pour gérer la sélection
+                    property bool selected: false
 
                     MouseArea {
                         id: mouseArea2
                         anchors.fill: parent
                         onClicked: {
-                            root2.selected = !root2.selected // Change l'état de sélection
-                            console.log(taskid2.text) // Affiche l'ID de la tâche dans le terminal
+                            if (selectedDelegate !== null) {
+                                selectedDelegate.selected = false
+                            }
+                            root2.selected = true
+                            selectedDelegate = root2
+
+                            selectedTaskId = taskid2.text
+                            selectedTaskName = taskname2.text
+
+                            console.log("Tâche sélectionnée ID:", selectedTaskId)
+                            console.log("Tâche sélectionnée Nom:", selectedTaskName)
                         }
                     }
 
@@ -339,45 +398,6 @@ Window {
                 }
             }
 
-            RoundButton {
-                id: addButton2
-                text: "+"
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                anchors.margins: 10
-                onClicked: {
-                    var component = Qt.createComponent("PopupCreateTask.qml");
-
-                    if (component.status === Component.Ready) {
-                        var PopupCreateTask = component.createObject(parent);
-
-                        if (PopupCreateTask === null) {
-                            console.error("Erreur lors de la création de PopupCreateTask");
-                        } else {
-                            if (taskHandlerCreate) {
-                                PopupCreateTask.addTaskName.connect(taskHandlerCreate.add_task_name);
-                                PopupCreateTask.addTaskPriority.connect(taskHandlerCreate.add_task_priority);
-                                PopupCreateTask.addTag.connect(taskHandlerCreate.add_tag);
-                                PopupCreateTask.removeLastTag.connect(taskHandlerCreate.remove_last_tag);
-                                PopupCreateTask.addUser.connect(taskHandlerCreate.add_user);
-                                PopupCreateTask.removeLastUser.connect(taskHandlerCreate.remove_last_user);
-                                PopupCreateTask.addStartDate.connect(taskHandlerCreate.add_start_date);
-                                PopupCreateTask.addEndDate.connect(taskHandlerCreate.add_end_date);
-                                PopupCreateTask.taskCompleted.connect(taskHandlerCreate.task_completed);
-                                PopupCreateTask.validateInfo.connect(function() {
-                                            taskHandlerCreate.validate_info();
-                                            taskHandlerBackend.fetchTasks();
-                                        });
-                            } else {
-                                console.error("Erreur : TaskHandler est introuvable.");
-                            }
-                        }
-                    } else {
-                        console.error("Erreur lors du chargement de PopupCreateTask.qml");
-                    }
-                }
-            }
-
             Connections {
                 target: taskHandlerBackend
                 onTasksFetchedPriority1: function (tasks) {
@@ -427,17 +447,26 @@ Window {
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
                     border.width: 2
-                    border.color: "#b5b5b5"
+                    border.color: "#ffffff"
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    property bool selected: false // Ajoute une propriété pour gérer la sélection
+                    property bool selected: false
 
                     MouseArea {
                         id: mouseArea3
                         anchors.fill: parent
                         onClicked: {
-                            root3.selected = !root3.selected // Change l'état de sélection
-                            console.log(taskid3.text) // Affiche l'ID de la tâche dans le terminal
+                            if (selectedDelegate !== null) {
+                                selectedDelegate.selected = false
+                            }
+                            root3.selected = true
+                            selectedDelegate = root3
+
+                            selectedTaskId = taskid3.text
+                            selectedTaskName = taskname3.text
+
+                            console.log("Tâche sélectionnée ID:", selectedTaskId)
+                            console.log("Tâche sélectionnée Nom:", selectedTaskName)
                         }
                     }
 
@@ -503,45 +532,6 @@ Window {
                 }
             }
 
-            RoundButton {
-                id: addButton3
-                text: "+"
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                anchors.margins: 10
-                onClicked: {
-                    var component = Qt.createComponent("PopupCreateTask.qml");
-
-                    if (component.status === Component.Ready) {
-                        var PopupCreateTask = component.createObject(parent);
-
-                        if (PopupCreateTask === null) {
-                            console.error("Erreur lors de la création de PopupCreateTask");
-                        } else {
-                            if (taskHandlerCreate) {
-                                PopupCreateTask.addTaskName.connect(taskHandlerCreate.add_task_name);
-                                PopupCreateTask.addTaskPriority.connect(taskHandlerCreate.add_task_priority);
-                                PopupCreateTask.addTag.connect(taskHandlerCreate.add_tag);
-                                PopupCreateTask.removeLastTag.connect(taskHandlerCreate.remove_last_tag);
-                                PopupCreateTask.addUser.connect(taskHandlerCreate.add_user);
-                                PopupCreateTask.removeLastUser.connect(taskHandlerCreate.remove_last_user);
-                                PopupCreateTask.addStartDate.connect(taskHandlerCreate.add_start_date);
-                                PopupCreateTask.addEndDate.connect(taskHandlerCreate.add_end_date);
-                                PopupCreateTask.taskCompleted.connect(taskHandlerCreate.task_completed);
-                                PopupCreateTask.validateInfo.connect(function() {
-                                            taskHandlerCreate.validate_info();
-                                            taskHandlerBackend.fetchTasks();
-                                        });
-                            } else {
-                                console.error("Erreur : TaskHandler est introuvable.");
-                            }
-                        }
-                    } else {
-                        console.error("Erreur lors du chargement de PopupCreateTask.qml");
-                    }
-                }
-            }
-
             Connections {
                 target: taskHandlerBackend
                 onTasksFetchedPriority0: function (tasks) {
@@ -591,17 +581,26 @@ Window {
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
                     border.width: 2
-                    border.color: "#b5b5b5"
+                    border.color: "#ffffff"
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    property bool selected: false // Ajoute une propriété pour gérer la sélection
+                    property bool selected: false
 
                     MouseArea {
                         id: mouseArea4
                         anchors.fill: parent
                         onClicked: {
-                            root4.selected = !root4.selected // Change l'état de sélection
-                            console.log(taskid4.text) // Affiche l'ID de la tâche dans le terminal
+                            if (selectedDelegate !== null) {
+                                selectedDelegate.selected = false
+                            }
+                            root4.selected = true
+                            selectedDelegate = root4
+
+                            selectedTaskId = taskid4.text
+                            selectedTaskName = taskname4.text
+
+                            console.log("Tâche sélectionnée ID:", selectedTaskId)
+                            console.log("Tâche sélectionnée Nom:", selectedTaskName)
                         }
                     }
 
@@ -663,45 +662,6 @@ Window {
                         y: 35
                         text: qsTr(model.tag)
                         font.pixelSize: 12
-                    }
-                }
-            }
-
-            RoundButton {
-                id: addButton4
-                text: "+"
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                anchors.margins: 10
-                onClicked: {
-                    var component = Qt.createComponent("PopupCreateTask.qml");
-
-                    if (component.status === Component.Ready) {
-                        var PopupCreateTask = component.createObject(parent);
-
-                        if (PopupCreateTask === null) {
-                            console.error("Erreur lors de la création de PopupCreateTask");
-                        } else {
-                            if (taskHandlerCreate) {
-                                PopupCreateTask.addTaskName.connect(taskHandlerCreate.add_task_name);
-                                PopupCreateTask.addTaskPriority.connect(taskHandlerCreate.add_task_priority);
-                                PopupCreateTask.addTag.connect(taskHandlerCreate.add_tag);
-                                PopupCreateTask.removeLastTag.connect(taskHandlerCreate.remove_last_tag);
-                                PopupCreateTask.addUser.connect(taskHandlerCreate.add_user);
-                                PopupCreateTask.removeLastUser.connect(taskHandlerCreate.remove_last_user);
-                                PopupCreateTask.addStartDate.connect(taskHandlerCreate.add_start_date);
-                                PopupCreateTask.addEndDate.connect(taskHandlerCreate.add_end_date);
-                                PopupCreateTask.taskCompleted.connect(taskHandlerCreate.task_completed);
-                                PopupCreateTask.validateInfo.connect(function() {
-                                            taskHandlerCreate.validate_info();
-                                            taskHandlerBackend.fetchTasks();
-                                        });
-                            } else {
-                                console.error("Erreur : TaskHandler est introuvable.");
-                            }
-                        }
-                    } else {
-                        console.error("Erreur lors du chargement de PopupCreateTask.qml");
                     }
                 }
             }
