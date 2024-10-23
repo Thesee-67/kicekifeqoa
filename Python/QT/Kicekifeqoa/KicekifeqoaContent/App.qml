@@ -2,24 +2,51 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
-ApplicationWindow {
+Window {
     visible: true
-    width: 940
-    height: 600
+    color: "#4e598c"
+    width: 1000
+    height: 900
     title: "Colonne"
+
+    Rectangle {
+        id: rectangle
+        x: 26
+        y: 22
+        width: 955
+        height: 856
+        color: "#ffffff"
+        radius: 10
+        border.color: "#bc6c25"
+        border.width: 0
+        layer.enabled: false
+
+        Image {
+            id: image
+            x: 12
+            y: 11
+            width: 100
+            height: 96
+            source: "logo.png"
+            fillMode: Image.PreserveAspectFit
+        }
+    }
 
     GridLayout {
         anchors.fill: parent
+        anchors.leftMargin: 39
+        anchors.rightMargin: 32
+        anchors.topMargin: 142
+        anchors.bottomMargin: 34
         columns: 4
         columnSpacing: 10
 
-        // Première colonne - Liste de tâches
         Rectangle {
             id: taskArea
-            color: "#eeeeee"
+            color: "#ff8c42"
             radius: 10
-            border.width: 1
-            border.color: "gray"
+            border.width: 0
+            border.color: "#bc6c25"
             width: 225
             Layout.fillHeight: true
 
@@ -35,7 +62,7 @@ ApplicationWindow {
                 id: taskListView
                 model: taskModel
                 anchors.fill: parent
-                anchors.topMargin: 12.5
+                anchors.topMargin: 51
                 anchors.bottomMargin: 12.5
                 spacing: 2
 
@@ -44,9 +71,9 @@ ApplicationWindow {
                     width: 200
                     height: 100
                     radius: 5
-                    color: selected ? "#9d9d9d" : "#bcbcbc" // Change la couleur si sélectionnée
-                    border.width: 1
-                    border.color: "gray"
+                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
+                    border.width: 2
+                    border.color: "#b5b5b5"
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     property bool selected: false // Ajoute une propriété pour gérer la sélection
@@ -119,78 +146,6 @@ ApplicationWindow {
                         text: qsTr(model.tag)
                         font.pixelSize: 12
                     }
-
-                    RoundButton {
-                        id: editcard
-                        x: 132
-                        y: 57
-                        width: 30
-                        height: 30
-                        text: "🖌️"
-                        onClicked: {
-                            var component = Qt.createComponent("PopupUpdateTask.qml");
-
-                            if (component.status === Component.Ready) {
-                                var PopupUpdateTask = component.createObject(parent);
-
-                                if (PopupUpdateTask === null) {
-                                    console.error("Erreur lors de la création de PopupUpdateTask");
-                                } else {
-                                    if (taskHandlerUpdate) {
-                                        PopupUpdateTask.updateTaskName.connect(taskHandlerUpdate.update_task_name);
-                                        PopupUpdateTask.updateTaskPriority.connect(taskHandlerUpdate.update_task_priority);
-                                        PopupUpdateTask.addTag.connect(taskHandlerUpdate.add_tag);
-                                        PopupUpdateTask.removeLastTag.connect(taskHandlerUpdate.remove_last_tag);
-                                        PopupUpdateTask.addUser.connect(taskHandlerUpdate.add_user);
-                                        PopupUpdateTask.removeLastUser.connect(taskHandlerUpdate.remove_last_user);
-                                        PopupUpdateTask.updateStartDate.connect(taskHandlerUpdate.update_start_date);
-                                        PopupUpdateTask.updateEndDate.connect(taskHandlerUpdate.update_end_date);
-                                        PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
-                                        PopupUpdateTask.validateUpdateInfo.connect(taskHandlerUpdate.validate_update_info);
-                                    } else {
-                                        console.error("Erreur : TaskHandler est introuvable.");
-                                    }
-                                }
-                            } else {
-                                console.error("Erreur lors du chargement de PopupUpdateTask.qml");
-                            }
-                        }
-                    }
-
-                    RoundButton {
-                        id: deletecard
-                        x: 165
-                        y: 57
-                        width: 30
-                        height: 30
-                        text: "🗑️"
-                        onClicked: {
-                            var component = Qt.createComponent("PopupDeleteTask.qml");
-
-                            if (component.status === Component.Ready) {
-                                var PopupDeleteTask = component.createObject(parent, {
-                                    "taskName": taskname.text,
-                                    "taskID": taskid.text
-                                });
-
-                                if (PopupDeleteTask === null) {
-                                    console.error("Erreur lors de la création de PopupDeleteTask");
-                                } else {
-                                    if (taskHandlerDelete) {
-                                        PopupDeleteTask.taskId.connect(taskHandlerDelete.set_task_id);
-                                        PopupDeleteTask.validateDeleteInfo.connect(function() {
-                                            taskHandlerDelete.validate_delete_info();
-                                            taskHandlerBackend.fetchTasks();
-                                        });
-                                    } else {
-                                        console.error("Erreur : taskHandlerDelete n'est pas initialisé");
-                                    }
-                                }
-                            } else {
-                                console.error("Erreur lors du chargement de PopupDeleteTask.qml");
-                            }
-                        }
-                    }
                 }
             }
 
@@ -243,21 +198,45 @@ ApplicationWindow {
                             "name": tasks[i].name,
                             "end_date": tasks[i].end_date,
                             "checked": tasks[i].checked,
-                            "priority": tasks[i].priority,
-                            "tag": tasks[i].tag
-                        });
+                                             "priority": tasks[i].priority,
+                                             "tag": tasks[i].tag
+                                         });
                     }
                 }
+            }
+
+            RoundButton {
+                id: modify
+                x: 833
+                y: -89
+                text: "🖌️"
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: 10
+                anchors.rightMargin: -648
+                anchors.bottomMargin: 773
+            }
+
+            RoundButton {
+                id: remove
+                x: 881
+                y: -88
+                text: "🗑️"
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: 10
+                anchors.rightMargin: -696
+                anchors.bottomMargin: 772
             }
         }
 
 
         Rectangle {
             id: taskArea2
-            color: "#eeeeee"
+            color: "#fcaf58"
             radius: 10
-            border.width: 1
-            border.color: "gray"
+            border.width: 0
+            border.color: "#bc6c25"
             width: 225
             Layout.fillHeight: true
 
@@ -273,7 +252,7 @@ ApplicationWindow {
                 id: taskListView2
                 model: taskModel2
                 anchors.fill: parent
-                anchors.topMargin: 12.5
+                anchors.topMargin: 51
                 anchors.bottomMargin: 12.5
                 spacing: 2
 
@@ -281,11 +260,22 @@ ApplicationWindow {
                     id: root2
                     width: 200
                     height: 100
-                    color: "#bcbcbc"
                     radius: 5
-                    border.width: 1
-                    border.color: "gray"
+                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
+                    border.width: 2
+                    border.color: "#b5b5b5"
                     anchors.horizontalCenter: parent.horizontalCenter
+
+                    property bool selected: false // Ajoute une propriété pour gérer la sélection
+
+                    MouseArea {
+                        id: mouseArea2
+                        anchors.fill: parent
+                        onClicked: {
+                            root2.selected = !root2.selected // Change l'état de sélection
+                            console.log(taskid2.text) // Affiche l'ID de la tâche dans le terminal
+                        }
+                    }
 
                     Text {
                         id: taskname2
@@ -345,80 +335,6 @@ ApplicationWindow {
                         y: 35
                         text: qsTr(model.tag)
                         font.pixelSize: 12
-                    }
-
-                    // Bouton de modification
-                    RoundButton {
-                        id: editcard2
-                        x: 132
-                        y: 57
-                        width: 30
-                        height: 30
-                        text: "🖌️"
-                        onClicked: {
-                            var component = Qt.createComponent("PopupUpdateTask.qml");
-
-                            if (component.status === Component.Ready) {
-                                var PopupUpdateTask = component.createObject(parent);
-
-                                if (PopupUpdateTask === null) {
-                                    console.error("Erreur lors de la création de PopupUpdateTask");
-                                } else {
-                                    if (taskHandlerUpdate) {
-                                        PopupUpdateTask.updateTaskName.connect(taskHandlerUpdate.update_task_name);
-                                        PopupUpdateTask.updateTaskPriority.connect(taskHandlerUpdate.update_task_priority);
-                                        PopupUpdateTask.addTag.connect(taskHandlerUpdate.add_tag);
-                                        PopupUpdateTask.removeLastTag.connect(taskHandlerUpdate.remove_last_tag);
-                                        PopupUpdateTask.addUser.connect(taskHandlerUpdate.add_user);
-                                        PopupUpdateTask.removeLastUser.connect(taskHandlerUpdate.remove_last_user);
-                                        PopupUpdateTask.updateStartDate.connect(taskHandlerUpdate.update_start_date);
-                                        PopupUpdateTask.updateEndDate.connect(taskHandlerUpdate.update_end_date);
-                                        PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
-                                        PopupUpdateTask.validateUpdateInfo.connect(taskHandlerUpdate.validate_update_info);
-                                    } else {
-                                        console.error("Erreur : TaskHandler est introuvable.");
-                                    }
-                                }
-                            } else {
-                                console.error("Erreur lors du chargement de PopupUpdateTask.qml");
-                            }
-                        }
-                    }
-
-                    // Bouton pour supprimer la tâche
-                    RoundButton {
-                        id: deletecard2
-                        x: 165
-                        y: 57
-                        width: 30
-                        height: 30
-                        text: "🗑️"
-                        onClicked: {
-                            var component = Qt.createComponent("PopupDeleteTask.qml");
-
-                            if (component.status === Component.Ready) {
-                                var PopupDeleteTask = component.createObject(parent, {
-                                    "taskName": taskname2.text,
-                                    "taskID": taskid2.text
-                                });
-
-                                if (PopupDeleteTask === null) {
-                                    console.error("Erreur lors de la création de PopupDeleteTask");
-                                } else {
-                                    if (taskHandlerDelete) {
-                                        PopupDeleteTask.taskId.connect(taskHandlerDelete.set_task_id);
-                                        PopupDeleteTask.validateDeleteInfo.connect(function() {
-                                            taskHandlerDelete.validate_delete_info();
-                                            taskHandlerBackend.fetchTasks();
-                                        });
-                                    } else {
-                                        console.error("Erreur : taskHandlerDelete n'est pas initialisé");
-                                    }
-                                }
-                            } else {
-                                console.error("Erreur lors du chargement de PopupDeleteTask.qml");
-                            }
-                        }
                     }
                 }
             }
@@ -481,10 +397,10 @@ ApplicationWindow {
         }
         Rectangle {
             id: taskArea3
-            color: "#eeeeee"
+            color: "#f9c784"
             radius: 10
-            border.width: 1
-            border.color: "gray"
+            border.width: 0
+            border.color: "#bc6c25"
             width: 225
             Layout.fillHeight: true
 
@@ -500,7 +416,7 @@ ApplicationWindow {
                 id: taskListView3
                 model: taskModel3
                 anchors.fill: parent
-                anchors.topMargin: 12.5
+                anchors.topMargin: 51
                 anchors.bottomMargin: 12.5
                 spacing: 2
 
@@ -508,11 +424,22 @@ ApplicationWindow {
                     id: root3
                     width: 200
                     height: 100
-                    color: "#bcbcbc"
                     radius: 5
-                    border.width: 1
-                    border.color: "gray"
+                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
+                    border.width: 2
+                    border.color: "#b5b5b5"
                     anchors.horizontalCenter: parent.horizontalCenter
+
+                    property bool selected: false // Ajoute une propriété pour gérer la sélection
+
+                    MouseArea {
+                        id: mouseArea3
+                        anchors.fill: parent
+                        onClicked: {
+                            root3.selected = !root3.selected // Change l'état de sélection
+                            console.log(taskid3.text) // Affiche l'ID de la tâche dans le terminal
+                        }
+                    }
 
                     Text {
                         id: taskname3
@@ -572,80 +499,6 @@ ApplicationWindow {
                         y: 35
                         text: qsTr(model.tag)
                         font.pixelSize: 12
-                    }
-
-                    // Bouton de modification
-                    RoundButton {
-                        id: editcard3
-                        x: 132
-                        y: 57
-                        width: 30
-                        height: 30
-                        text: "🖌️"
-                        onClicked: {
-                            var component = Qt.createComponent("PopupUpdateTask.qml");
-
-                            if (component.status === Component.Ready) {
-                                var PopupUpdateTask = component.createObject(parent);
-
-                                if (PopupUpdateTask === null) {
-                                    console.error("Erreur lors de la création de PopupUpdateTask");
-                                } else {
-                                    if (taskHandlerUpdate) {
-                                        PopupUpdateTask.updateTaskName.connect(taskHandlerUpdate.update_task_name);
-                                        PopupUpdateTask.updateTaskPriority.connect(taskHandlerUpdate.update_task_priority);
-                                        PopupUpdateTask.addTag.connect(taskHandlerUpdate.add_tag);
-                                        PopupUpdateTask.removeLastTag.connect(taskHandlerUpdate.remove_last_tag);
-                                        PopupUpdateTask.addUser.connect(taskHandlerUpdate.add_user);
-                                        PopupUpdateTask.removeLastUser.connect(taskHandlerUpdate.remove_last_user);
-                                        PopupUpdateTask.updateStartDate.connect(taskHandlerUpdate.update_start_date);
-                                        PopupUpdateTask.updateEndDate.connect(taskHandlerUpdate.update_end_date);
-                                        PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
-                                        PopupUpdateTask.validateUpdateInfo.connect(taskHandlerUpdate.validate_update_info);
-                                    } else {
-                                        console.error("Erreur : TaskHandler est introuvable.");
-                                    }
-                                }
-                            } else {
-                                console.error("Erreur lors du chargement de PopupUpdateTask.qml");
-                            }
-                        }
-                    }
-
-                    // Bouton pour supprimer la tâche
-                    RoundButton {
-                        id: deletecard3
-                        x: 165
-                        y: 57
-                        width: 30
-                        height: 30
-                        text: "🗑️"
-                        onClicked: {
-                            var component = Qt.createComponent("PopupDeleteTask.qml");
-
-                            if (component.status === Component.Ready) {
-                                var PopupDeleteTask = component.createObject(parent, {
-                                    "taskName": taskname3.text,
-                                    "taskID": taskid3.text
-                                });
-
-                                if (PopupDeleteTask === null) {
-                                    console.error("Erreur lors de la création de PopupDeleteTask");
-                                } else {
-                                    if (taskHandlerDelete) {
-                                        PopupDeleteTask.taskId.connect(taskHandlerDelete.set_task_id);
-                                        PopupDeleteTask.validateDeleteInfo.connect(function() {
-                                            taskHandlerDelete.validate_delete_info();
-                                            taskHandlerBackend.fetchTasks();
-                                        });
-                                    } else {
-                                        console.error("Erreur : taskHandlerDelete n'est pas initialisé");
-                                    }
-                                }
-                            } else {
-                                console.error("Erreur lors du chargement de PopupDeleteTask.qml");
-                            }
-                        }
                     }
                 }
             }
@@ -710,8 +563,8 @@ ApplicationWindow {
             id: taskArea4
             color: "#eeeeee"
             radius: 10
-            border.width: 1
-            border.color: "gray"
+            border.width: 0
+            border.color: "#bc6c25"
             width: 225
             Layout.fillHeight: true
 
@@ -727,7 +580,7 @@ ApplicationWindow {
                 id: taskListView4
                 model: taskModel4
                 anchors.fill: parent
-                anchors.topMargin: 12.5
+                anchors.topMargin: 51
                 anchors.bottomMargin: 12.5
                 spacing: 2
 
@@ -735,11 +588,22 @@ ApplicationWindow {
                     id: root4
                     width: 200
                     height: 100
-                    color: "#bcbcbc"
                     radius: 5
-                    border.width: 1
-                    border.color: "gray"
+                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
+                    border.width: 2
+                    border.color: "#b5b5b5"
                     anchors.horizontalCenter: parent.horizontalCenter
+
+                    property bool selected: false // Ajoute une propriété pour gérer la sélection
+
+                    MouseArea {
+                        id: mouseArea4
+                        anchors.fill: parent
+                        onClicked: {
+                            root4.selected = !root4.selected // Change l'état de sélection
+                            console.log(taskid4.text) // Affiche l'ID de la tâche dans le terminal
+                        }
+                    }
 
                     Text {
                         id: taskname4
@@ -800,80 +664,6 @@ ApplicationWindow {
                         text: qsTr(model.tag)
                         font.pixelSize: 12
                     }
-
-                    // Bouton de modification
-                    RoundButton {
-                        id: editcard4
-                        x: 132
-                        y: 57
-                        width: 30
-                        height: 30
-                        text: "🖌️"
-                        onClicked: {
-                            var component = Qt.createComponent("PopupUpdateTask.qml");
-
-                            if (component.status === Component.Ready) {
-                                var PopupUpdateTask = component.createObject(parent);
-
-                                if (PopupUpdateTask === null) {
-                                    console.error("Erreur lors de la création de PopupUpdateTask");
-                                } else {
-                                    if (taskHandlerUpdate) {
-                                        PopupUpdateTask.updateTaskName.connect(taskHandlerUpdate.update_task_name);
-                                        PopupUpdateTask.updateTaskPriority.connect(taskHandlerUpdate.update_task_priority);
-                                        PopupUpdateTask.addTag.connect(taskHandlerUpdate.add_tag);
-                                        PopupUpdateTask.removeLastTag.connect(taskHandlerUpdate.remove_last_tag);
-                                        PopupUpdateTask.addUser.connect(taskHandlerUpdate.add_user);
-                                        PopupUpdateTask.removeLastUser.connect(taskHandlerUpdate.remove_last_user);
-                                        PopupUpdateTask.updateStartDate.connect(taskHandlerUpdate.update_start_date);
-                                        PopupUpdateTask.updateEndDate.connect(taskHandlerUpdate.update_end_date);
-                                        PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
-                                        PopupUpdateTask.validateUpdateInfo.connect(taskHandlerUpdate.validate_update_info);
-                                    } else {
-                                        console.error("Erreur : TaskHandler est introuvable.");
-                                    }
-                                }
-                            } else {
-                                console.error("Erreur lors du chargement de PopupUpdateTask.qml");
-                            }
-                        }
-                    }
-
-                    // Bouton pour supprimer la tâche
-                    RoundButton {
-                        id: deletecard4
-                        x: 165
-                        y: 57
-                        width: 30
-                        height: 30
-                        text: "🗑️"
-                        onClicked: {
-                            var component = Qt.createComponent("PopupDeleteTask.qml");
-
-                            if (component.status === Component.Ready) {
-                                var PopupDeleteTask = component.createObject(parent, {
-                                    "taskName": taskname4.text,
-                                    "taskID": taskid4.text
-                                });
-
-                                if (PopupDeleteTask === null) {
-                                    console.error("Erreur lors de la création de PopupDeleteTask");
-                                } else {
-                                    if (taskHandlerDelete) {
-                                        PopupDeleteTask.taskId.connect(taskHandlerDelete.set_task_id);
-                                        PopupDeleteTask.validateDeleteInfo.connect(function() {
-                                            taskHandlerDelete.validate_delete_info();
-                                            taskHandlerBackend.fetchTasks();
-                                        });
-                                    } else {
-                                        console.error("Erreur : taskHandlerDelete n'est pas initialisé");
-                                    }
-                                }
-                            } else {
-                                console.error("Erreur lors du chargement de PopupDeleteTask.qml");
-                            }
-                        }
-                    }
                 }
             }
 
@@ -926,12 +716,129 @@ ApplicationWindow {
                             "name": tasks[i].name,
                             "end_date": tasks[i].end_date,
                             "checked": tasks[i].checked,
-                            "priority": tasks[i].priority,
-                            "tag": tasks[i].tag
-                        });
+                                              "priority": tasks[i].priority,
+                                              "tag": tasks[i].tag
+                                          });
                     }
-                }
+                 }
             }
+        }
+    }
+
+    Rectangle {
+        id: rectangle1
+        x: 146
+        y: 33
+        width: 719
+        height: 96
+        color: "#eeeeee"
+        radius: 10
+        border.color: "#bc6c25"
+        border.width: 0
+        layer.enabled: false
+    }
+
+    Rectangle {
+        id: rectangle4
+        x: 515
+        y: 147
+        width: 213
+        height: 42
+        color: "#ffffff"
+        radius: 10
+        border.color: "#bc6c25"
+        border.width: 0
+        layer.enabled: false
+    }
+
+    Rectangle {
+        id: rectangle3
+        x: 280
+        y: 147
+        width: 213
+        height: 42
+        color: "#ffffff"
+        radius: 10
+        border.color: "#bc6c25"
+        border.width: 0
+        layer.enabled: false
+    }
+
+    Rectangle {
+        id: rectangle5
+        x: 750
+        y: 147
+        width: 213
+        height: 42
+        color: "#ffffff"
+        radius: 10
+        border.color: "#bc6c25"
+        border.width: 0
+        layer.enabled: false
+    }
+
+    Rectangle {
+        id: rectangle2
+        x: 45
+        y: 147
+        width: 213
+        height: 42
+        color: "#ffffff"
+        radius: 10
+        border.color: "#bc6c25"
+        border.width: 0
+        layer.enabled: false
+
+        Text {
+            id: _text
+            x: 0
+            y: 2
+            width: 213
+            height: 38
+            color: "#ff8c42"
+            text: qsTr("Urgent")
+            font.pixelSize: 28
+            horizontalAlignment: Text.AlignHCenter
+            font.family: "Verdana"
+        }
+
+        Text {
+            id: _text1
+            x: 234
+            y: 2
+            width: 213
+            height: 38
+            color: "#fcaf58"
+            text: qsTr("En cours")
+            font.pixelSize: 28
+            horizontalAlignment: Text.AlignHCenter
+            font.family: "Verdana"
+        }
+
+        Text {
+            id: _text2
+            x: 470
+            y: 2
+            width: 213
+            height: 38
+            color: "#f9c784"
+            text: qsTr("A Faire")
+            font.pixelSize: 28
+            horizontalAlignment: Text.AlignHCenter
+            font.family: "Verdana"
+        }
+
+        Text {
+            id: _text3
+            x: 705
+            y: 2
+            width: 213
+            height: 38
+            color: "#eeeeee"
+            text: qsTr("Fini")
+            font.pixelSize: 28
+            horizontalAlignment: Text.AlignHCenter
+            font.family: "Verdana"
         }
     }
 }
