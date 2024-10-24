@@ -146,7 +146,6 @@ Window {
             anchors.bottom: _text1.top
             anchors.leftMargin: -30
             anchors.bottomMargin: 6
-            anchors.horizontalCenter: parent.horizontalCenter
         }
 
         Text {
@@ -178,7 +177,7 @@ Window {
         font.pixelSize: 20
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        anchors.horizontalCenter: rectangle5.horizontalCenter
+
 
     TextInput {
         id: textInput3
