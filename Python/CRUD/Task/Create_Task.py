@@ -1,10 +1,12 @@
 import mysql.connector
 from mysql.connector import (connection)
+from mysql.connector import Error
+from datetime import datetime
 import requests
 import json
 
 # URL de ton API PHP
-url = "http://kicekifeqoa.alwaysdata.net/api.php"
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
 # Configuration de la connexion
 config = {
@@ -18,19 +20,20 @@ config = {
 conn = connection.MySQLConnection(**config)
 cursor = conn.cursor()
 
-def Close_connection_BDD(conn,cursor):
+def close_connection_BDD(conn,cursor):
     cursor.close()
     conn.close()
     print("La connexion à la base de données a été fermée.")
 
-def delete_subtask(table, column, value):
-    post_data = {
-        'table': table,
-        'column': column,
-        'value': value
-    }
-    response = requests.delete(url, json=post_data)
-    print(response.json())
-    Close_connection_BDD(conn, cursor)
-
-#delete_subtask("Subtask", "id_subtask", "1")
+def create_task(table, data):
+    try:
+        post_data = {
+            'table': table,
+            'action': 'insert',
+            'data': data
+        }
+        response = requests.post(url, json=post_data)
+        print(response.json())
+        close_connection_BDD(conn, cursor)
+    except Error as e:
+        print(f"Erreur lors de l'insertion : {e}")

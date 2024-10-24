@@ -4,7 +4,7 @@ import requests
 import json
 
 # URL de ton API PHP
-url = "https://kicekifeqoa.alwaysdata.net/api.php"
+url = "http://kicekifeqoa.alwaysdata.net/api.php"
 
 # Configuration de la connexion
 config = {
@@ -18,12 +18,12 @@ config = {
 conn = connection.MySQLConnection(**config)
 cursor = conn.cursor()
 
-def Close_connection_BDD(conn,cursor):
+def close_connection_BDD(conn,cursor):
     cursor.close()
     conn.close()
     print("La connexion à la base de données a été fermée.")
 
-def delete_task(table, column, value):
+def delete_group(table, column, value):
     post_data = {
         'table': table,
         'column': column,
@@ -31,6 +31,5 @@ def delete_task(table, column, value):
     }
     response = requests.delete(url, json=post_data)
     print(response.json())
-    Close_connection_BDD(conn, cursor)
+    close_connection_BDD(conn, cursor)
 
-#delete_task("Task", "id_task", "1")

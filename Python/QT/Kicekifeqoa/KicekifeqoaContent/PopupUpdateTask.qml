@@ -1,5 +1,6 @@
-import QtQuick
-import QtQuick.Controls
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 
 Window {
     id: popupupdate
@@ -7,6 +8,7 @@ Window {
     width: 400
     height: 200
     title: "Modifier Tâche"
+    flags: Qt.FramelessWindowHint
 
     signal updateTaskName(string updatetaskname)
     signal updateTaskPriority(int updatepriority)

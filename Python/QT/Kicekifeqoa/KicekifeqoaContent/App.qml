@@ -1,135 +1,845 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Window 2.15
 
 Window {
-    width: 600
-    height: 400
     visible: true
+    color: "#4e598c"
+    width: 1000
+    height: 800
     title: "Kicekifeqoa"
+    flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowSystemMenuHint | Qt.WindowCloseButtonHint
+    minimumWidth: 1000
+    maximumWidth: 1000
+    minimumHeight: 800
+    maximumHeight: 800
 
-    ListModel {
-        id: taskModel
+    property string selectedTaskName: ""
+    property string selectedTaskId: ""
+    property var selectedDelegate: null
+
+    Rectangle {
+        id: rectangle
+        x: 26
+        y: 22
+        width: 955
+        height: 754
+        color: "#ffffff"
+        radius: 10
+        border.color: "#bc6c25"
+        border.width: 0
+        layer.enabled: false
+
+        Image {
+            id: image
+            x: 12
+            y: 11
+            width: 100
+            height: 96
+            source: "logo.png"
+            fillMode: Image.PreserveAspectFit
+        }
     }
 
-    Component.onCompleted: {
-        taskHandlerBackend.fetchTasks()
-    }
-
-    ListView {
-        id: taskListView
-        model: taskModel
+    GridLayout {
         anchors.fill: parent
+        anchors.leftMargin: 39
+        anchors.rightMargin: 32
+        anchors.topMargin: 142
+        anchors.bottomMargin: 34
+        columns: 4
+        columnSpacing: 10
 
-        delegate: Item {
-            width: parent.width
-            height: 50
+        Rectangle {
+            id: taskArea
+            color: "#ff8c42"
+            radius: 10
+            border.width: 0
+            border.color: "#bc6c25"
+            width: 225
+            Layout.fillHeight: true
 
-            RowLayout {
-                Text {
-                    text: model.name
-                    Layout.preferredWidth: 150
-                }
-                Text {
-                    text: "Priority: " + model.priority
-                    Layout.preferredWidth: 100
-                }
-                Text {
-                    text: "End: " + model.end_date
-                    Layout.preferredWidth: 150
-                }
-                Text {
-                    text: "Checked: " + model.checked
-                    Layout.preferredWidth: 100
-                }
-                Text {
-                    text: "Tag: " + model.tag
-                    Layout.preferredWidth: 150
-                }
+            ListModel {
+                id: taskModel
+            }
 
-                // Bouton pour modifier la tâche
-                RoundButton {
-                    id: editcard
-                    text: "🖌️"
-                    Layout.preferredWidth: 80
+            Component.onCompleted: {
+                taskHandlerBackend.fetchTasks()
+            }
 
-                    onClicked: {
-                        // Chargement dynamique de l'élément PopupUpdateTask à partir de PopupUpdateTask.qml
-                        var component = Qt.createComponent("PopupUpdateTask.qml");
+            ListView {
+                id: taskListView
+                model: taskModel
+                anchors.fill: parent
+                anchors.topMargin: 51
+                anchors.bottomMargin: 12.5
+                spacing: 2
 
-                        if (component.status === Component.Ready) {
-                            var PopupUpdateTask = component.createObject(parent);
+                delegate: Rectangle {
+                    id: root
+                    width: 200
+                    height: 100
+                    radius: 5
+                    color: selected ? "#dcdcdc" : "#eeeeee"
+                    border.width: 2
+                    border.color: "#ffffff"
+                    anchors.horizontalCenter: parent.horizontalCenter
 
-                            if (PopupUpdateTask === null) {
-                                console.error("Erreur lors de la création de PopupUpdateTask");
+                    property bool selected: false
+
+                    MouseArea {
+                        id: mouseArea
+                        anchors.fill: parent
+                        onClicked: {
+                            if (root.selected) {
+                                root.selected = false
+                                selectedDelegate = null
+                                selectedTaskId = ""
+                                selectedTaskName = ""
+
+                                console.log("Aucune tâche sélectionnée")
                             } else {
-                                if (taskHandlerUpdate) {
-                                    // Associer l'ID de la tâche en cours
-                                    PopupUpdateTask.updateTaskName.connect(taskHandlerUpdate.update_task_name);
-                                    PopupUpdateTask.updateTaskPriority.connect(taskHandlerUpdate.update_task_priority);
-                                    PopupUpdateTask.addTag.connect(taskHandlerUpdate.add_tag);
-                                    PopupUpdateTask.removeLastTag.connect(taskHandlerUpdate.remove_last_tag);
-                                    PopupUpdateTask.addUser.connect(taskHandlerUpdate.add_user);
-                                    PopupUpdateTask.removeLastUser.connect(taskHandlerUpdate.remove_last_user);
-                                    PopupUpdateTask.updateStartDate.connect(taskHandlerUpdate.update_start_date);
-                                    PopupUpdateTask.updateEndDate.connect(taskHandlerUpdate.update_end_date);
-                                    PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
-                                    PopupUpdateTask.validateUpdateInfo.connect(taskHandlerUpdate.validate_update_info);
-                                } else {
-                                    console.error("Erreur : TaskHandler est introuvable.");
+                                if (selectedDelegate !== null) {
+                                    selectedDelegate.selected = false
                                 }
+
+                                root.selected = true
+                                selectedDelegate = root
+
+                                selectedTaskId = taskid.text
+                                selectedTaskName = taskname.text
+
+                                console.log("Tâche sélectionnée ID:", selectedTaskId)
+                                console.log("Tâche sélectionnée Nom:", selectedTaskName)
                             }
-                        } else {
-                            console.error("Erreur lors du chargement de PopupUpdateTask.qml");
                         }
                     }
+
+
+                    Text {
+                        id: taskname
+                        x: 4
+                        y: 6
+                        text: qsTr(model.name)
+                        font.pixelSize: 17
+                        font.styleName: "Gras"
+                    }
+
+                    Text {
+                        id: taskid
+                        x: 150
+                        y: 25
+                        color: "#bcbcbc"
+                        text: model.id_task
+                        font.pixelSize: 17
+                        font.styleName: "Gras"
+                    }
+
+                    Text {
+                        id: enddate
+                        x: 4
+                        y: 57
+                        text: model.end_date
+                        font.pixelSize: 12
+                    }
+
+                    CheckBox {
+                        id: checked
+                        x: 152
+                        y: 2
+                        width: 60
+                        height: 30
+                        text: "Fini ?"
+                        checked: model.checked === 1
+                    }
+
+                    Text {
+                        id: priority
+                        x: 65
+                        y: 56
+                        font.pixelSize: 12
+                        text: {
+                            if (model.priority === 1) {
+                                return "🕐";
+                            } else if (model.priority === 2) {
+                                return "⚠️";
+                            } else {
+                                return "";
+                            }
+                        }
+                    }
+
+                    Text {
+                        id: tag
+                        x: 4
+                        y: 35
+                        text: qsTr(model.tag)
+                        font.pixelSize: 12
+                    }
                 }
+            }
 
-                // Bouton pour supprimer la tâche
-                RoundButton {
-                    id: deletecard
-                    text: "🗑️"
-                    Layout.preferredWidth: 80
+            RoundButton {
+                id: addButton
+                x: 866
+                y: -101
+                text: "+"
+                anchors.margins: 10
+                onClicked: {
+                    var component = Qt.createComponent("PopupCreateTask.qml");
 
-                    onClicked: {
+                    if (component.status === Component.Ready) {
+                        var PopupCreateTask = component.createObject(parent);
+
+                        if (PopupCreateTask === null) {
+                            console.error("Erreur lors de la création de PopupCreateTask");
+                        } else {
+                            if (taskHandlerCreate) {
+                                PopupCreateTask.addTaskName.connect(taskHandlerCreate.add_task_name);
+                                PopupCreateTask.addTaskPriority.connect(taskHandlerCreate.add_task_priority);
+                                PopupCreateTask.addTag.connect(taskHandlerCreate.add_tag);
+                                PopupCreateTask.removeLastTag.connect(taskHandlerCreate.remove_last_tag);
+                                PopupCreateTask.addUser.connect(taskHandlerCreate.add_user);
+                                PopupCreateTask.removeLastUser.connect(taskHandlerCreate.remove_last_user);
+                                PopupCreateTask.addEndDate.connect(taskHandlerCreate.add_end_date);
+                                PopupCreateTask.taskCompleted.connect(taskHandlerCreate.task_completed);
+                                PopupCreateTask.validateInfo.connect(function() {
+                                    taskHandlerCreate.validate_info();
+                                    taskHandlerBackend.fetchTasks();
+                                });
+                            } else {
+                                console.error("Erreur : TaskHandler est introuvable.");
+                            }
+                        }
+                    } else {
+                        console.error("Erreur lors du chargement de PopupCreateTask.qml");
+                    }
+                }
+            }
+
+            Connections {
+                target: taskHandlerBackend
+                onTasksFetchedPriority2: function (tasks) {
+                    taskModel.clear();  // Remplacer par taskModelPriority2
+                    for (var i = 0; i < tasks.length; i++) {
+                        taskModel.append({
+                            "id_task": tasks[i].id_task,
+                            "name": tasks[i].name,
+                            "end_date": tasks[i].end_date,
+                            "checked": tasks[i].checked,
+                                             "priority": tasks[i].priority,
+                                             "tag": tasks[i].tag
+                                         });
+                    }
+                }
+            }
+
+            RoundButton {
+                id: modify
+                x: 836
+                y: -71
+                text: "🖌️"
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: 10
+                anchors.rightMargin: -651
+                anchors.bottomMargin: 655
+            }
+
+            RoundButton {
+                id: remove
+                x: 884
+                y: -71
+                text: "🗑️"
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: 10
+                anchors.rightMargin: -699
+                anchors.bottomMargin: 655
+                onClicked: {
+                    if (selectedTaskName !== "" && selectedTaskId !== "") {
                         var component = Qt.createComponent("PopupDeleteTask.qml");
 
                         if (component.status === Component.Ready) {
-                            var PopupDeleteTask = component.createObject(parent);
+                            var PopupDeleteTask = component.createObject(parent, {
+                                "taskName": selectedTaskName,
+                                "taskID": selectedTaskId
+                            });
 
                             if (PopupDeleteTask === null) {
                                 console.error("Erreur lors de la création de PopupDeleteTask");
                             } else {
                                 if (taskHandlerDelete) {
-                                    // Associer l'ID de la tâche en cours
-                                    PopupDeleteTask.validateDeleteInfo.connect(taskHandlerDelete.validate_delete_info);
+                                    PopupDeleteTask.taskId.connect(taskHandlerDelete.set_task_id);
+                                    PopupDeleteTask.validateDeleteInfo.connect(function() {
+                                        taskHandlerDelete.validate_delete_info();
+                                        taskHandlerBackend.fetchTasks();
+                                    });
                                 } else {
-                                    console.error("Erreur : TaskHandler est introuvable.");
+                                    console.error("Erreur : taskHandlerDelete n'est pas initialisé");
                                 }
                             }
                         } else {
                             console.error("Erreur lors du chargement de PopupDeleteTask.qml");
                         }
+                    } else {
+                        console.error("Erreur : Aucune tâche sélectionnée.");
                     }
                 }
             }
         }
+
+        Rectangle {
+            id: taskArea2
+            color: "#fcaf58"
+            radius: 10
+            border.width: 0
+            border.color: "#bc6c25"
+            width: 225
+            Layout.fillHeight: true
+
+            ListModel {
+                id: taskModel2
+            }
+
+            Component.onCompleted: {
+                taskHandlerBackend.fetchTasks()
+            }
+
+            ListView {
+                id: taskListView2
+                model: taskModel2
+                anchors.fill: parent
+                anchors.topMargin: 51
+                anchors.bottomMargin: 12.5
+                spacing: 2
+
+                delegate: Rectangle {
+                    id: root2
+                    width: 200
+                    height: 100
+                    radius: 5
+                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
+                    border.width: 2
+                    border.color: "#ffffff"
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    property bool selected: false
+
+                    MouseArea {
+                        id: mouseArea2
+                        anchors.fill: parent
+                        onClicked: {
+                            if (root2.selected) {
+                                root2.selected = false
+                                selectedDelegate = null
+                                selectedTaskId = ""
+                                selectedTaskName = ""
+
+                                console.log("Aucune tâche sélectionnée")
+                            } else {
+                                if (selectedDelegate !== null) {
+                                    selectedDelegate.selected = false
+                                }
+
+                                root2.selected = true
+                                selectedDelegate = root2
+
+                                selectedTaskId = taskid2.text
+                                selectedTaskName = taskname2.text
+
+                                console.log("Tâche sélectionnée ID:", selectedTaskId)
+                                console.log("Tâche sélectionnée Nom:", selectedTaskName)
+                            }
+                        }
+                    }
+
+                    Text {
+                        id: taskname2
+                        x: 4
+                        y: 6
+                        text: qsTr(model.name)
+                        font.pixelSize: 17
+                        font.styleName: "Gras"
+                    }
+                    Text {
+                        id: taskid2
+                        x: 150
+                        y: 25
+                        color: "#bcbcbc"
+                        text: model.id_task
+                        font.pixelSize: 17
+                        font.styleName: "Gras"
+                    }
+
+                    Text {
+                        id: enddate2
+                        x: 4
+                        y: 57
+                        text: model.end_date
+                        font.pixelSize: 12
+                    }
+
+                    CheckBox {
+                        id: checked2
+                        x: 152
+                        y: 2
+                        width: 60
+                        height: 30
+                        text: "Fini ?"
+                        checked: model.checked === 1
+                    }
+
+                    Text {
+                        id: priority2
+                        x: 65
+                        y: 56
+                        font.pixelSize: 12
+                        text: {
+                            if (model.priority === 1) {
+                                return "🕐";
+                            } else if (model.priority === 2) {
+                                return "⚠️";
+                            } else {
+                                return "";
+                            }
+                        }
+                    }
+
+                    Text {
+                        id: tag2
+                        x: 4
+                        y: 35
+                        text: qsTr(model.tag)
+                        font.pixelSize: 12
+                    }
+                }
+            }
+
+            Connections {
+                target: taskHandlerBackend
+                onTasksFetchedPriority1: function (tasks) {
+                    taskModel2.clear();  // Remplacer par taskModelPriority1
+                    for (var i = 0; i < tasks.length; i++) {
+                        taskModel2.append({  // Remplacer taskModel2 par taskModelPriority1
+                            "id_task": tasks[i].id_task,
+                            "name": tasks[i].name,
+                            "end_date": tasks[i].end_date,
+                            "checked": tasks[i].checked,
+                            "priority": tasks[i].priority,
+                            "tag": tasks[i].tag
+                        });
+                    }
+                }
+            }
+        }
+        Rectangle {
+            id: taskArea3
+            color: "#f9c784"
+            radius: 10
+            border.width: 0
+            border.color: "#bc6c25"
+            width: 225
+            Layout.fillHeight: true
+
+            ListModel {
+                id: taskModel3
+            }
+
+            Component.onCompleted: {
+                taskHandlerBackend.fetchTasks()
+            }
+
+            ListView {
+                id: taskListView3
+                model: taskModel3
+                anchors.fill: parent
+                anchors.topMargin: 51
+                anchors.bottomMargin: 12.5
+                spacing: 2
+
+                delegate: Rectangle {
+                    id: root3
+                    width: 200
+                    height: 100
+                    radius: 5
+                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
+                    border.width: 2
+                    border.color: "#ffffff"
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    property bool selected: false
+
+                    MouseArea {
+                        id: mouseArea3
+                        anchors.fill: parent
+                        onClicked: {
+                            if (root3.selected) {
+                                root3.selected = false
+                                selectedDelegate = null
+                                selectedTaskId = ""
+                                selectedTaskName = ""
+
+                                console.log("Aucune tâche sélectionnée")
+                            } else {
+                                if (selectedDelegate !== null) {
+                                    selectedDelegate.selected = false
+                                }
+
+                                root3.selected = true
+                                selectedDelegate = root3
+
+                                selectedTaskId = taskid3.text
+                                selectedTaskName = taskname3.text
+
+                                console.log("Tâche sélectionnée ID:", selectedTaskId)
+                                console.log("Tâche sélectionnée Nom:", selectedTaskName)
+                            }
+                        }
+                    }
+
+                    Text {
+                        id: taskname3
+                        x: 4
+                        y: 6
+                        text: qsTr(model.name)
+                        font.pixelSize: 17
+                        font.styleName: "Gras"
+                    }
+                    Text {
+                        id: taskid3
+                        x: 150
+                        y: 25
+                        color: "#bcbcbc"
+                        text: model.id_task
+                        font.pixelSize: 17
+                        font.styleName: "Gras"
+                    }
+
+                    Text {
+                        id: enddate3
+                        x: 4
+                        y: 57
+                        text: model.end_date
+                        font.pixelSize: 12
+                    }
+
+                    CheckBox {
+                        id: checked3
+                        x: 152
+                        y: 2
+                        width: 60
+                        height: 30
+                        text: "Fini ?"
+                        checked: model.checked === 1
+                    }
+
+                    Text {
+                        id: priority3
+                        x: 65
+                        y: 56
+                        font.pixelSize: 12
+                        text: {
+                            if (model.priority === 1) {
+                                return "🕐";
+                            } else if (model.priority === 2) {
+                                return "⚠️";
+                            } else {
+                                return "";
+                            }
+                        }
+                    }
+
+                    Text {
+                        id: tag3
+                        x: 4
+                        y: 35
+                        text: qsTr(model.tag)
+                        font.pixelSize: 12
+                    }
+                }
+            }
+
+            Connections {
+                target: taskHandlerBackend
+                onTasksFetchedPriority0: function (tasks) {
+                    taskModel3.clear();  // Remplacer par taskModelPriority0
+                    for (var i = 0; i < tasks.length; i++) {
+                        taskModel3.append({  // Remplacer taskModel3 par taskModelPriority0
+                            "id_task": tasks[i].id_task,
+                            "name": tasks[i].name,
+                            "end_date": tasks[i].end_date,
+                            "checked": tasks[i].checked,
+                            "priority": tasks[i].priority,
+                            "tag": tasks[i].tag
+                        });
+                    }
+                }
+            }
+        }
+        Rectangle {
+            id: taskArea4
+            color: "#eeeeee"
+            radius: 10
+            border.width: 2
+            border.color: "#afafaf"
+            width: 225
+            Layout.fillHeight: true
+
+            ListModel {
+                id: taskModel4
+            }
+
+            Component.onCompleted: {
+                taskHandlerBackend.fetchTasks()
+            }
+
+            ListView {
+                id: taskListView4
+                model: taskModel4
+                anchors.fill: parent
+                anchors.topMargin: 51
+                anchors.bottomMargin: 12.5
+                spacing: 2
+
+                delegate: Rectangle {
+                    id: root4
+                    width: 200
+                    height: 100
+                    radius: 5
+                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
+                    border.width: 2
+                    border.color: "#ffffff"
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    property bool selected: false
+
+                    MouseArea {
+                        id: mouseArea4
+                        anchors.fill: parent
+                        onClicked: {
+                            if (root4.selected) {
+                                root4.selected = false
+                                selectedDelegate = null
+                                selectedTaskId = ""
+                                selectedTaskName = ""
+
+                                console.log("Aucune tâche sélectionnée")
+                            } else {
+                                if (selectedDelegate !== null) {
+                                    selectedDelegate.selected = false
+                                }
+
+                                root4.selected = true
+                                selectedDelegate = root4
+
+                                selectedTaskId = taskid4.text
+                                selectedTaskName = taskname4.text
+
+                                console.log("Tâche sélectionnée ID:", selectedTaskId)
+                                console.log("Tâche sélectionnée Nom:", selectedTaskName)
+                            }
+                        }
+                    }
+
+                    Text {
+                        id: taskname4
+                        x: 4
+                        y: 6
+                        text: qsTr(model.name)
+                        font.pixelSize: 17
+                        font.styleName: "Gras"
+                    }
+                    Text {
+                        id: taskid4
+                        x: 150
+                        y: 25
+                        color: "#bcbcbc"
+                        text: model.id_task
+                        font.pixelSize: 17
+                        font.styleName: "Gras"
+                    }
+
+                    Text {
+                        id: enddate4
+                        x: 4
+                        y: 57
+                        text: model.end_date
+                        font.pixelSize: 12
+                    }
+
+                    CheckBox {
+                        id: checked4
+                        x: 152
+                        y: 2
+                        width: 60
+                        height: 30
+                        text: "Fini ?"
+                        checked: model.checked === 1
+                    }
+
+                    Text {
+                        id: priority4
+                        x: 65
+                        y: 56
+                        font.pixelSize: 12
+                        text: {
+                            if (model.priority === 1) {
+                                return "🕐";
+                            } else if (model.priority === 2) {
+                                return "⚠️";
+                            } else {
+                                return "";
+                            }
+                        }
+                    }
+
+                    Text {
+                        id: tag4
+                        x: 4
+                        y: 35
+                        text: qsTr(model.tag)
+                        font.pixelSize: 12
+                    }
+                }
+            }
+
+            Connections {
+                target: taskHandlerBackend
+                 onTasksFetchedChecked: function (tasks) {
+                    taskModel4.clear();
+                    for (var i = 0; i < tasks.length; i++) {
+                        taskModel4.append({
+                            "id_task": tasks[i].id_task,
+                            "name": tasks[i].name,
+                            "end_date": tasks[i].end_date,
+                            "checked": tasks[i].checked,
+                                              "priority": tasks[i].priority,
+                                              "tag": tasks[i].tag
+                                          });
+                    }
+                 }
+            }
+        }
     }
 
-    Connections {
-        target: taskHandlerBackend
-        onTasksFetched: function(tasks) {
-            taskModel.clear()
-            for (var i = 0; i < tasks.length; i++) {
-                taskModel.append({
-                    "id_task": tasks[i].id_task,
-                    "name": tasks[i].name,
-                    "end_date": tasks[i].end_date,
-                    "checked": tasks[i].checked,
-                    "priority": tasks[i].priority,
-                    "tag": tasks[i].tag
-                })
-            }
+    Rectangle {
+        id: rectangle1
+        x: 146
+        y: 33
+        width: 719
+        height: 96
+        color: "#eeeeee"
+        radius: 10
+        border.color: "#bc6c25"
+        border.width: 0
+        layer.enabled: false
+    }
+
+    Rectangle {
+        id: rectangle4
+        x: 515
+        y: 147
+        width: 213
+        height: 42
+        color: "#ffffff"
+        radius: 10
+        border.color: "#bc6c25"
+        border.width: 0
+        layer.enabled: false
+    }
+
+    Rectangle {
+        id: rectangle3
+        x: 280
+        y: 147
+        width: 213
+        height: 42
+        color: "#ffffff"
+        radius: 10
+        border.color: "#bc6c25"
+        border.width: 0
+        layer.enabled: false
+    }
+
+    Rectangle {
+        id: rectangle5
+        x: 750
+        y: 147
+        width: 213
+        height: 42
+        color: "#ffffff"
+        radius: 10
+        border.color: "#bc6c25"
+        border.width: 0
+        layer.enabled: false
+    }
+
+    Rectangle {
+        id: rectangle2
+        x: 45
+        y: 147
+        width: 213
+        height: 42
+        color: "#ffffff"
+        radius: 10
+        border.color: "#bc6c25"
+        border.width: 0
+        layer.enabled: false
+
+        Text {
+            id: _text
+            x: 0
+            y: 2
+            width: 213
+            height: 38
+            color: "#ff8c42"
+            text: qsTr("Urgent")
+            font.pixelSize: 28
+            horizontalAlignment: Text.AlignHCenter
+            font.family: "Verdana"
+        }
+
+        Text {
+            id: _text1
+            x: 234
+            y: 2
+            width: 213
+            height: 38
+            color: "#fcaf58"
+            text: qsTr("En cours")
+            font.pixelSize: 28
+            horizontalAlignment: Text.AlignHCenter
+            font.family: "Verdana"
+        }
+
+        Text {
+            id: _text2
+            x: 470
+            y: 2
+            width: 213
+            height: 38
+            color: "#f9c784"
+            text: qsTr("A Faire")
+            font.pixelSize: 28
+            horizontalAlignment: Text.AlignHCenter
+            font.family: "Verdana"
+        }
+
+        Text {
+            id: _text3
+            x: 705
+            y: 2
+            width: 213
+            height: 38
+            color: "#afafafaf"
+            text: qsTr("Fini")
+            font.pixelSize: 28
+            horizontalAlignment: Text.AlignHCenter
+            styleColor: "#afafafaf"
+            style: Text.Outline
+            font.family: "Verdana"
         }
     }
 }

@@ -1,39 +1,59 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Window
-
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 Window {
     id: popupdelete
     visible: true
+    color: "#00ffffff"
     width: 200
     height: 100
+    opacity: 1
     title: "Supprimer Tâche"
+    flags: Qt.FramelessWindowHint
 
-    signal taskName(string taskname);
+    property string taskName: ""
+    property string taskID: ""
+
+    signal taskId(int taskID);
     signal validateDeleteInfo();
 
     Rectangle {
         id: root
         width: 200
         height: 100
-
-        Text {
-            id: _text
-            x: 21
-            y: 8
+        color: "#4e598c"
+        radius: 10
+        Rectangle {
+            id: rectangle
+            x: 5
+            y: 5
+            width: 190
+            height: 90
+            radius: 10
+            border.width: 0
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            Text {
+                id: _text
+            x: 19
+            y: 3
+            color: "#4e598c"
             text: qsTr("Vous allez supprimer la tâche :")
             font.pixelSize: 12
+            anchors.horizontalCenter: parent.horizontalCenter
         }
 
         RoundButton {
             id: validate
-            x: 73
-            y: 68
+            x: 71
+            y: 63
             width: 25
             height: 24
             text: "\u2705"
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 8
             onClicked: {
-                taskName(tasknametext.text);
+                taskId(taskID);
                 validateDeleteInfo();
                 popupdelete.close();
             }
@@ -41,11 +61,13 @@ Window {
 
         RoundButton {
             id: cancel
-            x: 104
-            y: 68
+            x: 102
+            y: 63
             width: 25
             height: 24
             text: "\u274c"
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 8
             onClicked: {
                 popupdelete.close();
             }
@@ -53,13 +75,17 @@ Window {
 
         Text {
             id: tasknametext
-            x: 21
-            y: 30
+            x: 19
+            y: 25
             width: 158
             height: 25
-            text: qsTr("TESTTEST")
+            color: "#4e598c"
+            text: taskName
             font.pixelSize: 18
             horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            anchors.horizontalCenter: parent.horizontalCenter
         }
     }
+}
 }

@@ -1,7 +1,6 @@
 import re
 import dns.resolver
 from mysql.connector import (connection)
-from mysql.connector import Error
 import requests
 import json
 
@@ -81,13 +80,13 @@ def Update_user(user_id, update_data):
         if 'email' in update_data:
             new_email = update_data['email']
             if not is_valid_email(new_email) or not Duplicate_email_check(new_email, cursor, user_id):
-                print(f"Impossible de mettre à jour l'email, veuillez entrer un ID Utilisateur ou une adresse email valide. ")
+                print(f"Impossible de mettre à jour l'email : {new_email}")
                 return
 
         if 'password' in update_data:
             new_password = update_data['password']
             if not Compliance_password(new_password):
-                print(f"Impossible de mettre le mot de passe à jour. ")
+                print(f"Impossible de mettre le mot de passe à jour : ")
                 return
         set_clause = ', '.join([f"{key} = %s" for key in update_data.keys()])
         sql_update_query = f"UPDATE Users SET {set_clause} WHERE id_user = %s"
@@ -106,9 +105,4 @@ def Update_user(user_id, update_data):
         Close_connection_BDD(conn, cursor)
 
 # Test
-Update_user(5, {"email": "kiki@jonj.jaj", "password": "NouveauMotDePasse123!"})
-
-
-
-
-
+Update_user(1, {"email": "nouvel_email@gmail.com", "password": "NouveauMotDePasse123!"})

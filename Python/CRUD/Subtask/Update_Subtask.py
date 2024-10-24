@@ -50,4 +50,3 @@ def update_subtask(table, id_column, id_value, update_data):
         Close_connection_BDD(conn, cursor)
     except mysql.connector.Error as e:
         print(f"Erreur lors de la mise à jour : {e}")
-

@@ -2,6 +2,11 @@ import mysql.connector
 from mysql.connector import (connection)
 from mysql.connector import Error
 from datetime import datetime
+import json
+import requests
+
+# URL de ton API PHP
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
 # Configuration de la connexion
 config = {
@@ -13,35 +18,27 @@ config = {
 
 # Connexion à la base de donnée
 conn = connection.MySQLConnection(**config)
+cursor = conn.cursor()
 
-def Close_connection_BDD(conn,cursor):
+def close_connection_BDD(conn,cursor):
     cursor.close()
     conn.close()
 
-def Insert_sous_task(id_affected_task,name, end_date, checked):
+def create_subtask(id_affected_task,name, end_date, checked):
     try:
         # Connexion à la base de données
-        cursor = conn.cursor()
         task_exists = check_task_exists(id_affected_task,cursor)
         if task_exists :
-            # Requête SQL d'insertion
-            sql_insert_query = """
-            INSERT INTO Subtask (id_affected_task, name, end_date, checked)
-            VALUES (%s, %s, %s, %s)
-            """
-
-            # Données à insérer
-            data = (id_affected_task,name, end_date, checked)
-
-            # Exécuter la requête et valider les changements
-            cursor.execute(sql_insert_query, data)
-            conn.commit()
-
-            print(f"Sous-Tâche '{name}' ajoutée avec succès.")
-            Close_connection_BDD(cursor, conn)
+            post_data = {
+                'table': table,
+                'action': 'insert',
+                'data': data
+            }
+            response = requests.post(url, json=post_data)
+            close_connection_BDD(cursor, conn)
         else :
             print(f"L'ID {id_affected_task} n'existe pas dans la table Task.")
-            Close_connection_BDD(cursor, conn)
+            close_connection_BDD(cursor, conn)
 
     except Error as e:
         print(f"Erreur lors de l'insertion : {e}")
@@ -56,13 +53,3 @@ def check_task_exists(id_affected_task,cursor):
         return True
     else:
         return False
-
-# Exemple d'utilisation
-id_affected_task = 1
-name = "Appli"
-end_date = datetime(2024, 10, 15, 18, 0)  # Exemple de date et heure de fin
-checked = 0  # 0 pour non vérifié, 1 pour vérifié
-priority = 2  # Niveau de priorité
-tag = "Travail"  # Exemple de tag
-
-Insert_sous_task(id_affected_task,name, end_date, checked)
