@@ -2,24 +2,27 @@ import mysql.connector
 from mysql.connector import (connection)
 from mysql.connector import Error
 from datetime import datetime
+import json
+import requests
 
-def connection_bdd():
-    config = {
-        'user': '379269_admin',
-        'password': 'Kicekifeqoa123*',
-        'host': 'mysql-kicekifeqoa.alwaysdata.net',
-        'database': 'kicekifeqoa_todolist',
-    }
-    conn = connection.MySQLConnection(user='379269_admin', password='Kicekifeqoa123*',
-                                      host='mysql-kicekifeqoa.alwaysdata.net',
-                                      database='kicekifeqoa_todolist')
-    cursor = conn.cursor()
-    return cursor, conn
+# URL de ton API PHP
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
-def close_connection_bdd(conn,cursor):
+# Configuration de la connexion
+config = {
+    'user': '379269_admin',
+    'password': 'Kicekifeqoa123*',
+    'host': 'mysql-kicekifeqoa.alwaysdata.net',
+    'database': 'kicekifeqoa_todolist',
+}
+
+# Connexion à la base de donnée
+conn = connection.MySQLConnection(**config)
+cursor = conn.cursor()
+
+def close_connection_BDD(conn,cursor):
     cursor.close()
     conn.close()
-
 
 def verification_doublon_group(name_Group, cursor):
     # Vérifier le type et afficher l'argument pour le débogage
@@ -47,35 +50,16 @@ def verification_doublon_group(name_Group, cursor):
 
 def create_group(name):
     try:
-        # Connexion à la base de données
-        cursor, conn = connection_bdd()
         if verification_doublon_group(name,cursor):
-            # Requête SQL d'insertion
-
-            sql_insert_query = """
-            INSERT INTO `Group` (name)
-            VALUES (%s)
-            """
-            print(1)
-            # Données à insérer
-            data = (name,)
-
-            # Exécuter la requête et valider les changements
-            cursor.execute(sql_insert_query, data)
-            conn.commit()
-
-            print(f"Tâche '{name}' ajoutée avec succès.")
-            close_connection_bdd(cursor, conn)
+            post_data = {
+                'table': table,
+                'action': 'insert',
+                'data': data
+            }
+            response = requests.post(url, json=post_data)
+            print(response.json())
+            close_connection_BDD(conn, cursor)
 
     except Error as e:
         print(f"Erreur lors de l'insertion : {e}")
 
-
-# Exemple d'utilisation
-name = "ouioui"
-end_date = datetime(2024, 10, 15, 18, 0)  # Exemple de date et heure de fin
-checked = 0  # 0 pour non vérifié, 1 pour vérifié
-priority = 2  # Niveau de priorité
-tag = "Travail"  # Exemple de tag
-
-create_group(name)
