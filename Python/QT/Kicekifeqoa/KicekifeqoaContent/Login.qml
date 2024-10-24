@@ -1,6 +1,6 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 
 ApplicationWindow {
     id: loginWindow  // Définition de l'identifiant
@@ -13,15 +13,15 @@ ApplicationWindow {
     // Connexion du signal de succès de login pour fermer la fenêtre
     Connections {
         target: taskHandlerLogin
-        onLoginSuccess: {
+        function onLoginSuccess() {
             loginWindow.close();  // Fermer la fenêtre login
         }
 
-        onLoginPasswdFail: {
+        function onLoginPasswdFail() {
             _text3.text = "Mot de passe incorrect";  // Affiche un message d'erreur pour le mot de passe
         }
 
-        onLoginEmailFail: {
+        function onLoginEmailFail() {
             _text3.text = "Email incorrect";  // Affiche un message d'erreur pour l'email
         }
     }
@@ -162,7 +162,7 @@ ApplicationWindow {
             y: 30
             width: 102
             height: 101
-            source: "img.png"
+            source: "logo.png"
             fillMode: Image.PreserveAspectFit
         }
 
