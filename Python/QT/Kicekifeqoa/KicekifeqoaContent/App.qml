@@ -582,8 +582,8 @@ Window {
             id: taskArea4
             color: "#eeeeee"
             radius: 10
-            border.width: 0
-            border.color: "#bc6c25"
+            border.width: 2
+            border.color: "#afafaf"
             width: 225
             Layout.fillHeight: true
 
@@ -833,10 +833,12 @@ Window {
             y: 2
             width: 213
             height: 38
-            color: "#eeeeee"
+            color: "#afafafaf"
             text: qsTr("Fini")
             font.pixelSize: 28
             horizontalAlignment: Text.AlignHCenter
+            styleColor: "#afafafaf"
+            style: Text.Outline
             font.family: "Verdana"
         }
     }
