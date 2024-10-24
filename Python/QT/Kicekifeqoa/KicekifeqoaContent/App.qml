@@ -7,13 +7,13 @@ Window {
     visible: true
     color: "#4e598c"
     width: 1000
-    height: 900
+    height: 800
     title: "Kicekifeqoa"
     flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowSystemMenuHint | Qt.WindowCloseButtonHint
     minimumWidth: 1000
     maximumWidth: 1000
-    minimumHeight: 900
-    maximumHeight: 900
+    minimumHeight: 800
+    maximumHeight: 800
 
     // Propriétés globales pour stocker la tâche sélectionnée et son délégué
     property string selectedTaskName: ""
@@ -25,7 +25,7 @@ Window {
         x: 26
         y: 22
         width: 955
-        height: 856
+        height: 754
         color: "#ffffff"
         radius: 10
         border.color: "#bc6c25"
@@ -93,19 +93,30 @@ Window {
                         id: mouseArea
                         anchors.fill: parent
                         onClicked: {
-                            if (selectedDelegate !== null) {
-                                selectedDelegate.selected = false
+                            if (root.selected) {
+                                root.selected = false
+                                selectedDelegate = null
+                                selectedTaskId = ""
+                                selectedTaskName = ""
+
+                                console.log("Aucune tâche sélectionnée")
+                            } else {
+                                if (selectedDelegate !== null) {
+                                    selectedDelegate.selected = false
+                                }
+
+                                root.selected = true
+                                selectedDelegate = root
+
+                                selectedTaskId = taskid.text
+                                selectedTaskName = taskname.text
+
+                                console.log("Tâche sélectionnée ID:", selectedTaskId)
+                                console.log("Tâche sélectionnée Nom:", selectedTaskName)
                             }
-                            root.selected = true
-                            selectedDelegate = root
-
-                            selectedTaskId = taskid.text
-                            selectedTaskName = taskname.text
-
-                            console.log("Tâche sélectionnée ID:", selectedTaskId)
-                            console.log("Tâche sélectionnée Nom:", selectedTaskName)
                         }
                     }
+
 
                     Text {
                         id: taskname
@@ -228,26 +239,26 @@ Window {
 
             RoundButton {
                 id: modify
-                x: 833
-                y: -69
+                x: 836
+                y: -71
                 text: "🖌️"
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.margins: 10
-                anchors.rightMargin: -648
-                anchors.bottomMargin: 753
+                anchors.rightMargin: -651
+                anchors.bottomMargin: 655
             }
 
             RoundButton {
                 id: remove
-                x: 881
-                y: -69
+                x: 884
+                y: -71
                 text: "🗑️"
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.margins: 10
-                anchors.rightMargin: -696
-                anchors.bottomMargin: 753
+                anchors.rightMargin: -699
+                anchors.bottomMargin: 655
                 onClicked: {
                     if (selectedTaskName !== "" && selectedTaskId !== "") {
                         var component = Qt.createComponent("PopupDeleteTask.qml");
@@ -322,17 +333,27 @@ Window {
                         id: mouseArea2
                         anchors.fill: parent
                         onClicked: {
-                            if (selectedDelegate !== null) {
-                                selectedDelegate.selected = false
+                            if (root2.selected) {
+                                root2.selected = false
+                                selectedDelegate = null
+                                selectedTaskId = ""
+                                selectedTaskName = ""
+
+                                console.log("Aucune tâche sélectionnée")
+                            } else {
+                                if (selectedDelegate !== null) {
+                                    selectedDelegate.selected = false
+                                }
+
+                                root2.selected = true
+                                selectedDelegate = root2
+
+                                selectedTaskId = taskid2.text
+                                selectedTaskName = taskname2.text
+
+                                console.log("Tâche sélectionnée ID:", selectedTaskId)
+                                console.log("Tâche sélectionnée Nom:", selectedTaskName)
                             }
-                            root2.selected = true
-                            selectedDelegate = root2
-
-                            selectedTaskId = taskid2.text
-                            selectedTaskName = taskname2.text
-
-                            console.log("Tâche sélectionnée ID:", selectedTaskId)
-                            console.log("Tâche sélectionnée Nom:", selectedTaskName)
                         }
                     }
 
@@ -456,17 +477,27 @@ Window {
                         id: mouseArea3
                         anchors.fill: parent
                         onClicked: {
-                            if (selectedDelegate !== null) {
-                                selectedDelegate.selected = false
+                            if (root3.selected) {
+                                root3.selected = false
+                                selectedDelegate = null
+                                selectedTaskId = ""
+                                selectedTaskName = ""
+
+                                console.log("Aucune tâche sélectionnée")
+                            } else {
+                                if (selectedDelegate !== null) {
+                                    selectedDelegate.selected = false
+                                }
+
+                                root3.selected = true
+                                selectedDelegate = root3
+
+                                selectedTaskId = taskid3.text
+                                selectedTaskName = taskname3.text
+
+                                console.log("Tâche sélectionnée ID:", selectedTaskId)
+                                console.log("Tâche sélectionnée Nom:", selectedTaskName)
                             }
-                            root3.selected = true
-                            selectedDelegate = root3
-
-                            selectedTaskId = taskid3.text
-                            selectedTaskName = taskname3.text
-
-                            console.log("Tâche sélectionnée ID:", selectedTaskId)
-                            console.log("Tâche sélectionnée Nom:", selectedTaskName)
                         }
                     }
 
@@ -590,17 +621,27 @@ Window {
                         id: mouseArea4
                         anchors.fill: parent
                         onClicked: {
-                            if (selectedDelegate !== null) {
-                                selectedDelegate.selected = false
+                            if (root4.selected) {
+                                root4.selected = false
+                                selectedDelegate = null
+                                selectedTaskId = ""
+                                selectedTaskName = ""
+
+                                console.log("Aucune tâche sélectionnée")
+                            } else {
+                                if (selectedDelegate !== null) {
+                                    selectedDelegate.selected = false
+                                }
+
+                                root4.selected = true
+                                selectedDelegate = root4
+
+                                selectedTaskId = taskid4.text
+                                selectedTaskName = taskname4.text
+
+                                console.log("Tâche sélectionnée ID:", selectedTaskId)
+                                console.log("Tâche sélectionnée Nom:", selectedTaskName)
                             }
-                            root4.selected = true
-                            selectedDelegate = root4
-
-                            selectedTaskId = taskid4.text
-                            selectedTaskName = taskname4.text
-
-                            console.log("Tâche sélectionnée ID:", selectedTaskId)
-                            console.log("Tâche sélectionnée Nom:", selectedTaskName)
                         }
                     }
 
