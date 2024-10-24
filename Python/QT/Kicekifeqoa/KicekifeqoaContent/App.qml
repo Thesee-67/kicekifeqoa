@@ -15,10 +15,9 @@ Window {
     minimumHeight: 800
     maximumHeight: 800
 
-    // Propriétés globales pour stocker la tâche sélectionnée et son délégué
     property string selectedTaskName: ""
     property string selectedTaskId: ""
-    property var selectedDelegate: null // Ajout de la référence au délégué sélectionné
+    property var selectedDelegate: null
 
     Rectangle {
         id: rectangle
@@ -203,7 +202,6 @@ Window {
                                 PopupCreateTask.removeLastTag.connect(taskHandlerCreate.remove_last_tag);
                                 PopupCreateTask.addUser.connect(taskHandlerCreate.add_user);
                                 PopupCreateTask.removeLastUser.connect(taskHandlerCreate.remove_last_user);
-                                PopupCreateTask.addStartDate.connect(taskHandlerCreate.add_start_date);
                                 PopupCreateTask.addEndDate.connect(taskHandlerCreate.add_end_date);
                                 PopupCreateTask.taskCompleted.connect(taskHandlerCreate.task_completed);
                                 PopupCreateTask.validateInfo.connect(function() {

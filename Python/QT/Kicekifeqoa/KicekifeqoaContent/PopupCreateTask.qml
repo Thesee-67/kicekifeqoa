@@ -15,7 +15,6 @@ ApplicationWindow {
     signal removeLastTag()
     signal addUser(string username)
     signal removeLastUser()
-    signal addStartDate(string startdate)
     signal addEndDate(string enddate)
     signal taskCompleted(int status)
     signal validateInfo()
@@ -115,7 +114,6 @@ ApplicationWindow {
         onClicked: {
             addTaskName(taskname.text);
             addTaskPriority(priorityslider.value);
-            addStartDate(startdate.text);
             addEndDate(enddate.text);
             taskCompleted(checkBox.checked ? 1 : 0);
             validateInfo();
