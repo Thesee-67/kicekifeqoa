@@ -33,4 +33,3 @@ def delete_user(table, column, value):
     print(response.json())
     close_connection_BDD(conn, cursor)
 
-#delete_users("Users", "id_user", "1")

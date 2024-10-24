@@ -33,4 +33,3 @@ def delete_group(table, column, value):
     print(response.json())
     close_connection_BDD(conn, cursor)
 
-#delete_group("Group", "id_group", "1")
