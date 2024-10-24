@@ -7,6 +7,7 @@ Window {
     width: 400
     height: 200
     title: "Modifier Tâche"
+    flags: Qt.FramelessWindowHint
 
     signal updateTaskName(string updatetaskname)
     signal updateTaskPriority(int updatepriority)

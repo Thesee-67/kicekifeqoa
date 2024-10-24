@@ -9,7 +9,6 @@ class TaskHandler(QObject):
         self.task_priority = 0
         self.tags = []
         self.users = []
-        self.start_date = None
         self.end_date = None
         self.checked = 0
 
@@ -64,13 +63,6 @@ class TaskHandler(QObject):
         root_object.setProperty("usersListModel", self.users)
 
     @Slot(str)
-    def add_start_date(self, startdate):
-        try:
-            self.start_date = self._validate_date_format(startdate)
-        except ValueError as e:
-            print(f"Erreur : {e}")
-
-    @Slot(str)
     def add_end_date(self, enddate):
         try:
             self.end_date = self._validate_date_format(enddate)
@@ -82,9 +74,9 @@ class TaskHandler(QObject):
         return validate_date_format(date_str)
 
     def _check_dates_consistency(self):
-        if self.start_date and self.end_date:
+        if self.end_date:
             from Python.QT.Kicekifeqoa.Python.format_date import check_dates_consistency
-            check_dates_consistency(self.start_date, self.end_date)
+            check_dates_consistency(self.end_date)
 
     @Slot(int)
     def task_completed(self, status):
@@ -95,7 +87,7 @@ class TaskHandler(QObject):
         try:
             if not self.task_name:
                 raise ValueError("Le nom de la tâche ne peut pas être vide.")
-            if not self.start_date or not self.end_date:
+            if not self.end_date:
                 raise ValueError("Les dates de début et de fin doivent être renseignées.")
             self._check_dates_consistency()
             formatted_tags = ", ".join(self.tags)
@@ -114,7 +106,6 @@ class TaskHandler(QObject):
             print(f"Priorité : {priority_labels[self.task_priority]}")
             print(f"Tags : {self.tags}")
             print(f"Utilisateurs : {self.users}")
-            print(f"Date de début : {self.start_date}")
             print(f"Date de fin : {self.end_date}")
             print(f"Checked : {self.checked}")
 
@@ -122,7 +113,6 @@ class TaskHandler(QObject):
             self.task_priority = 0
             self.tags = []
             self.users = []
-            self.start_date = None
             self.end_date = None
             self.checked = 0
 
