@@ -62,7 +62,7 @@ ApplicationWindow {
             width: 226
             height: 36
             opacity: 1
-            color: "#FFFFFF"
+            color: "#F9C784"
             clip: false
         }
 
@@ -96,7 +96,7 @@ ApplicationWindow {
                 width: 226
                 height: 36
                 opacity: 1
-                color: "#FFFFFF"
+                color: "#F9C784"
                 clip: false
             }
         }
@@ -136,15 +136,24 @@ ApplicationWindow {
             height: 40
             text: qsTr("Register")
             onClicked: {
-                // Chargement dynamique de l'élément PopupCreateTask à partir de PopupCreateTask.qml
+                // Chargement dynamique de l'élément PopupCreateTask à partir de Register.qml
                 var component = Qt.createComponent("Register.qml");
 
                 // Vérification que le fichier QML a été chargé correctement
                 if (component.status === Component.Ready) {
-                    // Création d'une instance de l'élément PopupCreateTask
-                    var PopupCreateTask = component.createObject(parent);
+                    // Création d'une instance de l'élément Register
+                    var Register = component.createObject(parent);
                 }
             }
+        }
+
+        Rectangle {
+            id: rectangle3
+            x: 28
+            y: 30
+            width: 102
+            height: 101
+            color: "#FFFFFF"
         }
 
         Image {
@@ -153,7 +162,7 @@ ApplicationWindow {
             y: 30
             width: 102
             height: 101
-            source: "Pictures/ICON.ico"
+            source: "img.png"
             fillMode: Image.PreserveAspectFit
         }
 

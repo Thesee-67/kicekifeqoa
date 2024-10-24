@@ -3,11 +3,21 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 ApplicationWindow {
-    id: register
+    id: registerWindow
     visible: true
     width: 400
     height: 400
     title: qsTr("Register")
+
+    Connections {
+        target: taskHandlerRegister
+        onRegisterSuccess: {
+            registerWindow.close();  // Fermer la fenêtre register
+        }
+        onAlreadyMail: {
+            _text3.text = "Mail déjà existant";  // Affiche un message d'erreur pour le email
+        }
+    }
 
     Rectangle {
         id: rectangle
@@ -47,8 +57,8 @@ ApplicationWindow {
             height: 40
             text: qsTr("Register")
             onClicked: {
-            register.close();  // Fermer la fenêtre login
-        }
+                taskHandlerRegister.checkCredentials(textInput2.text, textInput3.text)
+            }
         }
 
         Text {
@@ -68,7 +78,7 @@ ApplicationWindow {
             y: 118
             width: 226
             height: 36
-            color: "#FFFFFF"
+            color: "#F9C784"
         }
 
         Rectangle {
@@ -77,7 +87,7 @@ ApplicationWindow {
             y: 235
             width: 226
             height: 36
-            color: "#FFFFFF"
+            color: "#F9C784"
         }
 
         Text {
@@ -86,7 +96,8 @@ ApplicationWindow {
             y: 365
             width: 285
             height: 27
-            text: qsTr("ttt")
+            text: qsTr("")
+            color: "#e91717"
             font.pixelSize: 20
             horizontalAlignment: Text.AlignHCenter
         }

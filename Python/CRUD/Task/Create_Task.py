@@ -37,7 +37,3 @@ def create_task(table, data):
         close_connection_BDD(conn, cursor)
     except Error as e:
         print(f"Erreur lors de l'insertion : {e}")
-
-# Ajouter des données
-#add_data("Task", {"name": "tache","end_date": "","checked": "0","priority": "0","tag": "Travail"})
-#insert_task("Task", {"name": "Tache2","end_date": "2024-10-10 22:02:00","checked": "0","priority": "0","tag": "Travail"})

@@ -11,6 +11,7 @@ from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pupdate import TaskH
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pdelete import TaskHandler as TaskHandlerDelete
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_AppRead import TaskHandler as TaskHandlerBackend
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Login import TaskHandler as TaskHandlerLogin
+from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Register import TaskHandler as TaskHandlerRegister
 
 
 
@@ -45,7 +46,9 @@ if __name__ == '__main__':
     task_handler_delete = TaskHandlerDelete(engine)
     task_handler_backend = TaskHandlerBackend(engine)
     task_handler_login = TaskHandlerLogin(engine)
+    task_handler_register = TaskHandlerRegister(engine)
 
+    engine.rootContext().setContextProperty("taskHandlerRegister", task_handler_register)
     engine.rootContext().setContextProperty("taskHandlerLogin", task_handler_login)
     engine.rootContext().setContextProperty("taskHandlerCreate", task_handler_create)
     engine.rootContext().setContextProperty("taskHandlerUpdate", task_handler_update)

@@ -5,8 +5,8 @@ from Python.CRUD.Users.Read_User import  get_data
 
 class TaskHandler(QObject):
     loginSuccess = Signal()  # Déclaration du signal
-    loginpasswdfail = Signal()
-    loginemailfail = Signal()
+    loginPasswdFail = Signal()
+    loginEmailFail = Signal()
 
     def __init__(self, engine):
         super(TaskHandler, self).__init__()
@@ -34,6 +34,6 @@ class TaskHandler(QObject):
                 print(f"Chargement de : {app_qml_path}")
                 self.engine.load(os.fspath(app_qml_path))
             else:
-                self.loginpasswdfail.emit()
+                self.loginPasswdFail.emit()
         else:
-            self.loginemailfail.emit()
+            self.loginEmailFail.emit()
