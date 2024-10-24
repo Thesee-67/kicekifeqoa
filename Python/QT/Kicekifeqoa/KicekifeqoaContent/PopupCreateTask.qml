@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-Window {
+ApplicationWindow {
     id: popupcreate
     visible: true
     color: "#00ffffff"
@@ -22,6 +22,8 @@ Window {
 
     Rectangle {
         id: background
+        x: 0
+        y: 0
         width: 420
         height: 220
         color: "#4e598c"
@@ -71,6 +73,9 @@ Window {
         width: 20
         height: 20
         text: "+"
+        highlighted: false
+        flat: false
+        icon.color: "#4e598c"
         onClicked: {
             addTag(tagname.text)
             tagsListModel.append({"tag": tagname.text});
@@ -104,6 +109,8 @@ Window {
         anchors.bottom: parent.bottom
         anchors.rightMargin: 6
         anchors.bottomMargin: 8
+        checkable: false
+        icon.cache: true
         font.pointSize: 15
         onClicked: {
             addTaskName(taskname.text);
@@ -122,6 +129,7 @@ Window {
         y: 26
         width: 115
         height: 16
+        color: "#4e598c"
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
         text: priorityslider.value === 0 ? "Priorité basse"
@@ -173,7 +181,7 @@ Window {
 
     TextField {
         id: taskname
-        x: 14
+        x: 15
         y: 12
         width: 181
         height: 30
@@ -181,55 +189,28 @@ Window {
     }
 
     TextField {
-        id: startdate
-        x: 16
-        y: 157
-        width: 95
-        height: 30
-        horizontalAlignment: Text.AlignHCenter
-        placeholderText: qsTr("--/--/----")
-    }
-
-    TextField {
         id: enddate
-        x: 125
+        x: 15
         y: 157
         width: 95
         height: 30
         horizontalAlignment: Text.AlignHCenter
         placeholderText: qsTr("--/--/----")
-    }
-
-    Text {
-        id: _text3
-        x: 114
-        y: 155
-        text: qsTr("-")
-        font.pixelSize: 20
-    }
-
-    Text {
-        id: _text4
-        x: 15
-        y: 143
-        width: 95
-        height: 15
-        text: qsTr("Date de début :")
-        font.pixelSize: 11
     }
 
     Text {
         id: _text5
-        x: 125
+        x: 15
         y: 143
         width: 95
         height: 15
+        color: "#4e598c"
         text: qsTr("Date de fin :")
         font.pixelSize: 11
 
         CheckBox {
             id: checkBox
-            x: 143
+            x: 263
             y: -106
             width: 150
             height: 30
@@ -312,7 +293,6 @@ Window {
         y: 152
         text: "X"
         anchors.right: parent.right
-        anchors.top: _text4.bottom
         anchors.bottom: parent.bottom
         anchors.rightMargin: 8
         anchors.topMargin: 6

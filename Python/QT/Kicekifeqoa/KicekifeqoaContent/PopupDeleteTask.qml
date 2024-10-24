@@ -37,6 +37,7 @@ Window {
                 id: _text
             x: 19
             y: 3
+            color: "#4e598c"
             text: qsTr("Vous allez supprimer la tâche :")
             font.pixelSize: 12
             anchors.horizontalCenter: parent.horizontalCenter
@@ -78,9 +79,11 @@ Window {
             y: 25
             width: 158
             height: 25
+            color: "#4e598c"
             text: taskName
             font.pixelSize: 18
             horizontalAlignment: Text.AlignHCenter
+            font.bold: true
             anchors.horizontalCenter: parent.horizontalCenter
         }
     }
