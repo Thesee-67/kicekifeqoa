@@ -17,11 +17,11 @@ ApplicationWindow {
             loginWindow.close();  // Fermer la fenêtre login
         }
 
-        onLoginpasswdfail: {
+        onLoginPasswdFail: {
             _text3.text = "Mot de passe incorrect";  // Affiche un message d'erreur pour le mot de passe
         }
 
-        onLoginemailfail: {
+        onLoginEmailFail: {
             _text3.text = "Email incorrect";  // Affiche un message d'erreur pour l'email
         }
     }
