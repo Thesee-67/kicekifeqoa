@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 
+
 Window {
     property color couleur1: "#4E598C"
     property color couleur2: "#FFFFFF"
