@@ -4,8 +4,16 @@ import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 
 Window {
+    property color couleur1: "#4E598C"
+    property color couleur2: "#FFFFFF"
+    property color couleur3: "#F9C784"
+    property color couleur4: "#FCAF58"
+    property color couleur5: "#FF8C42"
+    property color couleur6: "#BC6C25"
+    property color couleur7: "#BCBCBC"
+
     visible: true
-    color: "#4e598c"
+    color: couleur1
     width: 1000
     height: 800
     title: "Kicekifeqoa"
@@ -25,9 +33,9 @@ Window {
         y: 22
         width: 955
         height: 754
-        color: "#ffffff"
+        color: couleur2
         radius: 10
-        border.color: "#bc6c25"
+        border.color: couleur6
         border.width: 0
         layer.enabled: false
 
@@ -53,10 +61,10 @@ Window {
 
         Rectangle {
             id: taskArea
-            color: "#ff8c42"
+            color: couleur5
             radius: 10
             border.width: 0
-            border.color: "#bc6c25"
+            border.color: couleur6
             width: 225
             Layout.fillHeight: true
 
@@ -83,7 +91,7 @@ Window {
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee"
                     border.width: 2
-                    border.color: "#ffffff"
+                    border.color: couleur2
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     property bool selected: false
@@ -130,7 +138,7 @@ Window {
                         id: taskid
                         x: 150
                         y: 25
-                        color: "#bcbcbc"
+                        color: couleur7
                         text: model.id_task
                         font.pixelSize: 17
                         font.styleName: "Gras"
@@ -292,10 +300,10 @@ Window {
 
         Rectangle {
             id: taskArea2
-            color: "#fcaf58"
+            color: couleur4
             radius: 10
             border.width: 0
-            border.color: "#bc6c25"
+            border.color: couleur6
             width: 225
             Layout.fillHeight: true
 
@@ -322,7 +330,7 @@ Window {
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
                     border.width: 2
-                    border.color: "#ffffff"
+                    border.color: couleur2
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     property bool selected: false
@@ -367,7 +375,7 @@ Window {
                         id: taskid2
                         x: 150
                         y: 25
-                        color: "#bcbcbc"
+                        color: couleur7
                         text: model.id_task
                         font.pixelSize: 17
                         font.styleName: "Gras"
@@ -436,10 +444,10 @@ Window {
         }
         Rectangle {
             id: taskArea3
-            color: "#f9c784"
+            color: couleur3
             radius: 10
             border.width: 0
-            border.color: "#bc6c25"
+            border.color: couleur6
             width: 225
             Layout.fillHeight: true
 
@@ -466,7 +474,7 @@ Window {
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
                     border.width: 2
-                    border.color: "#ffffff"
+                    border.color: couleur2
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     property bool selected: false
@@ -511,7 +519,7 @@ Window {
                         id: taskid3
                         x: 150
                         y: 25
-                        color: "#bcbcbc"
+                        color: couleur7
                         text: model.id_task
                         font.pixelSize: 17
                         font.styleName: "Gras"
@@ -610,7 +618,7 @@ Window {
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
                     border.width: 2
-                    border.color: "#ffffff"
+                    border.color: couleur2
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     property bool selected: false
@@ -655,7 +663,7 @@ Window {
                         id: taskid4
                         x: 150
                         y: 25
-                        color: "#bcbcbc"
+                        color: couleur7
                         text: model.id_task
                         font.pixelSize: 17
                         font.styleName: "Gras"
@@ -732,7 +740,7 @@ Window {
         height: 96
         color: "#eeeeee"
         radius: 10
-        border.color: "#bc6c25"
+        border.color: couleur6
         border.width: 0
         layer.enabled: false
     }
@@ -743,9 +751,9 @@ Window {
         y: 147
         width: 213
         height: 42
-        color: "#ffffff"
+        color: couleur2
         radius: 10
-        border.color: "#bc6c25"
+        border.color: couleur6
         border.width: 0
         layer.enabled: false
     }
@@ -756,9 +764,9 @@ Window {
         y: 147
         width: 213
         height: 42
-        color: "#ffffff"
+        color: couleur2
         radius: 10
-        border.color: "#bc6c25"
+        border.color: couleur6
         border.width: 0
         layer.enabled: false
     }
@@ -769,9 +777,9 @@ Window {
         y: 147
         width: 213
         height: 42
-        color: "#ffffff"
+        color: couleur2
         radius: 10
-        border.color: "#bc6c25"
+        border.color: couleur6
         border.width: 0
         layer.enabled: false
     }
@@ -782,9 +790,9 @@ Window {
         y: 147
         width: 213
         height: 42
-        color: "#ffffff"
+        color: couleur2
         radius: 10
-        border.color: "#bc6c25"
+        border.color: couleur6
         border.width: 0
         layer.enabled: false
 
@@ -794,7 +802,7 @@ Window {
             y: 2
             width: 213
             height: 38
-            color: "#ff8c42"
+            color: couleur5
             text: qsTr("Urgent")
             font.pixelSize: 28
             horizontalAlignment: Text.AlignHCenter
@@ -807,7 +815,7 @@ Window {
             y: 2
             width: 213
             height: 38
-            color: "#fcaf58"
+            color: couleur4
             text: qsTr("En cours")
             font.pixelSize: 28
             horizontalAlignment: Text.AlignHCenter
@@ -820,7 +828,7 @@ Window {
             y: 2
             width: 213
             height: 38
-            color: "#f9c784"
+            color: couleur3
             text: qsTr("A Faire")
             font.pixelSize: 28
             horizontalAlignment: Text.AlignHCenter

@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import qInstallMessageHandler, QtMsgType, QObject, Slot, Signal
+from PySide6.QtCore import qInstallMessageHandler, QtMsgType
 from autogen.settings import url, import_paths
 
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
@@ -12,8 +12,6 @@ from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pdelete import TaskH
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_AppRead import TaskHandler as TaskHandlerBackend
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Login import TaskHandler as TaskHandlerLogin
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Register import TaskHandler as TaskHandlerRegister
-
-
 
 def message_handler(mode, context, message):
     if mode == QtMsgType.QtDebugMsg:
