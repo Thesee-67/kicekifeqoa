@@ -1,35 +1,43 @@
 import re
 import dns.resolver
-from mysql.connector import (connection)
-from mysql.connector import Error
+import requests
+import json
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
-# Configuration de la connexion
-config = {
-    'user': '379269_admin',
-    'password': 'Kicekifeqoa123*',
-    'host': 'mysql-kicekifeqoa.alwaysdata.net',
-    'database': 'kicekifeqoa_todolist',
-}
+def add_data(table, data):
+    post_data = {
+        'table': table,
+        'action': 'insert',
+        'data': data
+    }
+    response = requests.post(url, json=post_data)
+    print(response.json())
 
-# Connexion à la base de donnée
-conn = connection.MySQLConnection(**config)
+def count_data(table, filter_column, filter_value):
 
-def close_connection_BDD(conn,cursor):
-    cursor.close()
-    conn.close()
-
-def verfication_doublon_email (E_mail, cursor):
-    # Requête SQL pour vérifier l'existence de l'email
-    query = "SELECT COUNT(*) FROM Users WHERE email = %s"
-    cursor.execute(query, (E_mail,))
-    result = cursor.fetchone()
-
-    # Si le résultat est 0, l'email n'existe pas
-    if result[0] == 0:
-        return True  # L'email n'existe pas, donc il est disponible
+    params = {
+        'table': table,
+        'filter_column': filter_column,
+        'filter_value': filter_value
+    }
+    response = requests.request("COUNT", url, params=params)
+    if response.status_code == 200:
+        return json.dumps(response.json(), indent=4)
     else:
-        print("The email already exists")
-        return False  # L'email existe déjà
+        print(f"Erreur : {response.status_code} - {response.text}")
+        return False
+
+def verification_email(email):
+    # Vérifier le type et afficher l'argument pour le débogage
+    result = count_data ('Users',"email", email)
+    result = json.loads(result)
+    result = result["count"]
+    # Si le résultat est 0, le email n'existe pas
+    if result == 0:
+        return True  # Le email n'existe pas, donc il est disponible
+    else:
+        print("The grp already exists.")
+        return False  # Le email existe déjà
 
 def compliance_password(Password) :
     if len(Password) < 8:
@@ -68,28 +76,15 @@ def is_valid_email(email):
 
 def create_user (E_mail,Password):
     try:
-        # Connexion à la base de données
-        cursor = conn.cursor()
-        if (verfication_doublon_email (E_mail,cursor)
+
+        if (verification_email (E_mail)
                 and compliance_password(Password) and is_valid_email(E_mail)):
-
-            # Requête SQL d'insertion
-            sql_insert_query = """
-            INSERT INTO Users (email, password)
-            VALUES (%s, %s)
-            """
-            # Données à insérer
-            data = (E_mail,Password)
-
-            # Exécuter la requête et valider les changements
-            cursor.execute(sql_insert_query, data)
-            conn.commit()
-
+            add_data("Users",
+                     {"email": E_mail, "password": Password})
             print(f"Creation user : {E_mail} succes.")
-            close_connection_BDD(cursor, conn)
 
-    except Error as e:
-        print(f"Erreur lors de l'insertion : {e}")
+    except:
+        print(f"Erreur lors de l'insertion ")
 
 
 # Exemple d'utilisation

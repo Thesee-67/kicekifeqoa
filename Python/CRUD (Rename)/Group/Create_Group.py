@@ -1,74 +1,58 @@
-import mysql.connector
-from mysql.connector import (connection)
-from mysql.connector import Error
+import requests
+import json
 from datetime import datetime
 
-def connection_bdd():
-    config = {
-        'user': '379269_admin',
-        'password': 'Kicekifeqoa123*',
-        'host': 'mysql-kicekifeqoa.alwaysdata.net',
-        'database': 'kicekifeqoa_todolist',
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
+def count_data(table, filter_column, filter_value):
+
+    params = {
+        'table': table,
+        'filter_column': filter_column,
+        'filter_value': filter_value
     }
-    conn = connection.MySQLConnection(user='379269_admin', password='Kicekifeqoa123*',
-                                      host='mysql-kicekifeqoa.alwaysdata.net',
-                                      database='kicekifeqoa_todolist')
-    cursor = conn.cursor()
-    return cursor, conn
+    response = requests.request("COUNT", url, params=params)
+    if response.status_code == 200:
+        return json.dumps(response.json(), indent=4)
+    else:
+        print(f"Erreur : {response.status_code} - {response.text}")
+        return False
 
-def close_connection_bdd(conn,cursor):
-    cursor.close()
-    conn.close()
-
-
-def verification_doublon_group(name_Group, cursor):
+def verification_doublon_group(name_Group):
     # Vérifier le type et afficher l'argument pour le débogage
-    # Requête SQL pour vérifier l'existence du groupe
-    query = "SELECT COUNT(*) FROM `Group` WHERE name = %s"
-    try:
-        # Exécution de la requête avec un tuple
-        cursor.execute(query, (name_Group,))  # (name_Group,) pour passer en tant que tuple
-        # Récupérer le résultat
-        result = cursor.fetchone()
-        # Vérifier si le résultat est valide
-        if result is not None and result[0] is not None:
-            # Si le résultat est 0, le name_Group n'existe pas
-            if result[0] == 0:
-                return True  # Le name_Group n'existe pas, donc il est disponible
-            else:
-                print("Le groupe existe déjà.")
-                return False  # Le name_Group existe déjà
+    result = count_data ('Group',"name", name_Group)
+    result = json.loads(result)
+    result = result["count"]
+    if result is not None:
+        # Si le résultat est 0, le name_Group n'existe pas
+        if result == 0:
+            return True  # Le name_Group n'existe pas, donc il est disponible
         else:
-            print("Aucun résultat trouvé.")
-            return True  # Le groupe n'existe pas
-    except mysql.connector.Error as err:
-        print(f"Erreur lors de l'exécution de la requête : {err}")
-        return None  # Indiquer qu'il y a eu une erreur
+            print("The grp already exists.")
+            return False  # Le name_Group existe déjà
+    else:
+        print("No result found.")
+        return True
 
-def create_group(name):
+def add_data(table, data):
+    post_data = {
+        'table': table,
+        'action': 'insert',
+        'data': data
+    }
+    response = requests.post(url, json=post_data)
+    print(response.json())
+
+
+def create_group(grp_name):
     try:
-        # Connexion à la base de données
-        cursor, conn = connection_bdd()
-        if verification_doublon_group(name,cursor):
-            # Requête SQL d'insertion
+        if verification_doublon_group(grp_name):
+            add_data("Group", {"name":grp_name})
+            print(f"Groupe '{grp_name}' ajoutée avec succès.")
+        else:
+            print(f"Création du groupe a échoué")
 
-            sql_insert_query = """
-            INSERT INTO `Group` (name)
-            VALUES (%s)
-            """
-            print(1)
-            # Données à insérer
-            data = (name,)
-
-            # Exécuter la requête et valider les changements
-            cursor.execute(sql_insert_query, data)
-            conn.commit()
-
-            print(f"Tâche '{name}' ajoutée avec succès.")
-            close_connection_bdd(cursor, conn)
-
-    except Error as e:
-        print(f"Erreur lors de l'insertion : {e}")
+    except:
+        print(f"Erreur lors de l'insertion ")
 
 
 # Exemple d'utilisation

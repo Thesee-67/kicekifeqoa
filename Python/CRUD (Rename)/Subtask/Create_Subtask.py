@@ -1,68 +1,65 @@
-import mysql.connector
-from mysql.connector import (connection)
-from mysql.connector import Error
+import requests
+import json
 from datetime import datetime
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
-# Configuration de la connexion
-config = {
-    'user': '379269_admin',
-    'password': 'Kicekifeqoa123*',
-    'host': 'mysql-kicekifeqoa.alwaysdata.net',
-    'database': 'kicekifeqoa_todolist',
-}
+def add_data(table, data):
+    post_data = {
+        'table': table,
+        'action': 'insert',
+        'data': data
+    }
+    response = requests.post(url, json=post_data)
+    print(response.json())
+def count_data(table, filter_column, filter_value):
 
-# Connexion à la base de donnée
-conn = connection.MySQLConnection(**config)
-
-def close_connection_BDD(conn,cursor):
-    cursor.close()
-    conn.close()
-
-def create_sous_task(id_affected_task,name, end_date, checked):
-    try:
-        # Connexion à la base de données
-        cursor = conn.cursor()
-        task_exists = check_task_exists(id_affected_task,cursor)
-        if task_exists :
-            # Requête SQL d'insertion
-            sql_insert_query = """
-            INSERT INTO Subtask (id_affected_task, name, end_date, checked)
-            VALUES (%s, %s, %s, %s)
-            """
-
-            # Données à insérer
-            data = (id_affected_task,name, end_date, checked)
-
-            # Exécuter la requête et valider les changements
-            cursor.execute(sql_insert_query, data)
-            conn.commit()
-
-            print(f"Sous-Tâche '{name}' ajoutée avec succès.")
-            close_connection_BDD(cursor, conn)
-        else :
-            print(f"L'ID {id_affected_task} n'existe pas dans la table Task.")
-            close_connection_BDD(cursor, conn)
-
-    except Error as e:
-        print(f"Erreur lors de l'insertion : {e}")
-
-def check_task_exists(id_affected_task,cursor):
-    query = "SELECT COUNT(*) FROM Task WHERE id_task = %s"
-    cursor.execute(query, (id_affected_task,))
-    result = cursor.fetchone()
-
-    # Si le résultat est supérieur à 0, l'ID existe
-    if result[0] > 0:
-        return True
+    params = {
+        'table': table,
+        'filter_column': filter_column,
+        'filter_value': filter_value
+    }
+    response = requests.request("COUNT", url, params=params)
+    if response.status_code == 200:
+        return json.dumps(response.json(), indent=4)
     else:
+        print(f"Erreur : {response.status_code} - {response.text}")
         return False
+
+def verification_id_sub_task(id_affected_task):
+    # Vérifier le type et afficher l'argument pour le débogage
+    result = count_data ('Task',"id_task", id_affected_task)
+    result = json.loads(result)
+    result = result["count"]
+    if result is not None:
+        # Si le résultat est 0, le id_sub_task n'existe pas
+        if result != 0:
+            return True  # Le id_sub_task existe, donc il est disponible
+        else:
+            print("The id_sub_task No already exists.")
+            return False  # Le id_sub_task n'existe pas
+    else:
+        print("No result found.")
+        return False
+
+
+def create_subtask(subtask_name,id_affected_task,end_date,checked,priority):
+    try:
+        if verification_id_sub_task(id_affected_task):
+            end_date = end_date.strftime('%Y-%m-%d %H:%M:%S')
+            add_data("Subtask", {"id_affected_task":id_affected_task,"name":subtask_name, "end_date":end_date,"checked":checked})
+            print(f"Task '{subtask_name}' ajoutée avec succès.")
+        else:
+            print("No task fund")
+    except:
+        print(f"Erreur lors de l'insertion ")
+
 
 # Exemple d'utilisation
 id_affected_task = 1
-name = "Appli"
+name = "ouiouioui"
 end_date = datetime(2024, 10, 15, 18, 0)  # Exemple de date et heure de fin
 checked = 0  # 0 pour non vérifié, 1 pour vérifié
 priority = 2  # Niveau de priorité
-tag = "Travail"  # Exemple de tag
 
-create_sous_task(id_affected_task,name, end_date, checked)
+
+create_subtask(name,id_affected_task,end_date,checked,priority)

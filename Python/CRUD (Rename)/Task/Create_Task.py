@@ -1,43 +1,33 @@
-import mysql.connector
-from mysql.connector import (connection)
-from mysql.connector import Error
-from datetime import datetime
 import requests
 import json
+from datetime import datetime
 
-# URL de ton API PHP
 url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
-# Configuration de la connexion
-config = {
-    'user': '379269_admin',
-    'password': 'Kicekifeqoa123*',
-    'host': 'mysql-kicekifeqoa.alwaysdata.net',
-    'database': 'kicekifeqoa_todolist',
-}
+def add_data(table, data):
+    post_data = {
+        'table': table,
+        'action': 'insert',
+        'data': data
+    }
+    response = requests.post(url, json=post_data)
+    print(response.json())
 
-# Connexion à la base de donnée
-conn = connection.MySQLConnection(**config)
-cursor = conn.cursor()
 
-def close_connection_BDD(conn,cursor):
-    cursor.close()
-    conn.close()
-    print("La connexion à la base de données a été fermée.")
-
-def create_task(table, data):
+def create_task(task_name,end_date,checked,priority,tag):
     try:
-        post_data = {
-            'table': table,
-            'action': 'insert',
-            'data': data
-        }
-        response = requests.post(url, json=post_data)
-        print(response.json())
-        close_connection_BDD(conn, cursor)
-    except Error as e:
-        print(f"Erreur lors de l'insertion : {e}")
+        end_date = end_date.strftime('%Y-%m-%d %H:%M:%S')
+        add_data("Task", {"name":task_name, "end_date":end_date,"checked":checked, "priority":priority, "tag":tag})
+        print(f"Task '{task_name}' ajoutée avec succès.")
+    except:
+        print(f"Erreur lors de l'insertion ")
 
-# Ajouter des données
-#add_data("Task", {"name": "tache","end_date": "","checked": "0","priority": "0","tag": "Travail"})
-#insert_task("Task", {"name": "Tache2","end_date": "2024-10-10 22:02:00","checked": "0","priority": "0","tag": "Travail"})
+
+# Exemple d'utilisation
+name = "ouiouioui"
+end_date = datetime(2024, 10, 15, 18, 0)  # Exemple de date et heure de fin
+checked = 0  # 0 pour non vérifié, 1 pour vérifié
+priority = 2  # Niveau de priorité
+tag = "Travail"  # Exemple de tag
+
+create_task(name,end_date,checked,priority,tag)
