@@ -1,12 +1,20 @@
 from pathlib import Path
 from PySide6.QtCore import QObject, Slot, Signal
 import os
-from Python.CRUD.Users.Read_User import get_data
+from Python.CRUD.Users.Read_User import get_users
 from Python.CRUD.Users.Create_User import create_user
 
 class TaskHandler(QObject):
-    alreadyMail = Signal()  # Déclaration du signal
     registerSuccess = Signal()  # Déclaration du signal
+    alreadyMail = Signal()  # Déclaration du signal
+    badMail = Signal()
+    shortPass = Signal()
+    longPass = Signal()
+    uppercasePass = Signal()
+    lowercasePass = Signal()
+    numberPass = Signal()
+    specialPass = Signal()
+    unknownError= Signal()
 
     def __init__(self, engine):
         super(TaskHandler, self).__init__()
@@ -14,24 +22,22 @@ class TaskHandler(QObject):
 
     @Slot(str, str)  # Accepter deux paramètres : email et password
     def checkCredentials(self, email, password):
-        result = get_data(
-            table="Users",
-            filter_column="email",
-            filter_value=email,
-        )
+        result = create_user(email,password)
+        print(result)
+        checkResults = {
+            "Mail Exist":self.alreadyMail,
+            "Mail NOK":self.badMail,
+            "Pass <8": self.shortPass,
+            "Pass >72":self.longPass,
+            "Pass Uppercase":self.uppercasePass,
+            "Pass Lowercase":self.lowercasePass,
+            "Pass Number":self.numberPass,
+            "Pass Special":self.specialPass,
+            "Unkown Error":self.unknownError
+        }
 
-        if result and isinstance(result, list) and len(result) > 0:
-            user_data = result[0]
-
-            if user_data.get('email') == email:
-                self.alreadyMail.emit()  # Émettre le signal si l'email existe déjà
-        else:
-            # Si l'utilisateur n'existe pas, on peut ajouter un nouvel utilisateur
-            self.add_user(email, password)  # Ajout de l'utilisateur
+        if result[0] == True:
             self.registerSuccess.emit()
-
-    def add_user(self, email, password):
-        create_user("Users", {
-            "email": email,
-            "password": password,
-        })
+        else:
+            signal = checkResults.get(result[1])
+            signal.emit()
