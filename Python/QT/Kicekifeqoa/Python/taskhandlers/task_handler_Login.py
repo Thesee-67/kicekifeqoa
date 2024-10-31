@@ -1,7 +1,8 @@
 from pathlib import Path
 from PySide6.QtCore import QObject, Slot, Signal
 import os
-from Python.CRUD.Users.Read_User import  get_data
+from Python.CRUD.Users.Read_User import  get_users
+import bcrypt
 
 class TaskHandler(QObject):
     loginSuccess = Signal()  # Déclaration du signal
@@ -12,20 +13,23 @@ class TaskHandler(QObject):
         super(TaskHandler, self).__init__()
         self.engine = engine
 
+    def verify_password(self,stored_password,provided_password):
+        # Compare le mot de passe fourni avec le hash stocké
+        password = bcrypt.checkpw(provided_password.encode(),stored_password)
+        return password
+
     @Slot(str, str)
     def checkCredentials(self, email, password):
-        result = get_data(
-            table="Users",
-            filter_column="email",
-            filter_value=email,
-            filter_column2="password",
-            filter_value2=password
-        )
+        if email != "": # Vérifie si le mail n'est pas vide
+            result = get_users(email=email)
+        else:
+            result = 'no existing links'
 
-        if result and isinstance(result, list) and len(result) > 0:
+        if result != 'no existing links':
             user_data = result[0]
+            stored_password = (user_data.get("password")).encode("utf-8") #transforme le hash de str a Bytes
 
-            if user_data.get('password') == password:
+            if self.verify_password(stored_password,password):
                 # Émettre le signal pour fermer la fenêtre
                 self.loginSuccess.emit()
 
