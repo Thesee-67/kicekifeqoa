@@ -1,51 +1,45 @@
-import mysql.connector
-from mysql.connector import (connection)
 import requests
-import json
 
-# URL de ton API PHP
-url = "http://kicekifeqoa.alwaysdata.net/api.php"
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
-# Configuration de la connexion
-config = {
-    'user': '379269_admin',
-    'password': 'Kicekifeqoa123*',
-    'host': 'mysql-kicekifeqoa.alwaysdata.net',
-    'database': 'kicekifeqoa_todolist',
-}
-
-# Connexion à la base de donnée
-conn = connection.MySQLConnection(**config)
-cursor = conn.cursor()
-
-def Close_connection_BDD(conn, cursor):
-    cursor.close()
-    conn.close()
-
-def Update_group(table, id_column, id_value, update_data):
+def update_group(id_group, name=None, description=None):
     """
-    Permet de mettre à jour un groupe dans la base de données.
+    Met à jour un groupe en utilisant l'API.
 
-    table : str
-        Le nom de la table à mettre à jour (ici "Group").
-    id_column : str
-        Le nom de la colonne qui identifie le groupe à mettre à jour (ex. "id_group").
-    id_value : str/int
-        La valeur de cette colonne pour le groupe à mettre à jour (ex. l'ID du groupe).
-    update_data : dict
-        Un dictionnaire contenant les colonnes à mettre à jour et leurs nouvelles valeurs.
+    Paramètres:
+    - id_group (int) : ID du groupe.
+    - name (str) : nouveau nom du groupe.
+    - description (str) : nouvelle description du groupe.
+
+    Retourne:
+    - Message de succès ou d'erreur.
     """
+
+    data = {
+        'table': 'Group',
+        'id_group': id_group,
+        'update_data': {}
+    }
+
+    # Ajouter les champs à mettre à jour
+    if name:
+        data['update_data']['name'] = name
+    if description:
+        data['update_data']['description'] = description
+
+    # Vérifier que des champs sont à mettre à jour
+    if not data['update_data']:
+        return "Aucun champ à mettre à jour."
+
+    # Envoyer la requête PUT à l'API
     try:
-        post_data = {
-            'table': table,
-            'action': 'update',
-            'id_column': id_column,
-            'id_value': id_value,
-            'data': update_data
-        }
-        # Envoie de  la requête à l'API pour la mise à jour
-        response = requests.put(url, json=post_data)
-        print(response.json())
-        Close_connection_BDD(conn, cursor)
-    except mysql.connector.Error as e:
-        print(f"Erreur lors de la mise à jour : {e}")
+        response = requests.put(url, json=data)
+        if response.status_code == 200:
+            return f"Groupe avec ID {id_group} mis à jour avec succès."
+        else:
+            return f"Erreur lors de la mise à jour : {response.status_code} - {response.text}"
+    except requests.RequestException as e:
+        return f"Erreur de connexion à l'API : {e}"
+
+# Test
+print(update_group(3, name="Nouveau Groupe", description="Description mise à jour"))

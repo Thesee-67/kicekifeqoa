@@ -1,70 +1,52 @@
-import mysql.connector
-from mysql.connector import (connection)
-from mysql.connector import Error
-from datetime import datetime
-conn = 0
-cursor = 0
+import requests
 
-def connection_BDD():
-    config = {
-        'user': '379269_admin',
-        'password': 'Kicekifeqoa123*',
-        'host': 'mysql-kicekifeqoa.alwaysdata.net',
-        'database': 'kicekifeqoa_todolist',
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
+
+def update_task(id_task, name=None, end_date=None, checked=None, priority=None, tag=None):
+    """
+    Met à jour une tâche existante en utilisant l'API.
+    
+    Paramètres:
+    - id_task (int) : l'ID de la tâche à mettre à jour.
+    - name (str) : nouveau nom de la tâche.
+    - end_date (str) : nouvelle date de fin au format 'YYYY-MM-DD HH:MM:SS'.
+    - checked (int) : statut vérifié (1) ou non vérifié (0).
+    - priority (int) : nouvelle priorité.
+    - tag (str) : nouveau tag.
+    
+    Retourne:
+    - Message de succès ou d'erreur.
+    """
+    data = {
+        'table': 'Task',
+        'id_task': id_task,
+        'update_data': {}
     }
-    conn = connection.MySQLConnection(user='379269_admin', password='Kicekifeqoa123*',
-                                      host='mysql-kicekifeqoa.alwaysdata.net',
-                                      database='kicekifeqoa_todolist')
-    cursor = conn.cursor()
-    return cursor, conn
 
-def close_connection_BDD(conn,cursor):
-    cursor.close()
-    conn.close()
+    # Champs à mettre à jour
+    if name is not None:
+        data['update_data']['name'] = name
+    if end_date is not None:
+        data['update_data']['end_date'] = end_date
+    if checked is not None:
+        data['update_data']['checked'] = checked
+    if priority is not None:
+        data['update_data']['priority'] = priority
+    if tag is not None:
+        data['update_data']['tag'] = tag
 
+    if not data['update_data']:
+        print("Aucun champ à mettre à jour.")
+        return
 
-def update_task(task_id, name=None, end_date=None, checked=None, priority=None, tag=None):
-    try:
-        cursor, conn = connection_BDD()
+    # Mise à jour avec PUT 
+    response = requests.put(url, json=data)
 
-        update_fields = []
-        values = []
+    # Vérifier la réponse de l'API
+    if response.status_code == 200:
+        return f"Tâche avec ID {id_task} mise à jour avec succès."
+    else:
+        return f"Erreur lors de la mise à jour : {response.status_code} - {response.text}"
 
-        if name is not None:
-            update_fields.append("name = %s")
-            values.append(name)
-
-        if end_date is not None:
-            update_fields.append("end_date = %s")
-            values.append(end_date)
-
-        if checked is not None:
-            update_fields.append("checked = %s")
-            values.append(checked)
-
-        if priority is not None:
-            update_fields.append("priority = %s")
-            values.append(priority)
-
-        if tag is not None:
-            update_fields.append("tag = %s")
-            values.append(tag)
-
-        if not update_fields:
-            print("Aucune mise à jour n'a été spécifiée.")
-            return
-        sql_update_query = f"""
-        UPDATE Task
-        SET {', '.join(update_fields)}
-        WHERE id = %s
-        """
-
-        values.append(task_id)
-        cursor.execute(sql_update_query, tuple(values))
-        conn.commit()
-
-        print(f"Tâche avec ID {task_id} mise à jour avec succès.")
-        close_connection_BDD(conn, cursor)
-
-    except Error as e:
-        print(f"Erreur lors de la mise à jour : {e}")
+# Test
+print(update_task(159, name="Tache2", end_date="2024-10-10 22:02:00", priority=1, tag="Travail"))

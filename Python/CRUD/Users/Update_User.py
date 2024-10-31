@@ -1,108 +1,85 @@
-import re
-import dns.resolver
-from mysql.connector import (connection)
 import requests
-import json
+import re
 
-# URL de ton API PHP
-url = "http://kicekifeqoa.alwaysdata.net/api.php"
-
-# Configuration de la connexion
-config = {
-    'user': '379269_admin',
-    'password': 'Kicekifeqoa123*',
-    'host': 'mysql-kicekifeqoa.alwaysdata.net',
-    'database': 'kicekifeqoa_todolist',
-}
-
-# Connexion à la base de donnée
-conn = connection.MySQLConnection(**config)
-cursor = conn.cursor()
-
-def Close_connection_BDD(conn, cursor):
-    cursor.close()
-    conn.close()
-
-def Duplicate_email_check(email, cursor, user_id=None):
-    """
-    Vérifie si un email existe déjà dans la base de données.
-    Si user_id est fourni, exclut l'utilisateur actuel de la vérification.
-    """
-    if user_id:
-        query = "SELECT COUNT(*) FROM Users WHERE email = %s AND id_user != %s"
-        cursor.execute(query, (email, user_id))
-    else:
-        query = "SELECT COUNT(*) FROM Users WHERE email = %s"
-        cursor.execute(query, (email,))
-    result = cursor.fetchone()
-    return result[0] == 0
-
-def Compliance_password(password):
-
-    if len(password) < 8:
-        print("Le mot de passse doit contenir au moins 8 caractères.")
-        return False
-    if not re.search(r"[A-Z]", password):
-        print("Le mot de passe doit contenir au moins une lettre majuscule. ")
-        return False
-    if not re.search(r"[a-z]", password):
-        print("Le mot de passe doit contenir au moins une lettre minuscule. ")
-        return False
-    if not re.search(r"[0-9]", password):
-        print("Le mot de passe doit contenir au moins un chiffre. ")
-        return False
-    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
-        print("Le mot de passe doit contenir au moins un caractère spécial. ")
-        return False
-    return True
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
 def is_valid_email(email):
+    """
+    Vérifie si l'email est dans un format valide.
+    """
     regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-
-    if not re.match(regex, email):
+    if re.match(regex, email):
+        return True
+    else:
         print("Format d'email invalide.")
         return False
 
-    # Vérification de l'existence du domaine
-    domain = email.split('@')[-1]
-    try:
-        # Vérifier les enregistrements MX du domaine
-        dns.resolver.resolve(domain, 'MX')
-    except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
-        print("Le domaine de l'email n'existe pas.")
+def Compliance_password(password):
+    """
+    Vérifie la conformité et la sécurité du mot de passe.
+    """
+    if len(password) < 8:
+        print("Le mot de passe doit contenir au moins 8 caractères.")
+        return False
+    if not re.search(r"[A-Z]", password):
+        print("Le mot de passe doit contenir au moins une lettre majuscule.")
+        return False
+    if not re.search(r"[a-z]", password):
+        print("Le mot de passe doit contenir au moins une lettre minuscule.")
+        return False
+    if not re.search(r"[0-9]", password):
+        print("Le mot de passe doit contenir au moins un chiffre.")
+        return False
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+        print("Le mot de passe doit contenir au moins un caractère spécial.")
         return False
     return True
 
-def Update_user(user_id, update_data):
+def update_user(id_user, email=None, password=None, name=None):
+    """
+    Met à jour un utilisateur en utilisant l'API.
+
+    Paramètres:
+    - id_user (int) : ID de l'utilisateur.
+    - email (str) : nouvel email.
+    - password (str) : nouveau mot de passe.
+    - name (str) : nouveau nom.
+
+    Retourne:
+    - Message de succès ou d'erreur.
+    """
+    # Validation des champs
+    if email and not is_valid_email(email):
+        return "L'email fourni est invalide."
+    if password and not Compliance_password(password):
+        return "Le mot de passe fourni est trop faible."
+
+    # Construire les données pour la requête PUT
+    data = {
+        'table': 'Users',
+        'id_user': id_user,
+        'update_data': {}
+    }
+    if email:
+        data['update_data']['email'] = email
+    if password:
+        data['update_data']['password'] = password
+    if name:
+        data['update_data']['name'] = name
+
+    # Vérifier que des champs sont à mettre à jour
+    if not data['update_data']:
+        return "Aucun champ à mettre à jour."
+
+    # Envoyer la requête PUT à l'API
     try:
-        cursor = conn.cursor()
-
-        if 'email' in update_data:
-            new_email = update_data['email']
-            if not is_valid_email(new_email) or not Duplicate_email_check(new_email, cursor, user_id):
-                print(f"Impossible de mettre à jour l'email : {new_email}")
-                return
-
-        if 'password' in update_data:
-            new_password = update_data['password']
-            if not Compliance_password(new_password):
-                print(f"Impossible de mettre le mot de passe à jour : ")
-                return
-        set_clause = ', '.join([f"{key} = %s" for key in update_data.keys()])
-        sql_update_query = f"UPDATE Users SET {set_clause} WHERE id_user = %s"
-
-        data = tuple(update_data.values()) + (user_id,)
-
-        cursor.execute(sql_update_query, data)
-        conn.commit()
-
-        print(f"Utilisateur {user_id} mis à jour !")
-        Close_connection_BDD(conn, cursor)
-
-    except Error as e:
-        print(f"Erreur lors de la mise à jour : {e}")
-    finally:
-        Close_connection_BDD(conn, cursor)
+        response = requests.put(url, json=data)
+        if response.status_code == 200:
+            return f"Utilisateur avec ID {id_user} mis à jour avec succès."
+        else:
+            return f"Erreur lors de la mise à jour : {response.status_code} - {response.text}"
+    except requests.RequestException as e:
+        return f"Erreur de connexion à l'API : {e}"
 
 # Test
-Update_user(1, {"email": "nouvel_email@gmail.com", "password": "NouveauMotDePasse123!"})
+print(update_user(159, email="nouveau.email@example.com", password="NouveauMDP!123", name="Nouveau Nom"))
