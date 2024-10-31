@@ -5,7 +5,7 @@ USE Todolist;
 CREATE TABLE Users (
     id_user INT PRIMARY KEY auto_increment,
     email varchar(50) not null,
-    `password` varchar(50) not null
+    `password` char(60) not null
 );
 
 CREATE TABLE Task (
