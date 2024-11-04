@@ -17,30 +17,32 @@ def update_task(id_task, name=None, end_date=None, checked=None, priority=None, 
     Retourne:
     - Message de succès ou d'erreur.
     """
-    data = {
+    post_data = {
         'table': 'Task',
-        'id_task': id_task,
-        'update_data': {}
+        'action': 'update',
+        'data': {},
+        'column': "id_task",
+        'value': id_task
     }
 
     # Champs à mettre à jour
     if name is not None:
-        data['update_data']['name'] = name
+        post_data['data']['name'] = name
     if end_date is not None:
-        data['update_data']['end_date'] = end_date
+        post_data['data']['end_date'] = end_date
     if checked is not None:
-        data['update_data']['checked'] = checked
+        post_data['data']['checked'] = checked
     if priority is not None:
-        data['update_data']['priority'] = priority
+        post_data['data']['priority'] = priority
     if tag is not None:
-        data['update_data']['tag'] = tag
+        post_data['data']['tag'] = tag
 
-    if not data['update_data']:
+    if not post_data['data']:
         print("Aucun champ à mettre à jour.")
         return
 
     # Mise à jour avec PUT 
-    response = requests.put(url, json=data)
+    response = requests.post(url, json=post_data)
 
     # Vérifier la réponse de l'API
     if response.status_code == 200:
@@ -49,4 +51,4 @@ def update_task(id_task, name=None, end_date=None, checked=None, priority=None, 
         return f"Erreur lors de la mise à jour : {response.status_code} - {response.text}"
 
 # Test
-print(update_task(159, name="Tache2", end_date="2024-10-10 22:02:00", priority=1, tag="Travail"))
+print(update_task(149, name="Finir Proj", end_date="2024-12-22 22:02:00", priority=2, tag="Travail"))

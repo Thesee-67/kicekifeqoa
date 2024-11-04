@@ -14,12 +14,13 @@ def is_valid_date(date_text):
         print("Le format de la date est invalide. Utilisez 'YYYY-MM-DD HH:MM:SS'.")
         return False
 
-def update_subtask(id_subtask, name=None, end_date=None, checked=None):
+def update_subtask(id_subtask,id_affected_task=None, name=None, end_date=None, checked=None):
     """
     Met à jour une sous-tâche en utilisant l'API.
 
     Paramètres:
     - id_subtask (int) : ID de la sous-tâche.
+    - id_affected_task(int) : ID de la tache affecter
     - name (str) : nouveau nom.
     - end_date (str) : nouvelle date de fin au format 'YYYY-MM-DD HH:MM:SS'.
     - checked (int) : état de vérification (1 pour vérifié, 0 pour non vérifié).
@@ -31,25 +32,29 @@ def update_subtask(id_subtask, name=None, end_date=None, checked=None):
         return "La date de fin est invalide. Utilisez le format 'YYYY-MM-DD HH:MM:SS'."
 
     # Construire les données pour la requête PUT
-    data = {
+    post_data = {
         'table': 'Subtask',
-        'id_subtask': id_subtask,
-        'update_data': {}
+        'action': 'update',
+        'data': {},
+        'column': "id_subtask",
+        'value': id_subtask
     }
+    if id_subtask:
+        post_data['data']['id_subtask'] = id_subtask
     if name:
-        data['update_data']['name'] = name
+        post_data['data']['name'] = name
     if end_date:
-        data['update_data']['end_date'] = end_date
+        post_data['data']['end_date'] = end_date
     if checked is not None:
-        data['update_data']['checked'] = checked
+        post_data['data']['checked'] = checked
 
     # Vérifier que des champs sont à mettre à jour
-    if not data['update_data']:
+    if not post_data['data']:
         return "Aucun champ à mettre à jour."
 
     # Envoyer la requête PUT à l'API
     try:
-        response = requests.put(url, json=data)
+        response = requests.put(url, json=post_data)
         if response.status_code == 200:
             return f"Sous-tâche avec ID {id_subtask} mise à jour avec succès."
         else:

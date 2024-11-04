@@ -2,38 +2,37 @@ import requests
 
 url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
-def update_group(id_group, name=None, description=None):
+def update_group(id_group, name=None,):
     """
     Met à jour un groupe en utilisant l'API.
 
     Paramètres:
     - id_group (int) : ID du groupe.
     - name (str) : nouveau nom du groupe.
-    - description (str) : nouvelle description du groupe.
 
     Retourne:
     - Message de succès ou d'erreur.
     """
 
-    data = {
+    post_data = {
         'table': 'Group',
-        'id_group': id_group,
-        'update_data': {}
+        'action': 'update',
+        'data': {},
+        'column': "id_group",
+        'value': id_group
     }
 
     # Ajouter les champs à mettre à jour
     if name:
-        data['update_data']['name'] = name
-    if description:
-        data['update_data']['description'] = description
+        post_data['data']['name'] = name
 
     # Vérifier que des champs sont à mettre à jour
-    if not data['update_data']:
+    if not post_data['update_data']:
         return "Aucun champ à mettre à jour."
 
     # Envoyer la requête PUT à l'API
     try:
-        response = requests.put(url, json=data)
+        response = requests.put(url, json=post_data)
         if response.status_code == 200:
             return f"Groupe avec ID {id_group} mis à jour avec succès."
         else:
