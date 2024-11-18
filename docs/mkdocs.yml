@@ -1,0 +1,28 @@
+site_name: Kicekifeqoa
+site_author: "HABERER Evan"
+
+theme:
+  name: material
+  palette:
+    scheme: default
+    primary: indigo
+    accent: pink
+  nav:
+    - Kicékiféqoa: index.md
+    - Notre groupe: index.md#notre-groupe
+    - Installation: install.md
+    - Code: code.md
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.tabs
+    - navigation.expand
+    - search.highlight
+    - search.share
+  markdown_extensions:
+    - admonition
+    - footnotes
+    - toc:
+        permalink: true
+
