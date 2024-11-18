@@ -22,14 +22,14 @@ Window {
         y: 0
         width: 400
         height: 400
-        color: "#4e598c"
+        color: couleur1
         Rectangle {
         id: rectangle
         x: 9
         y: 9
         width: 380
         height: 382
-        color: "#ffffff"
+        color: couleur2
         radius: 10
         border.width: 0
 
@@ -40,7 +40,7 @@ Window {
             y: 12
             width: 307
             height: 89
-            color: "#ff8c42"
+            color: couleur5
             radius: 10
         }
 
@@ -50,7 +50,7 @@ Window {
             y: 123
             width: 307
             height: 244
-            color: "#f9c784"
+            color: couleur3
             radius: 10
         }
 
@@ -60,7 +60,7 @@ Window {
             y: 320
             width: 98
             height: 40
-            color: "#ffffff"
+            color: couleur2
             radius: 10
             anchors.horizontalCenter: parent.horizontalCenter
         }
@@ -71,7 +71,7 @@ Window {
             y: 218
             width: 227
             height: 33
-            color: "#ffffff"
+            color: couleur2
             text: qsTr("Password :")
             font.pixelSize: 25
             horizontalAlignment: Text.AlignHCenter
@@ -85,7 +85,7 @@ Window {
             y: 130
             width: 227
             height: 33
-            color: "#ffffff"
+            color: couleur2
             text: qsTr("E-mail :")
             font.pixelSize: 25
             horizontalAlignment: Text.AlignHCenter
@@ -113,7 +113,7 @@ Window {
             y: 36
             width: 307
             height: 40
-            color: "#ffffff"
+            color: couleur2
             text: qsTr("Créer un compte")
             font.pixelSize: 30
             horizontalAlignment: Text.AlignHCenter
@@ -127,7 +127,7 @@ Window {
             y: 163
             width: 256
             height: 36
-            color: "#ffffff"
+            color: couleur2
             radius: 10
             anchors.left: rectangle2.left
             anchors.right: rectangle2.right
@@ -140,7 +140,7 @@ Window {
             y: 251
             width: 286
             height: 36
-            color: "#ffffff"
+            color: couleur2
             radius: 10
             anchors.left: _text2.left
             anchors.bottom: _text1.top

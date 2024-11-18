@@ -5,8 +5,16 @@ import QtQuick.Layouts 1.15
 Window {
     id: loginWindow  // Définition de l'identifiant
 
+    property color couleur1: "#4E598C"
+    property color couleur2: "#FFFFFF"
+    property color couleur3: "#F9C784"
+    property color couleur4: "#FCAF58"
+    property color couleur5: "#FF8C42"
+    property color couleur6: "#BC6C25"
+    property color couleur7: "#BCBCBC"
+
     visible: true
-    color: "#4e598c"
+    color: couleur1
     width: 600
     height: 580
     title: qsTr("Login")
@@ -33,7 +41,7 @@ Window {
         y: 20
         width: 560
         height: 546
-        color: "#ffffff"
+        color: couleur2
         radius: 10
         border.width: 0
         anchors.verticalCenter: parent.verticalCenter
@@ -47,7 +55,7 @@ Window {
             y: 405
             width: 361
             height: 125
-            color: "#f9c784"
+            color: couleur3
             radius: 10
             border.width: 0
             anchors.horizontalCenter: parent.horizontalCenter
@@ -58,7 +66,7 @@ Window {
                 y: 70
                 width: 100
                 height: 40
-                color: "#ffffff"
+                color: couleur2
                 radius: 10
             }
 
@@ -68,7 +76,7 @@ Window {
                 y: 69
                 width: 100
                 height: 40
-                color: "#ffffff"
+                color: couleur2
                 radius: 10
                 anchors.bottom: rectangle5.bottom
             }
@@ -80,7 +88,7 @@ Window {
             y: 138
             width: 361
             height: 245
-            color: "#ff8c42"
+            color: couleur5
             radius: 10
             anchors.bottom: rectangle2.bottom
             anchors.bottomMargin: -139
@@ -94,7 +102,7 @@ Window {
             y: 155
             width: 103
             height: 42
-            color: "#ffffff"
+            color: couleur2
             text: qsTr("E-mail :")
             font.pixelSize: 30
             horizontalAlignment: Text.AlignHCenter
@@ -109,7 +117,7 @@ Window {
             width: 317
             height: 36
             opacity: 1
-            color: "#ffffff"
+            color: couleur2
             radius: 10
             clip: false
         }
@@ -127,7 +135,7 @@ Window {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            selectedTextColor: "#ffffff"
+            selectedTextColor: couleur2
             selectionColor: "#f94b7cd9"
         }
 
@@ -137,7 +145,7 @@ Window {
             y: 264
             width: 144
             height: 43
-            color: "#ffffff"
+            color: couleur2
             text: qsTr("Password :")
             font.pixelSize: 30
             horizontalAlignment: Text.AlignHCenter
@@ -151,7 +159,7 @@ Window {
                 width: 315
                 height: 36
                 opacity: 1
-                color: "#ffffff"
+                color: couleur2
                 radius: 10
                 clip: false
             }
@@ -173,7 +181,7 @@ Window {
             anchors.horizontalCenterOffset: 0
             anchors.horizontalCenter: rectangle2.horizontalCenter
             selectionColor: "#f94b7cd9"
-            selectedTextColor: "#ffffff"
+            selectedTextColor: couleur2
         }
 
         Button {
@@ -228,7 +236,7 @@ Window {
         y: 417
         width: 338
         height: 30
-        color: "#ffffff"
+        color: couleur2
         font.pixelSize: 20
         horizontalAlignment: Text.AlignHCenter
         font.styleName: "Gras"

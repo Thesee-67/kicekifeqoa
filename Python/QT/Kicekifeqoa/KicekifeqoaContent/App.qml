@@ -5,14 +5,6 @@ import QtQuick.Window 2.15
 
 
 Window {
-    property color couleur1: "#4E598C"
-    property color couleur2: "#FFFFFF"
-    property color couleur3: "#F9C784"
-    property color couleur4: "#FCAF58"
-    property color couleur5: "#FF8C42"
-    property color couleur6: "#BC6C25"
-    property color couleur7: "#BCBCBC"
-
     visible: true
     color: couleur1
     width: 1000
