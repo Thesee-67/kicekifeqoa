@@ -12,6 +12,7 @@ from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pdelete import TaskH
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_AppRead import TaskHandler as TaskHandlerBackend
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Login import TaskHandler as TaskHandlerLogin
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Register import TaskHandler as TaskHandlerRegister
+from Python.QT.Kicekifeqoa.Python.colors import Colors
 
 def message_handler(mode, context, message):
     if mode == QtMsgType.QtDebugMsg:
@@ -35,6 +36,9 @@ if __name__ == '__main__':
 
     app_dir = Path(__file__).parent.parent
     engine.addImportPath(os.fspath(app_dir))
+
+    colors = Colors()
+    engine.rootContext().setContextProperty("Colors", colors)
 
     for path in import_paths:
         engine.addImportPath(os.fspath(app_dir / path))

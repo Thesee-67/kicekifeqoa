@@ -26,8 +26,8 @@ ApplicationWindow {
         y: 0
         width: 420
         height: 220
-        color: couleur1
-        radius: 10
+        color: Colors.couleur1
+        radius: 5
         border.width: 0
 
         Rectangle {
@@ -37,7 +37,7 @@ ApplicationWindow {
         width: 400
         height: 200
         visible: true
-        radius: 10
+        radius: 5
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: 0
         anchors.horizontalCenterOffset: 0
@@ -75,7 +75,7 @@ ApplicationWindow {
         text: "+"
         highlighted: false
         flat: false
-        icon.color: couleur1
+        icon.color: Colors.couleur1
         onClicked: {
             addTag(tagname.text)
             tagsListModel.append({"tag": tagname.text});
@@ -128,7 +128,7 @@ ApplicationWindow {
         y: 26
         width: 115
         height: 16
-        color: couleur1
+        color: Colors.couleur1
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
         text: priorityslider.value === 0 ? "Priorité basse"
@@ -203,7 +203,7 @@ ApplicationWindow {
         y: 143
         width: 95
         height: 15
-        color: couleur1
+        color: Colors.couleur1
         text: qsTr("Date de fin :")
         font.pixelSize: 11
 

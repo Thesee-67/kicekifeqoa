@@ -21,15 +21,15 @@ Window {
         id: root
         width: 200
         height: 100
-        color: couleur1
-        radius: 10
+        color: Colors.couleur1
+        radius: 5
         Rectangle {
             id: rectangle
             x: 5
             y: 5
             width: 190
             height: 90
-            radius: 10
+            radius: 5
             border.width: 0
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
@@ -37,7 +37,7 @@ Window {
                 id: _text
             x: 19
             y: 3
-            color: couleur1
+            color: Colors.couleur1
             text: qsTr("Vous allez supprimer la tâche :")
             font.pixelSize: 12
             anchors.horizontalCenter: parent.horizontalCenter
@@ -79,7 +79,7 @@ Window {
             y: 25
             width: 158
             height: 25
-            color: couleur1
+            color: Colors.couleur1
             text: taskName
             font.pixelSize: 18
             horizontalAlignment: Text.AlignHCenter
