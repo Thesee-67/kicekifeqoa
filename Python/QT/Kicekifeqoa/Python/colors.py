@@ -1,9 +1,23 @@
-from PySide6.QtCore import QObject, Property
+from PySide6.QtCore import QObject, Property, Slot, Signal
+
 
 class Colors(QObject):
+    styleChanged = Signal()  # Signal pour notifier le changement de style
+
     def __init__(self, parent=None, style=1):
         super().__init__(parent)
-        self.style = style
+        self._style = style
+
+    @Slot()
+    def changeStyle(self):
+        self._style += 1
+        if self._style > 3:
+            self._style = 1
+        self.styleChanged.emit()
+
+    @Property(int, notify=styleChanged)
+    def style(self):
+        return self._style
 
     @Property(str, constant=True)
     def couleur1(self):
@@ -19,9 +33,9 @@ class Colors(QObject):
         if self.style == 1:
             return "#FFFFFF"  # Blanc
         elif self.style == 2:
-            return "#FFFFFF"  # Vert clair
+            return "#FFFFFF"  # Blanc
         elif self.style == 3:
-            return "#FFFFFF"  # Jaune vif
+            return "#FFFFFF"  # Blanc
 
     @Property(str, constant=True)
     def couleur3(self):

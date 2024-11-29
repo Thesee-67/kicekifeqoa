@@ -37,7 +37,7 @@ Window {
             y: 11
             width: 100
             height: 96
-            source: "logo.png"
+            source: "images/logo.png"
             fillMode: Image.PreserveAspectFit
         }
     }
@@ -221,7 +221,7 @@ Window {
             Connections {
                 target: taskHandlerBackend
                 onTasksFetchedPriority2: function (tasks) {
-                    taskModel.clear();  // Remplacer par taskModelPriority2
+                    taskModel.clear();
                     for (var i = 0; i < tasks.length; i++) {
                         taskModel.append({
                             "id_task": tasks[i].id_task,

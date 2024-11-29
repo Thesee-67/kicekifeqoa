@@ -10,6 +10,10 @@ Window {
     height: 580
     title: qsTr("Login")
 
+    Component.onCompleted: {
+        openingAnimation.start(); // Lance l'animation d'ouverture dès que la fenêtre est créée
+    }
+
     // Connexion du signal de succès de login pour fermer la fenêtre
     Connections {
         target: taskHandlerLogin
@@ -25,6 +29,11 @@ Window {
             _text3.text = "Email incorrect";  // Affiche un message d'erreur pour l'email
         }
     }
+
+    function reloadWindow() {
+            loginWindow.close(); // Ferme la fenêtre actuelle
+            Qt.createComponent("Login.qml").createObject(null); // Crée une nouvelle instance de la fenêtre
+        }
 
     Rectangle {
         id: rectangle
@@ -173,6 +182,7 @@ Window {
             anchors.horizontalCenter: rectangle2.horizontalCenter
             selectionColor: "#f94b7cd9"
             selectedTextColor: Colors.couleur2
+            echoMode: TextInput.Password
         }
 
         Button {
@@ -218,7 +228,7 @@ Window {
             y: 18
             width: 102
             height: 101
-            source: "logo.png"
+            source: "images/logo.png"
         }
 
         Text {
@@ -235,6 +245,54 @@ Window {
         anchors.horizontalCenter: rectangle2.horizontalCenter
         }
 
+
+        Button {
+            id: colorButton
+            x: 520
+            y: 505
+            width: 40
+            height: 40
+
+            background: Rectangle {
+                    color: "transparent" // Pas de couleur de fond
+                }
+                contentItem: Image {
+                    source: "images/Cwheel.png" // Chemin vers votre image
+                    width: 40
+                    height: 40
+                    anchors.centerIn: parent
+                }
+            onClicked: {
+                Colors.changeStyle();
+                animation.start(); // Lance l'animation
+            }
+        }
+
+        SequentialAnimation {
+            id: animation
+            PropertyAnimation {
+                target: loginWindow
+                property: "opacity"
+                from: 1
+                to: 0
+                duration: 500
+            }
+            ScriptAction {
+                script: {
+                    loginWindow.reloadWindow(); // Ferme et rouvre la fenêtre
+                }
+            }
+        }
+
+
+        PropertyAnimation {
+            id: openingAnimation
+            target: loginWindow
+            property: "opacity"
+            from: 0
+            to: 1
+            duration: 500 // Durée de l'animation d'ouverture
+        }
 
         states: [
             State {
