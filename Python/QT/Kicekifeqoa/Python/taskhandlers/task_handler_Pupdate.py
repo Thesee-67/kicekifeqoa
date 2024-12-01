@@ -20,41 +20,34 @@ class TaskHandler(QObject):
     @Slot(str)
     def fetch_task_by_id(self, task_id):
         try:
-            print(f"Fetching task with ID: {task_id}")
             task_data = get_task(id_task=task_id)
-            print(f"Data received: {task_data}")
 
             if isinstance(task_data, list) and len(task_data) > 0:
                 task = task_data[0]
-                print(f"Task found: {task}")
                 self.task_id = task_id
                 self.task_name = task.get("name", "")
                 self.task_priority = task.get("priority", 0)
-                self.tags = task.get("tag", "")
-                print(self.tags)
+                # Transforme les tags en liste
+                self.tags = task.get("tag", "").split(",") if task.get("tag") else []
+                print(f"Tags récupérés : {self.tags}")
 
-                # Formater la date de fin avant de l'assigner
                 raw_end_date = task.get("end_date", None)
                 if raw_end_date:
-                    self.end_date = read_date_format(raw_end_date)  # Formater au format 'dd/mm/yyyy'
+                    self.end_date = read_date_format(raw_end_date)
                 else:
                     self.end_date = None
-
                 self.checked = task.get("checked", 0)
 
-                # Créer un dictionnaire avec toutes les données et émettre vers QML
                 task_info = {
                     "task_id": self.task_id,
                     "task_name": self.task_name,
                     "task_priority": self.task_priority,
                     "tag": self.tags,
-                    "end_date": self.end_date,  # La date formatée
+                    "end_date": self.end_date,
                     "checked": self.checked
                 }
 
-                # Émettre le dictionnaire formaté
                 self.taskFetched.emit(task_info)
-
             else:
                 print(f"Aucune tâche trouvée avec l'ID : {task_id}")
         except Exception as e:
@@ -77,6 +70,8 @@ class TaskHandler(QObject):
     @Slot(str)
     def add_tag(self, tagname):
         if tagname.strip():
+            if not isinstance(self.tags, list):
+                self.tags = []
             self.tags.append(tagname)
             self._update_tags_in_qml()
         else:
@@ -121,6 +116,10 @@ class TaskHandler(QObject):
         from Python.QT.Kicekifeqoa.Python.format_date import validate_date_format
         return validate_date_format(date_str)
 
+    def _check_dates_consistency(self):
+        if self.start_date and self.end_date:
+            from Python.QT.Kicekifeqoa.Python.format_date import check_dates_consistency
+            check_dates_consistency(self.start_date, self.end_date)
 
     @Slot(int)
     def task_completed(self, status):
