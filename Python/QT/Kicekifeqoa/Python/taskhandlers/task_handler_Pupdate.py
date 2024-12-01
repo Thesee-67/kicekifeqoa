@@ -1,6 +1,7 @@
 from PySide6.QtCore import QObject, Slot, Signal
 from Python.CRUD.Task.Update_Task import update_task, fetch_task
 from Python.CRUD.Task.Read_Task import get_task
+from Python.QT.Kicekifeqoa.Python.format_date import read_date_format
 import requests
 
 class TaskHandler(QObject):
@@ -26,13 +27,28 @@ class TaskHandler(QObject):
             if isinstance(task_data, list) and len(task_data) > 0:
                 task = task_data[0]
                 print(f"Task found: {task}")
-                self.task_id = task_id  # Mise à jour de l'ID de la tâche
+                self.task_id = task_id
                 self.task_name = task.get("name", "")
                 self.task_priority = task.get("priority", 0)
                 self.tags = task.get("tag", "").split(",") if task.get("tag") else []
-                self.end_date = task.get("end_date", None)
+
+                raw_end_date = task.get("end_date", None)
+                if raw_end_date:
+                    self.end_date = read_date_format(raw_end_date)
+                else:
+                    self.end_date = None
                 self.checked = task.get("checked", 0)
-                self.taskFetched.emit(task)
+
+                task_info = {
+                    "task_id": self.task_id,
+                    "task_name": self.task_name,
+                    "task_priority": self.task_priority,
+                    "tags": self.tags,
+                    "end_date": self.end_date,
+                    "checked": self.checked
+                }
+
+                self.taskFetched.emit(task_info)
             else:
                 print(f"Aucune tâche trouvée avec l'ID : {task_id}")
         except Exception as e:
