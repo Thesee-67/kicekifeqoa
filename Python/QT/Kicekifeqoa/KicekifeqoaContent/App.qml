@@ -263,7 +263,7 @@ Window {
                                     var PopupUpdateTask = component.createObject(root, {
                                         "taskName": taskData.task_name,
                                         "taskPriority": taskData.task_priority,
-                                        "taskTags": taskData.tag ? taskData.tag.split(",") : [],
+                                        "taskTags": taskData.tag ,
                                         "taskEndDate": taskData.end_date,
                                         "taskChecked": taskData.checked
                                     });

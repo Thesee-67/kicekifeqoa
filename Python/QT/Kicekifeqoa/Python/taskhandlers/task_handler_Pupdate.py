@@ -46,7 +46,7 @@ class TaskHandler(QObject):
                     "task_id": self.task_id,
                     "task_name": self.task_name,
                     "task_priority": self.task_priority,
-                    "tags": self.tags,
+                    "tag": self.tags,
                     "end_date": self.end_date,  # La date formatée
                     "checked": self.checked
                 }
