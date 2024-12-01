@@ -2,273 +2,236 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
-Window {
+ApplicationWindow {
     id: popupupdate
     visible: true
-    width: 400
-    height: 200
-    title: "Modifier Tâche"
+    color: "#00ffffff"
+    width: 420
+    height: 220
     flags: Qt.FramelessWindowHint
 
-    signal updateTaskName(string updatetaskname)
-    signal updateTaskPriority(int updatepriority)
-    signal addTag(string tag)
+    property string taskName: ""            // Propriétés pour pré-remplir les champs
+    property int taskPriority: 0
+    property string taskTags: []
+    property string taskEndDate: ""
+    property bool taskChecked: false
+
+    signal updateTaskName(string taskname)   // Signaux pour envoyer les modifications
+    signal updateTaskPriority(int priority)
+    signal updateTag(string tagname)
     signal removeLastTag()
-    signal addUser(string user)
-    signal removeLastUser()
-    signal updateStartDate(string updatestartdate)
-    signal updateEndDate(string updateenddate)
+    signal updateEndDate(string enddate)
     signal taskCompleted(int status)
     signal validateUpdateInfo()
 
-    ListModel {
-        id: tagsListModel
-    }
+    Rectangle {
+        id: background
+        x: 0
+        y: 0
+        width: 420
+        height: 220
+        color: "#4e598c"
+        radius: 10
+        border.width: 0
 
-    ListModel {
-        id: usersListModel
-    }
+        Rectangle {
+            id: rectangle
+            x: 10
+            y: 10
+            width: 400
+            height: 200
+            visible: true
+            radius: 10
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: 0
+            anchors.horizontalCenterOffset: 0
+            anchors.horizontalCenter: parent.horizontalCenter
 
-    Slider {
-        id: priorityslider
-        x: 271
-        y: 12
-        width: 115
-        height: 30
-        value: 0
-        stepSize: 1
-        live: true
-        to: 2
-        hoverEnabled: true
-        enabled: true
-        topPadding: 6
-    }
-
-    RoundButton {
-        id: tagadd
-        x: 177
-        y: 68
-        width: 20
-        height: 20
-        text: "+"
-        onClicked: {
-            addTag(tagname.text)
-            tagsListModel.append({"tag": tagname.text});
-            tagname.text = "";
-        }
-    }
-
-    RoundButton {
-        id: tagremove
-        x: 203
-        y: 68
-        width: 20
-        height: 20
-        text: "-"
-        onClicked: {
-            if (tagsListModel.count > 0) {
-                tagsListModel.remove(tagsListModel.count - 1)
-                removeLastTag();
+            ListModel {
+                id: tagsListModel
             }
-        }
-    }
 
-    RoundButton {
-        id: validate
-        x: 352
-        y: 152
-        text: "\u2713"
-        font.pointSize: 15
-        onClicked: {
-            updateTaskName(taskname.text);
-            updateTaskPriority(priorityslider.value);
-            updateStartDate(startdate.text);
-            updateEndDate(enddate.text);
-            taskCompleted(checkBox.checked ? 1 : 0);
-            validateUpdateInfo();
-            popupupdate.close();
-        }
-    }
-
-    Text {
-        id: prioritytext
-        x: 271
-        y: 40
-        width: 115
-        height: 16
-        font.pixelSize: 12
-        horizontalAlignment: Text.AlignHCenter
-        text: priorityslider.value === 0 ? "Priorité basse"
-             : priorityslider.value === 1 ? "Priorité moyenne"
-             : "URGENT"
-    }
-
-    TextField {
-        id: tagname
-        x: 16
-        y: 63
-        width: 155
-        height: 30
-        placeholderText: qsTr("Etiquettes")
-    }
-
-    RoundButton {
-        id: useradd
-        x: 177
-        y: 104
-        width: 20
-        height: 20
-        text: "+"
-        onClicked: {
-            addUser(username.text)
-            usersListModel.append({"user": username.text});
-            username.text = "";
-        }
-    }
-
-    RoundButton {
-        id: userremove
-        x: 203
-        y: 104
-        width: 20
-        height: 20
-        text: "-"
-        onClicked: {
-            if (usersListModel.count > 0) {
-                usersListModel.remove(usersListModel.count - 1)
-                removeLastUser();
+            Component.onCompleted: {
+                // Remplir la liste des tags lors de l'ouverture de la fenêtre
+                if (taskTags && taskTags.length > 0) {
+                    const tags = taskTags.split(",");
+                    tags.forEach(tag => tagsListModel.append({"tag": tag.trim()}));
+                }
             }
-        }
-    }
 
-    TextField {
-        id: username
-        x: 16
-        y: 99
-        width: 155
-        height: 30
-        placeholderText: qsTr("Utilisateurs / Groupes")
-    }
+            Slider {
+                id: priorityslider
+                x: 273
+                y: 4
+                width: 115
+                height: 30
+                value: taskPriority
+                scale: 0.7
+                stepSize: 1
+                live: true
+                to: 2
+                hoverEnabled: true
+                enabled: true
+                topPadding: 6
+            }
 
-    TextField {
-        id: taskname
-        x: 16
-        y: 12
-        width: 181
-        height: 30
-        placeholderText: qsTr("Nom de la tâche")
-    }
+            RoundButton {
+                id: tagadd
+                x: 173
+                y: 65
+                width: 20
+                height: 20
+                text: "+"
+                onClicked: {
+                    updateTag(tagname.text)
+                    tagsListModel.append({"tag": tagname.text});
+                    tagname.text = "";
+                }
+            }
 
-    TextField {
-        id: startdate
-        x: 16
-        y: 157
-        width: 95
-        height: 30
-        horizontalAlignment: Text.AlignHCenter
-        placeholderText: qsTr("--/--/----")
-    }
+            RoundButton {
+                id: tagremove
+                x: 199
+                y: 65
+                width: 20
+                height: 20
+                text: "-"
+                onClicked: {
+                    if (tagsListModel.count > 0) {
+                        tagsListModel.remove(tagsListModel.count - 1)
+                        removeLastTag();
+                    }
+                }
+            }
 
-    TextField {
-        id: enddate
-        x: 128
-        y: 157
-        width: 95
-        height: 30
-        horizontalAlignment: Text.AlignHCenter
-        placeholderText: qsTr("--/--/----")
-    }
+            RoundButton {
+                id: validate
+                x: 306
+                y: 152
+                text: "\u2713"
+                anchors.right: close.left
+                anchors.top: close.top
+                anchors.bottom: parent.bottom
+                anchors.rightMargin: 6
+                anchors.bottomMargin: 8
+                checkable: false
+                icon.cache: true
+                font.pointSize: 15
+                onClicked: {
+                    updateTaskName(taskname.text);
+                    updateTaskPriority(priorityslider.value);
+                    updateEndDate(enddate.text);
+                    taskCompleted(checkBox.checked ? 1 : 0);
+                    validateUpdateInfo();
+                    popupupdate.close();
+                }
+            }
 
-    Text {
-        id: _text3
-        x: 115
-        y: 157
-        text: qsTr("-")
-        font.pixelSize: 20
-    }
+            Text {
+                id: prioritytext
+                x: 277
+                y: 26
+                width: 115
+                height: 16
+                color: "#4e598c"
+                font.pixelSize: 12
+                horizontalAlignment: Text.AlignHCenter
+                text: priorityslider.value === 0 ? "Priorité basse"
+                     : priorityslider.value === 1 ? "Priorité moyenne"
+                                                  : "URGENT"
+                anchors.right: parent.right
+                anchors.rightMargin: 8
+            }
 
-    Text {
-        id: _text4
-        x: 16
-        y: 143
-        width: 95
-        height: 15
-        text: qsTr("Date de début :")
-        font.pixelSize: 11
-    }
+            TextField {
+                id: tagname
+                x: 15
+                y: 63
+                width: 155
+                height: 30
+                placeholderText: qsTr("Etiquettes")
+            }
 
-    Text {
-        id: _text5
-        x: 128
-        y: 143
-        width: 95
-        height: 15
-        text: qsTr("Date de fin :")
-        font.pixelSize: 11
+            TextField {
+                id: taskname
+                x: 15
+                y: 12
+                width: 181
+                height: 30
+                placeholderText: qsTr("Nom de la tâche")
+                text: taskName  // Pré-rempli avec le nom de la tâche
+            }
 
-        CheckBox {
-            id: checkBox
-            x: 97
-            y: 13
-            width: 150
-            height: 30
-            text: qsTr("Tache Terminée")
-            scale: 0.8
-            checkState: Qt.Unchecked
-        }
-    }
+            TextField {
+                id: enddate
+                x: 15
+                y: 157
+                width: 95
+                height: 30
+                horizontalAlignment: Text.AlignHCenter
+                placeholderText: qsTr("--/--/----")
+                text: taskEndDate  // Pré-rempli avec la date de fin
+            }
 
-    Flickable {
-        id: tagsFlickable
-        x: 231
-        y: 68
-        width: 150
-        height: 30
-        contentWidth: tagsRow.width
-        contentHeight: tagsRow.height
-        clip: true
+            Text {
+                id: _text5
+                x: 15
+                y: 143
+                width: 95
+                height: 15
+                color: "#4e598c"
+                text: qsTr("Date de fin :")
+                font.pixelSize: 11
 
-        Row {
-            id: tagsRow
-            spacing: 10
-            Repeater {
-                model: tagsListModel
-                delegate: Text {
-                    text: model.tag
+                CheckBox {
+                    id: checkBox
+                    x: 263
+                    y: -106
+                    width: 150
+                    height: 30
+                    text: qsTr("Tâche Terminée")
+                    scale: 0.8
+                    checked: taskChecked  // Pré-rempli avec le statut de la tâche
+                }
+            }
+
+            Flickable {
+                id: tagsFlickable
+                x: 227
+                y: 65
+                width: 150
+                height: 30
+                contentWidth: tagsRow.width
+                contentHeight: tagsRow.height
+                clip: true
+
+                Row {
+                    id: tagsRow
+                    spacing: 10
+                    Repeater {
+                        model: tagsListModel
+                        delegate: Text {
+                            text: model.tag
+                        }
+                    }
+                }
+            }
+
+            RoundButton {
+                id: close
+                x: 352
+                y: 152
+                text: "X"
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.rightMargin: 8
+                anchors.topMargin: 6
+                anchors.bottomMargin: 8
+                font.pointSize: 15
+                onClicked: {
+                    popupupdate.close();
                 }
             }
         }
-    }
-
-    Flickable {
-        id: usersFlickable
-        x: 231
-        y: 104
-        width: 150
-        height: 30
-        contentWidth: usersRow.width
-        contentHeight: usersRow.height
-        clip: true
-
-        Row {
-            id: usersRow
-            spacing: 10
-            Repeater {
-                model: usersListModel
-                delegate: Text {
-                    text: model.user
-                }
-            }
-        }
-    }
-
-    MouseArea {
-        id: mouseArea
-        x: 231
-        y: 63
-        width: 150
-        height: 66
-        enabled: false
-        cursorShape: Qt.DragMoveCursor
     }
 }

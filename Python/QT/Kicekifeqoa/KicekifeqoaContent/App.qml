@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 
 Window {
+    id: root
     visible: true
     color: Colors.couleur1
     width: 1000
@@ -236,16 +237,62 @@ Window {
             }
 
             RoundButton {
-                id: modify
-                x: 836
-                y: -71
-                text: "🖌️"
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.margins: 10
-                anchors.rightMargin: -651
-                anchors.bottomMargin: 655
-            }
+                    id: modify
+                    x: 836
+                    y: -71
+                    text: "🖌️"
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.margins: 10
+                    anchors.rightMargin: -651
+                    anchors.bottomMargin: 655
+                    onClicked: {
+                        if (selectedTaskId !== "") {
+                            taskHandlerUpdate.fetch_task_by_id(selectedTaskId);  // Appel pour récupérer les données
+                        } else {
+                            console.error("Erreur : Aucune tâche sélectionnée.");
+                        }
+                    }
+                        Connections {
+                            target: taskHandlerUpdate
+                            onTaskFetched: function (taskData) {
+                                // Créer le composant du popup
+                                var component = Qt.createComponent("PopupUpdateTask.qml");
+
+                                if (component.status === Component.Ready) {
+                                    var PopupUpdateTask = component.createObject(root, {
+                                        "taskName": taskData.name,
+                                        "taskPriority": taskData.priority,
+                                        "taskTags": taskData.tag ? taskData.tag.split(",") : [],
+                                        "taskEndDate": taskData.end_date,
+                                        "taskChecked": taskData.checked
+                                    });
+
+                                    if (PopupUpdateTask === null) {
+                                        console.error("Erreur lors de la création de PopupUpdateTask");
+                                    } else {
+                                        // Assigner les signaux pour gérer les mises à jour
+                                        if (taskHandlerUpdate) {
+                                            PopupUpdateTask.updateTaskName.connect(taskHandlerUpdate.update_task_name);
+                                            PopupUpdateTask.updateTaskPriority.connect(taskHandlerUpdate.update_task_priority);
+                                            PopupUpdateTask.updateTag.connect(taskHandlerUpdate.add_tag);
+                                            PopupUpdateTask.removeLastTag.connect(taskHandlerUpdate.remove_last_tag);
+                                            PopupUpdateTask.updateEndDate.connect(taskHandlerUpdate.update_end_date);
+                                            PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
+                                            PopupUpdateTask.validateUpdateInfo.connect(function () {
+                                                taskHandlerUpdate.validate_update_info();
+                                                taskHandlerBackend.fetchTasks();
+                                            });
+                                        } else {
+                                            console.error("Erreur : TaskHandler est introuvable.");
+                                        }
+                                    }
+                                } else {
+                                    console.error("Erreur lors du chargement de PopupUpdateTask.qml");
+                                }
+                            }
+                        }
+                    }
 
             RoundButton {
                 id: remove

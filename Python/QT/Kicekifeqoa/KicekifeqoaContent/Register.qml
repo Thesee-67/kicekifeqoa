@@ -16,6 +16,30 @@ Window {
         onAlreadyMail: {
             _text3.text = "Mail déjà existant";  // Affiche un message d'erreur pour le email
         }
+        onBadMail: {
+            _text3.text = "Ce mail n'existe pas";  // Affiche un message d'erreur pour le email
+        }
+        onShortPass: {
+            _text3.text = "Mot de passe trop court (8 caractères min)";  // Affiche un message d'erreur pour le mdp
+        }
+         onLongPass: {
+            _text3.text = "Mot de passe trop long (72 caractères max)";  // Affiche un message d'erreur pour le mdp
+        }
+        onUppercasePass: {
+            _text3.text = "Le mot de passe doit contenir une majuscule";  // Affiche un message d'erreur pour le mdp
+        }
+        onLowercasePass: {
+            _text3.text = "Le mot de passe doit contenir une minuscule";  // Affiche un message d'erreur pour le mdp
+        }
+        onNumberPass: {
+            _text3.text = "Le mot de passe doit contenir un nombre";  // Affiche un message d'erreur pour le mdp
+        }
+        onSpecialPass: {
+            _text3.text = "Le mot de passe doit contenir (!@#$%^&*(),.?{}|<>) ";  // Affiche un message d'erreur pour le mdp
+        }
+        onUnknownError: {
+            _text3.text = "Une erreur inconnu s'est produite";  // Affiche un message d'erreur pour le mdp
+        }
     }
     Rectangle {
         x: 0

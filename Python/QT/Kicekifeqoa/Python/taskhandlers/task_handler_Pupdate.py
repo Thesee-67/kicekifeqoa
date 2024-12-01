@@ -1,17 +1,42 @@
-from PySide6.QtCore import QObject, Slot
-#from Python.CRUD.Task.Update_Task import update_task
+from PySide6.QtCore import QObject, Slot, Signal
+from Python.CRUD.Task.Update_Task import update_task, fetch_task
+from Python.CRUD.Task.Read_Task import get_task
+import requests
 
 class TaskHandler(QObject):
+    taskFetched = Signal(dict)  # Signal pour transmettre les données au QML
+
     def __init__(self, engine):
         super().__init__()
         self.engine = engine
+        self.task_id = ""
         self.task_name = ""
         self.task_priority = 0
         self.tags = []
-        self.users = []
-        self.start_date = None
         self.end_date = None
         self.checked = 0
+
+    @Slot(str)
+    def fetch_task_by_id(self, task_id):
+        try:
+            print(f"Fetching task with ID: {task_id}")
+            task_data = get_task(id_task=task_id)
+            print(f"Data received: {task_data}")
+
+            if isinstance(task_data, list) and len(task_data) > 0:
+                task = task_data[0]
+                print(f"Task found: {task}")
+                self.task_id = task_id  # Mise à jour de l'ID de la tâche
+                self.task_name = task.get("name", "")
+                self.task_priority = task.get("priority", 0)
+                self.tags = task.get("tag", "").split(",") if task.get("tag") else []
+                self.end_date = task.get("end_date", None)
+                self.checked = task.get("checked", 0)
+                self.taskFetched.emit(task)
+            else:
+                print(f"Aucune tâche trouvée avec l'ID : {task_id}")
+        except Exception as e:
+            print(f"Erreur lors de la récupération de la tâche : {e}")
 
     @Slot(str)
     def update_task_name(self, updatetaskname):
@@ -64,13 +89,6 @@ class TaskHandler(QObject):
         root_object.setProperty("usersListModel", self.users)
 
     @Slot(str)
-    def update_start_date(self, updatestartdate):
-        try:
-            self.start_date = self._validate_date_format(updatestartdate)
-        except ValueError as e:
-            print(f"Erreur : {e}")
-
-    @Slot(str)
     def update_end_date(self, updateenddate):
         try:
             self.end_date = self._validate_date_format(updateenddate)
@@ -93,31 +111,25 @@ class TaskHandler(QObject):
     @Slot()
     def validate_update_info(self):
         try:
-            if not self.task_name:
-                raise ValueError("Le nom de la tâche ne peut pas être vide.")
-            if not self.start_date or not self.end_date:
-                raise ValueError("Les dates de début et de fin doivent être renseignées.")
-            self._check_dates_consistency()
-            formatted_tags = ", ".join(self.tags)
+            if not self.task_name.strip():
+                raise ValueError("Le nom de la tâche est obligatoire.")
+            if not self.end_date.strip():
+                raise ValueError("La date de fin est obligatoire.")
 
-            #update_task(task_id, name=None, end_date=None, checked=None, priority=None, tag=None)
-            '''update_task(task_id, {
-                "name": self.task_name,
-                "end_date": self.end_date,
-                "checked": self.checked,
-                "priority": self.task_priority,
-                "tag": formatted_tags,
-            })'''
+            response = update_task(
+                id_task=self.task_id,
+                name=self.task_name,
+                end_date=self.end_date,
+                checked=self.checked,
+                priority=self.task_priority,
+                tag=", ".join(self.tags)
+            )
 
-            print("----- Informations sur la tâche -----")
-            priority_labels = ["Priorité basse", "Priorité moyenne", "URGENT"]
-            print(f"Nom de la tâche : {self.task_name}")
-            print(f"Priorité : {priority_labels[self.task_priority]}")
-            print(f"Tags : {self.tags}")
-            print(f"Utilisateurs : {self.users}")
-            print(f"Date de début : {self.start_date}")
-            print(f"Date de fin : {self.end_date}")
-            print(f"Checked : {self.checked}")
-
-        except ValueError as e:
-            print(f"Erreur de validation : {e}")
+            if "succès" in response.lower():
+                print("Mise à jour réussie :", response)
+            else:
+                print("Erreur lors de la mise à jour :", response)
+        except ValueError as ve:
+            print("Erreur de validation :", ve)
+        except Exception as e:
+            print("Erreur inattendue :", e)
