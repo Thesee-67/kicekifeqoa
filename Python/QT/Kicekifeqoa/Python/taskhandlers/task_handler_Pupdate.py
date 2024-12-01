@@ -32,23 +32,28 @@ class TaskHandler(QObject):
                 self.task_priority = task.get("priority", 0)
                 self.tags = task.get("tag", "").split(",") if task.get("tag") else []
 
+                # Formater la date de fin avant de l'assigner
                 raw_end_date = task.get("end_date", None)
                 if raw_end_date:
-                    self.end_date = read_date_format(raw_end_date)
+                    self.end_date = read_date_format(raw_end_date)  # Formater au format 'dd/mm/yyyy'
                 else:
                     self.end_date = None
+
                 self.checked = task.get("checked", 0)
 
+                # Créer un dictionnaire avec toutes les données et émettre vers QML
                 task_info = {
                     "task_id": self.task_id,
                     "task_name": self.task_name,
                     "task_priority": self.task_priority,
                     "tags": self.tags,
-                    "end_date": self.end_date,
+                    "end_date": self.end_date,  # La date formatée
                     "checked": self.checked
                 }
 
+                # Émettre le dictionnaire formaté
                 self.taskFetched.emit(task_info)
+
             else:
                 print(f"Aucune tâche trouvée avec l'ID : {task_id}")
         except Exception as e:
@@ -115,10 +120,6 @@ class TaskHandler(QObject):
         from Python.QT.Kicekifeqoa.Python.format_date import validate_date_format
         return validate_date_format(date_str)
 
-    def _check_dates_consistency(self):
-        if self.start_date and self.end_date:
-            from Python.QT.Kicekifeqoa.Python.format_date import check_dates_consistency
-            check_dates_consistency(self.start_date, self.end_date)
 
     @Slot(int)
     def task_completed(self, status):
