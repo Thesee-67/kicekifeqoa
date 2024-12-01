@@ -253,30 +253,46 @@ Window {
                             console.error("Erreur : Aucune tâche sélectionnée.");
                         }
                     }
-                }
+                        Connections {
+                            target: taskHandlerUpdate
+                            onTaskFetched: function (taskData) {
+                                // Créer le composant du popup
+                                var component = Qt.createComponent("PopupUpdateTask.qml");
 
-                // Connexion au signal pour afficher la fenêtre avec les données récupérées
-                Connections {
-                    target: taskHandlerUpdate
-                    onTaskFetched: function(taskData) {
-                        var component = Qt.createComponent("PopupUpdateTask.qml");
-                        if (component.status === Component.Ready) {
-                            var popup = component.createObject(root, {
-                                "taskName": taskData.name,
-                                "taskPriority": taskData.priority,
-                                "taskTags": taskData.tag ? taskData.tag.split(",") : [],
-                                "taskEndDate": taskData.end_date,
-                                "taskChecked": taskData.checked
-                            });
-                            if (popup === null) {
-                                console.error("Erreur lors de la création de PopupUpdateTask");
+                                if (component.status === Component.Ready) {
+                                    var PopupUpdateTask = component.createObject(root, {
+                                        "taskName": taskData.name,
+                                        "taskPriority": taskData.priority,
+                                        "taskTags": taskData.tag ? taskData.tag.split(",") : [],
+                                        "taskEndDate": taskData.end_date,
+                                        "taskChecked": taskData.checked
+                                    });
+
+                                    if (PopupUpdateTask === null) {
+                                        console.error("Erreur lors de la création de PopupUpdateTask");
+                                    } else {
+                                        // Assigner les signaux pour gérer les mises à jour
+                                        if (taskHandlerUpdate) {
+                                            PopupUpdateTask.updateTaskName.connect(taskHandlerUpdate.update_task_name);
+                                            PopupUpdateTask.updateTaskPriority.connect(taskHandlerUpdate.update_task_priority);
+                                            PopupUpdateTask.updateTag.connect(taskHandlerUpdate.add_tag);
+                                            PopupUpdateTask.removeLastTag.connect(taskHandlerUpdate.remove_last_tag);
+                                            PopupUpdateTask.updateEndDate.connect(taskHandlerUpdate.update_end_date);
+                                            PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
+                                            PopupUpdateTask.validateUpdateInfo.connect(function () {
+                                                taskHandlerUpdate.validate_update_info();
+                                                taskHandlerBackend.fetchTasks();
+                                            });
+                                        } else {
+                                            console.error("Erreur : TaskHandler est introuvable.");
+                                        }
+                                    }
+                                } else {
+                                    console.error("Erreur lors du chargement de PopupUpdateTask.qml");
+                                }
                             }
-                        } else {
-                            console.error("Erreur lors du chargement de PopupUpdateTask.qml");
                         }
                     }
-                }
-
 
             RoundButton {
                 id: remove

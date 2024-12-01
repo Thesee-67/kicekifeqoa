@@ -89,13 +89,6 @@ class TaskHandler(QObject):
         root_object.setProperty("usersListModel", self.users)
 
     @Slot(str)
-    def update_start_date(self, updatestartdate):
-        try:
-            self.start_date = self._validate_date_format(updatestartdate)
-        except ValueError as e:
-            print(f"Erreur : {e}")
-
-    @Slot(str)
     def update_end_date(self, updateenddate):
         try:
             self.end_date = self._validate_date_format(updateenddate)
