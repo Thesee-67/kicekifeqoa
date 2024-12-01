@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 
 Window {
+    id: root
     visible: true
     color: "#4e598c"
     width: 1000
@@ -236,16 +237,46 @@ Window {
             }
 
             RoundButton {
-                id: modify
-                x: 836
-                y: -71
-                text: "🖌️"
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.margins: 10
-                anchors.rightMargin: -651
-                anchors.bottomMargin: 655
-            }
+                    id: modify
+                    x: 836
+                    y: -71
+                    text: "🖌️"
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.margins: 10
+                    anchors.rightMargin: -651
+                    anchors.bottomMargin: 655
+                    onClicked: {
+                        if (selectedTaskId !== "") {
+                            taskHandlerUpdate.fetch_task_by_id(selectedTaskId);  // Appel pour récupérer les données
+                        } else {
+                            console.error("Erreur : Aucune tâche sélectionnée.");
+                        }
+                    }
+                }
+
+                // Connexion au signal pour afficher la fenêtre avec les données récupérées
+                Connections {
+                    target: taskHandlerUpdate
+                    onTaskFetched: function(taskData) {
+                        var component = Qt.createComponent("PopupUpdateTask.qml");
+                        if (component.status === Component.Ready) {
+                            var popup = component.createObject(root, {
+                                "taskName": taskData.name,
+                                "taskPriority": taskData.priority,
+                                "taskTags": taskData.tag ? taskData.tag.split(",") : [],
+                                "taskEndDate": taskData.end_date,
+                                "taskChecked": taskData.checked
+                            });
+                            if (popup === null) {
+                                console.error("Erreur lors de la création de PopupUpdateTask");
+                            }
+                        } else {
+                            console.error("Erreur lors du chargement de PopupUpdateTask.qml");
+                        }
+                    }
+                }
+
 
             RoundButton {
                 id: remove

@@ -2,6 +2,36 @@ import requests
 
 url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
+
+def fetch_task(id_task):
+    """
+    Récupère les détails d'une tâche existante en utilisant l'API.
+
+    Paramètres:
+    - id_task (int) : l'ID de la tâche à récupérer.
+
+    Retourne:
+    - Les données de la tâche ou un message d'erreur.
+    """
+    post_data = {
+        'table': 'Task',
+        'action': 'read',  # Action pour lire les données
+        'column': 'id_task',
+        'value': id_task
+    }
+
+    response = requests.post(url, json=post_data)
+
+    if response.status_code == 200:
+        data = response.json()
+        if 'data' in data and len(data['data']) > 0:
+            return data['data'][0]  # Retourne les données de la tâche
+        else:
+            return f"Aucune tâche trouvée avec l'ID {id_task}."
+    else:
+        return f"Erreur lors de la récupération : {response.status_code} - {response.text}"
+
+
 def update_task(id_task, name=None, end_date=None, checked=None, priority=None, tag=None):
     """
     Met à jour une tâche existante en utilisant l'API.
@@ -49,6 +79,3 @@ def update_task(id_task, name=None, end_date=None, checked=None, priority=None, 
         return f"Tâche avec ID {id_task} mise à jour avec succès."
     else:
         return f"Erreur lors de la mise à jour : {response.status_code} - {response.text}"
-
-# Test
-print(update_task(149, name="Finir Proj", end_date="2024-12-22 22:02:00", priority=2, tag="Travail"))
