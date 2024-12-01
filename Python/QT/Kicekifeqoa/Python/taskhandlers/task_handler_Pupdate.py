@@ -30,7 +30,8 @@ class TaskHandler(QObject):
                 self.task_id = task_id
                 self.task_name = task.get("name", "")
                 self.task_priority = task.get("priority", 0)
-                self.tags = task.get("tag", "").split(",") if task.get("tag") else []
+                self.tags = task.get("tag", "")
+                print(self.tags)
 
                 # Formater la date de fin avant de l'assigner
                 raw_end_date = task.get("end_date", None)
