@@ -6,7 +6,7 @@ import QtQuick.Window 2.15
 Window {
     id: root
     visible: true
-    color: "#4e598c"
+    color: Colors.couleur1
     width: 1000
     height: 800
     title: "Kicekifeqoa"
@@ -26,9 +26,9 @@ Window {
         y: 22
         width: 955
         height: 754
-        color: "#ffffff"
-        radius: 10
-        border.color: "#bc6c25"
+        color: Colors.couleur2
+        radius: 5
+        border.color: Colors.couleur6
         border.width: 0
         layer.enabled: false
 
@@ -38,7 +38,7 @@ Window {
             y: 11
             width: 100
             height: 96
-            source: "logo.png"
+            source: "images/logo.png"
             fillMode: Image.PreserveAspectFit
         }
     }
@@ -54,10 +54,10 @@ Window {
 
         Rectangle {
             id: taskArea
-            color: "#ff8c42"
-            radius: 10
+            color: Colors.couleur5
+            radius: 5
             border.width: 0
-            border.color: "#bc6c25"
+            border.color: Colors.couleur6
             width: 225
             Layout.fillHeight: true
 
@@ -84,7 +84,7 @@ Window {
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee"
                     border.width: 2
-                    border.color: "#ffffff"
+                    border.color: Colors.couleur2
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     property bool selected: false
@@ -131,7 +131,7 @@ Window {
                         id: taskid
                         x: 150
                         y: 25
-                        color: "#bcbcbc"
+                        color: Colors.couleur7
                         text: model.id_task
                         font.pixelSize: 17
                         font.styleName: "Gras"
@@ -222,7 +222,7 @@ Window {
             Connections {
                 target: taskHandlerBackend
                 onTasksFetchedPriority2: function (tasks) {
-                    taskModel.clear();  // Remplacer par taskModelPriority2
+                    taskModel.clear();
                     for (var i = 0; i < tasks.length; i++) {
                         taskModel.append({
                             "id_task": tasks[i].id_task,
@@ -339,10 +339,10 @@ Window {
 
         Rectangle {
             id: taskArea2
-            color: "#fcaf58"
-            radius: 10
+            color: Colors.couleur4
+            radius: 5
             border.width: 0
-            border.color: "#bc6c25"
+            border.color: Colors.couleur6
             width: 225
             Layout.fillHeight: true
 
@@ -367,9 +367,9 @@ Window {
                     width: 200
                     height: 100
                     radius: 5
-                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
+                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la Colors.couleur si sélectionnée
                     border.width: 2
-                    border.color: "#ffffff"
+                    border.color: Colors.couleur2
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     property bool selected: false
@@ -414,7 +414,7 @@ Window {
                         id: taskid2
                         x: 150
                         y: 25
-                        color: "#bcbcbc"
+                        color: Colors.couleur7
                         text: model.id_task
                         font.pixelSize: 17
                         font.styleName: "Gras"
@@ -483,10 +483,10 @@ Window {
         }
         Rectangle {
             id: taskArea3
-            color: "#f9c784"
-            radius: 10
+            color: Colors.couleur3
+            radius: 5
             border.width: 0
-            border.color: "#bc6c25"
+            border.color: Colors.couleur6
             width: 225
             Layout.fillHeight: true
 
@@ -511,9 +511,9 @@ Window {
                     width: 200
                     height: 100
                     radius: 5
-                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
+                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la Colors.couleur si sélectionnée
                     border.width: 2
-                    border.color: "#ffffff"
+                    border.color: Colors.couleur2
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     property bool selected: false
@@ -558,7 +558,7 @@ Window {
                         id: taskid3
                         x: 150
                         y: 25
-                        color: "#bcbcbc"
+                        color: Colors.couleur7
                         text: model.id_task
                         font.pixelSize: 17
                         font.styleName: "Gras"
@@ -628,7 +628,7 @@ Window {
         Rectangle {
             id: taskArea4
             color: "#eeeeee"
-            radius: 10
+            radius: 5
             border.width: 2
             border.color: "#afafaf"
             width: 225
@@ -655,9 +655,9 @@ Window {
                     width: 200
                     height: 100
                     radius: 5
-                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la couleur si sélectionnée
+                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la Colors.couleur si sélectionnée
                     border.width: 2
-                    border.color: "#ffffff"
+                    border.color: Colors.couleur2
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     property bool selected: false
@@ -702,7 +702,7 @@ Window {
                         id: taskid4
                         x: 150
                         y: 25
-                        color: "#bcbcbc"
+                        color: Colors.couleur7
                         text: model.id_task
                         font.pixelSize: 17
                         font.styleName: "Gras"
@@ -778,8 +778,8 @@ Window {
         width: 719
         height: 96
         color: "#eeeeee"
-        radius: 10
-        border.color: "#bc6c25"
+        radius: 5
+        border.color: Colors.couleur6
         border.width: 0
         layer.enabled: false
     }
@@ -790,9 +790,9 @@ Window {
         y: 147
         width: 213
         height: 42
-        color: "#ffffff"
-        radius: 10
-        border.color: "#bc6c25"
+        color: Colors.couleur2
+        radius: 5
+        border.color: Colors.couleur6
         border.width: 0
         layer.enabled: false
     }
@@ -803,9 +803,9 @@ Window {
         y: 147
         width: 213
         height: 42
-        color: "#ffffff"
-        radius: 10
-        border.color: "#bc6c25"
+        color: Colors.couleur2
+        radius: 5
+        border.color: Colors.couleur6
         border.width: 0
         layer.enabled: false
     }
@@ -816,9 +816,9 @@ Window {
         y: 147
         width: 213
         height: 42
-        color: "#ffffff"
-        radius: 10
-        border.color: "#bc6c25"
+        color: Colors.couleur2
+        radius: 5
+        border.color: Colors.couleur6
         border.width: 0
         layer.enabled: false
     }
@@ -829,9 +829,9 @@ Window {
         y: 147
         width: 213
         height: 42
-        color: "#ffffff"
-        radius: 10
-        border.color: "#bc6c25"
+        color: Colors.couleur2
+        radius: 5
+        border.color: Colors.couleur6
         border.width: 0
         layer.enabled: false
 
@@ -841,7 +841,7 @@ Window {
             y: 2
             width: 213
             height: 38
-            color: "#ff8c42"
+            color: Colors.couleur5
             text: qsTr("Urgent")
             font.pixelSize: 28
             horizontalAlignment: Text.AlignHCenter
@@ -854,7 +854,7 @@ Window {
             y: 2
             width: 213
             height: 38
-            color: "#fcaf58"
+            color: Colors.couleur4
             text: qsTr("En cours")
             font.pixelSize: 28
             horizontalAlignment: Text.AlignHCenter
@@ -867,7 +867,7 @@ Window {
             y: 2
             width: 213
             height: 38
-            color: "#f9c784"
+            color: Colors.couleur3
             text: qsTr("A Faire")
             font.pixelSize: 28
             horizontalAlignment: Text.AlignHCenter

@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import qInstallMessageHandler, QtMsgType, QObject, Slot, Signal
+from PySide6.QtCore import qInstallMessageHandler, QtMsgType
 from autogen.settings import url, import_paths
 
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
@@ -12,8 +12,7 @@ from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pdelete import TaskH
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_AppRead import TaskHandler as TaskHandlerBackend
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Login import TaskHandler as TaskHandlerLogin
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Register import TaskHandler as TaskHandlerRegister
-
-
+from Python.QT.Kicekifeqoa.Python.colors import Colors
 
 def message_handler(mode, context, message):
     if mode == QtMsgType.QtDebugMsg:
@@ -27,20 +26,27 @@ def message_handler(mode, context, message):
     elif mode == QtMsgType.QtFatalMsg:
         print(f"Fatal: {message}")
 
-
 if __name__ == '__main__':
+    choix = 1
 
+    # Installer le gestionnaire de messages Qt
     qInstallMessageHandler(message_handler)
 
+    # Initialisation de l'application
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
 
     app_dir = Path(__file__).parent.parent
     engine.addImportPath(os.fspath(app_dir))
 
+    # Instancier Colors avec le style choisi
+    colors = Colors(style=choix)
+    engine.rootContext().setContextProperty("Colors", colors)
+
     for path in import_paths:
         engine.addImportPath(os.fspath(app_dir / path))
 
+    # Ajouter les gestionnaires de tâches
     task_handler_create = TaskHandlerCreate(engine)
     task_handler_update = TaskHandlerUpdate(engine)
     task_handler_delete = TaskHandlerDelete(engine)
@@ -55,8 +61,10 @@ if __name__ == '__main__':
     engine.rootContext().setContextProperty("taskHandlerDelete", task_handler_delete)
     engine.rootContext().setContextProperty("taskHandlerBackend", task_handler_backend)
 
+    # Charger le fichier QML
     engine.load(os.fspath(app_dir / url))
     if not engine.rootObjects():
         sys.exit(-1)
 
+    # Lancer l'application
     sys.exit(app.exec())
