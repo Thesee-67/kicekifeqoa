@@ -27,7 +27,6 @@ class TaskHandler(QObject):
                 self.task_id = task_id
                 self.task_name = task.get("name", "")
                 self.task_priority = task.get("priority", 0)
-                # Transforme les tags en liste
                 self.tags = task.get("tag", "").split(",") if task.get("tag") else []
                 print(f"Tags récupérés : {self.tags}")
 

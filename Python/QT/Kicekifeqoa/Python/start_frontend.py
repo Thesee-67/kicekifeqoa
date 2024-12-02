@@ -29,24 +29,20 @@ def message_handler(mode, context, message):
 if __name__ == '__main__':
     choix = 1
 
-    # Installer le gestionnaire de messages Qt
     qInstallMessageHandler(message_handler)
 
-    # Initialisation de l'application
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
 
     app_dir = Path(__file__).parent.parent
     engine.addImportPath(os.fspath(app_dir))
 
-    # Instancier Colors avec le style choisi
     colors = Colors(style=choix)
     engine.rootContext().setContextProperty("Colors", colors)
 
     for path in import_paths:
         engine.addImportPath(os.fspath(app_dir / path))
 
-    # Ajouter les gestionnaires de tâches
     task_handler_create = TaskHandlerCreate(engine)
     task_handler_update = TaskHandlerUpdate(engine)
     task_handler_delete = TaskHandlerDelete(engine)

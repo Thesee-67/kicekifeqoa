@@ -12,7 +12,7 @@ ApplicationWindow {
 
     property string taskName: ""            // Propriétés pour pré-remplir les champs
     property int taskPriority: 0
-    property string taskTags: []
+    property string taskTags: ""
     property string taskEndDate: ""
     property bool taskChecked: false
 
@@ -52,7 +52,6 @@ ApplicationWindow {
             }
 
             Component.onCompleted: {
-                // Remplir la liste des tags lors de l'ouverture de la fenêtre
                 if (taskTags && taskTags.length > 0) {
                     const tags = taskTags.split(",");
                     tags.forEach(tag => tagsListModel.append({"tag": tag.trim()}));
