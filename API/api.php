@@ -2,6 +2,22 @@
 // Clé de chiffrement utilisée pour chiffrer le fichier
 $key = hash('sha256', 'fd7fbf262118bc9631193efdab5e33adf88530610f7bc8bc7c19f7a3ca76f34d', true); // Clé de 32 octets
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Définir le chemin du fichier de log des erreurs
+$logFile = __DIR__ . '/error_log.log';
+
+// Configurer PHP pour écrire les erreurs dans le fichier spécifié
+ini_set('log_errors', 1);
+ini_set('error_log', $logFile);
+
+// Fonction pour afficher les erreurs dans le fichier de log
+function logDebugInfo($message) {
+    error_log($message);
+}
+
 // Chemin vers le fichier chiffré
 $encryptedFile = __DIR__ . '/../db_config.enc';
 
@@ -137,23 +153,51 @@ function handlePost($pdo) {
             echo json_encode(["message" => "Données ajoutées avec succès."]);
         } elseif ($action === 'update') {
             // Gérer la mise à jour
-            $set = [];
-            foreach ($data['data'] as $column => $value) {
-                $set[] = "$column = ?";
+            try {
+                // Vérifier que les paramètres nécessaires sont présents
+                if (empty($data['data']) || empty($data['column']) || !isset($data['value'])) {
+                    error_log("Erreur : données, colonne ou valeur manquantes pour l'opération UPDATE.");
+                    http_response_code(400);
+                    echo json_encode(["error" => "Données, colonne ou valeur manquantes."]);
+                    return;
+                }
+
+                // Préparer la requête SQL
+                $set = [];
+                foreach ($data['data'] as $column => $value) {
+                    $set[] = "`$column` = ?";
+                }
+                $set = implode(", ", $set);
+                $column = $data['column'];
+                $value = $data['value'];
+                $query = "UPDATE `$table` SET $set WHERE `$column` = ?";
+
+                // Journaliser la requête et les valeurs pour déboguer
+                error_log("Requête UPDATE générée : $query");
+                error_log("Valeurs pour UPDATE : " . json_encode(array_merge(array_values($data['data']), [$value])));
+
+                // Exécuter la requête
+                $stmt = $pdo->prepare($query);
+                $stmt->execute(array_merge(array_values($data['data']), [$value]));
+
+                // Vérifier le nombre de lignes affectées
+                if ($stmt->rowCount() > 0) {
+                    echo json_encode(["message" => "Données mises à jour avec succès."]);
+                } else {
+                    error_log("Aucune ligne mise à jour. Vérifiez les critères de mise à jour.");
+                    http_response_code(404);
+                    echo json_encode(["error" => "Aucune donnée n'a été mise à jour."]);
+                }
+            } catch (PDOException $e) {
+                // Gérer et journaliser les erreurs
+                error_log("Erreur lors de l'exécution de l'UPDATE : " . $e->getMessage());
+                http_response_code(500);
+                echo json_encode(["error" => "Une erreur est survenue lors de la mise à jour."]);
             }
-            $set = implode(", ", $set);
-            $column = $data['column'];
-            $value = $data['value'];
-            $stmt = $pdo->prepare("UPDATE `$table` SET $set WHERE $column = ?");
-            $stmt->execute(array_merge(array_values($data['data']), [$value]));
-            echo json_encode(["message" => "Données mises à jour avec succès."]);
         } else {
             http_response_code(400);
             echo json_encode(["error" => "Action non reconnue."]);
         }
-    } else {
-        http_response_code(400);
-        echo json_encode(["error" => "Nom de table ou action manquante."]);
     }
 }
 
