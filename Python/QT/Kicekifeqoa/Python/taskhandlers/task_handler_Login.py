@@ -12,25 +12,29 @@ class TaskHandler(QObject):
     def __init__(self, engine):
         super(TaskHandler, self).__init__()
         self.engine = engine
+        self.user_id = None  # Variable pour stocker l'ID de l'utilisateur
 
-    def verify_password(self,stored_password,provided_password):
+    def verify_password(self, stored_password, provided_password):
         # Compare le mot de passe fourni avec le hash stocké
-        password = bcrypt.checkpw(provided_password.encode(),stored_password)
-        return password
+        return bcrypt.checkpw(provided_password.encode(), stored_password)
 
     @Slot(str, str)
     def checkCredentials(self, email, password):
-        if email != "": # Vérifie si le mail n'est pas vide
+        if email != "":  # Vérifie si le mail n'est pas vide
             result = get_users(email=email)
         else:
             result = 'no existing links'
 
         if result != 'no existing links':
             user_data = result[0]
-            stored_password = (user_data.get("password")).encode("utf-8") #transforme le hash de str a Bytes
+            stored_password = (user_data.get("password")).encode("utf-8")  # transforme le hash de str à Bytes
 
-            if self.verify_password(stored_password,password):
-                # Émettre le signal pour fermer la fenêtre
+            if self.verify_password(stored_password, password):
+                # Récupère l'ID de l'utilisateur après une connexion réussie
+                self.user_id = user_data.get("id_user")
+                print(f"Utilisateur connecté : {self.user_id}")
+
+                # Émettre le signal pour fermer la fenêtre de login
                 self.loginSuccess.emit()
 
                 # Charger la nouvelle interface App.qml
