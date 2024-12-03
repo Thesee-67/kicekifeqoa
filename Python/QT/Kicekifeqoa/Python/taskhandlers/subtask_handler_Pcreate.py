@@ -11,7 +11,7 @@ class TaskHandler(QObject):
         self.checked = 0
 
     @Slot(str)
-    def parent_task_id(self, parenttaskid):
+    def define_parent_task_id(self, parenttaskid):
         if parenttaskid.strip():
             self.parent_task_id = parenttaskid
         else:
@@ -46,12 +46,6 @@ class TaskHandler(QObject):
 
     @Slot()
     def validate_info(self):
-        print("CEST BON")
-        print(self.task_name)
-        print(self.end_date)
-        print(self.checked)
-        print(self.parent_task_id)
-
         try:
             if not self.task_name:
                 raise ValueError("Le nom de la tâche ne peut pas être vide.")

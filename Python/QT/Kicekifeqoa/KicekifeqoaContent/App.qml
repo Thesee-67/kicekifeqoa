@@ -187,8 +187,9 @@ Window {
                 y: -101
                 text: "+"
                 anchors.margins: 10
-                onClicked: { 
+                onClicked: {
                     if (selectedTaskId !== "") {
+                        subtaskHandlerCreate.define_parent_task_id(selectedTaskId);
                         var component = Qt.createComponent("PopupCreateSubtask.qml");
 
                         if (component.status === Component.Ready) {
@@ -198,7 +199,6 @@ Window {
                                 console.error("Erreur lors de la création de PopupCreateSubTask");
                             } else {
                                 if (taskHandlerCreate) {
-                                    subtaskHandlerCreate.parent_task_id(selectedTaskId);
                                     PopupCreateSubtask.addTaskName.connect(subtaskHandlerCreate.add_task_name);
                                     PopupCreateSubtask.addEndDate.connect(subtaskHandlerCreate.add_end_date);
                                     PopupCreateSubtask.taskCompleted.connect(subtaskHandlerCreate.task_completed);
