@@ -187,7 +187,7 @@ Window {
                 y: -101
                 text: "+"
                 anchors.margins: 10
-                onClicked: {
+                onClicked: { 
                     if (selectedTaskId !== "") {
                         console.log("Sous-tâche de (ID " + selectedTaskId + ") va être créée");
 
