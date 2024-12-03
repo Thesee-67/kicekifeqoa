@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject, Slot
 from Python.CRUD.Task.Create_Task import create_task
-from Python.CRUD.Users.Read_User import get_data
+from Python.CRUD.Task_has_Users.Create_Task_has_Users import create_task_user_association
 
 class TaskHandler(QObject):
     def __init__(self, engine):
@@ -12,6 +12,7 @@ class TaskHandler(QObject):
         self.users = []
         self.end_date = None
         self.checked = 0
+        self.user_id = None
 
     @Slot(str)
     def add_task_name(self, taskname):
@@ -89,11 +90,16 @@ class TaskHandler(QObject):
             if not self.task_name:
                 raise ValueError("Le nom de la tâche ne peut pas être vide.")
             if not self.end_date:
-                raise ValueError("Les dates de début et de fin doivent être renseignées.")
+                raise ValueError("La date de fin doit être renseignée.")
             self._check_dates_consistency()
             formatted_tags = ", ".join(self.tags)
 
-            create_task("Task", {
+            # Vérifie si l'ID de l'utilisateur est valide
+            if self.user_id is None:
+                print("Erreur : L'utilisateur n'est pas authentifié.")
+                return
+
+            task_id = create_task("Task", {
                 "name": self.task_name,
                 "end_date": self.end_date,
                 "checked": self.checked,
@@ -101,14 +107,12 @@ class TaskHandler(QObject):
                 "tag": formatted_tags,
             })
 
-            print("----- Informations sur la tâche -----")
-            priority_labels = ["Priorité basse", "Priorité moyenne", "URGENT"]
-            print(f"Nom de la tâche : {self.task_name}")
-            print(f"Priorité : {priority_labels[self.task_priority]}")
-            print(f"Tags : {self.tags}")
-            print(f"Utilisateurs : {self.users}")
-            print(f"Date de fin : {self.end_date}")
-            print(f"Checked : {self.checked}")
+            # Associer l'utilisateur à cette tâche dans la table Task_has_Users
+            if self.user_id:
+                create_task_user_association("Task_has_Users", {
+                    "task_id": task_id,
+                    "user_id": self.user_id,
+                })
 
             self.task_name = ""
             self.task_priority = 0
