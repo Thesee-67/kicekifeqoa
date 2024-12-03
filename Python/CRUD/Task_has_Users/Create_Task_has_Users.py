@@ -20,24 +20,20 @@ config = {
 conn = connection.MySQLConnection(**config)
 cursor = conn.cursor()
 
-def insert_task_user_association(task_id, user_id):
-    # Connexion à la base de données
-    conn = sqlite3.connect("your_database.db")  # Remplace par le chemin correct vers ta base de données
-    cursor = conn.cursor()
+def close_connection_BDD(conn,cursor):
+    cursor.close()
+    conn.close()
+    print("La connexion à la base de données a été fermée.")
 
-    # Insertion dans la table Task_has_Users
+def create_task_user_association(table, data):
     try:
-        cursor.execute("""
-            INSERT INTO Task_has_Users (task_id, user_id)
-            VALUES (?, ?)
-        """, (task_id, user_id))
-
-        # Commit pour appliquer les changements
-        conn.commit()
-        print(f"Tâche {task_id} associée à l'utilisateur {user_id}")
-
-    except sqlite3.IntegrityError as e:
-        print(f"Erreur d'intégrité : {e}")  # Gestion des erreurs si les clés sont en conflit
-
-    finally:
-        conn.close()
+        post_data = {
+            'table': table,
+            'action': 'insert',
+            'data': data
+        }
+        response = requests.post(url, json=post_data)
+        print(response.json())
+        close_connection_BDD(conn, cursor)
+    except Error as e:
+        print(f"Erreur lors de l'insertion : {e}")

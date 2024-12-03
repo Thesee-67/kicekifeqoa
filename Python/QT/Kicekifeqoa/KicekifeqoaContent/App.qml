@@ -181,6 +181,7 @@ Window {
                 }
             }
 
+
             RoundButton {
                 id: addButton
                 x: 866
@@ -196,6 +197,7 @@ Window {
                         if (PopupCreateTask === null) {
                             console.error("Erreur lors de la création de PopupCreateTask");
                         } else {
+
                             if (taskHandlerCreate) {
                                 PopupCreateTask.addTaskName.connect(taskHandlerCreate.add_task_name);
                                 PopupCreateTask.addTaskPriority.connect(taskHandlerCreate.add_task_priority);
