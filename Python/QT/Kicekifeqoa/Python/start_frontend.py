@@ -7,6 +7,7 @@ from PySide6.QtCore import qInstallMessageHandler, QtMsgType
 from autogen.settings import url, import_paths
 
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
+from Python.QT.Kicekifeqoa.Python.taskhandlers.subtask_handler_Pcreate import TaskHandler as SubtaskHandlerCreate
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pupdate import TaskHandler as TaskHandlerUpdate
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pdelete import TaskHandler as TaskHandlerDelete
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_AppRead import TaskHandler as TaskHandlerBackend
@@ -44,6 +45,7 @@ if __name__ == '__main__':
         engine.addImportPath(os.fspath(app_dir / path))
 
     task_handler_create = TaskHandlerCreate(engine)
+    subtask_handler_create = SubtaskHandlerCreate(engine)
     task_handler_update = TaskHandlerUpdate(engine)
     task_handler_delete = TaskHandlerDelete(engine)
     task_handler_backend = TaskHandlerBackend(engine)
@@ -53,6 +55,7 @@ if __name__ == '__main__':
     engine.rootContext().setContextProperty("taskHandlerRegister", task_handler_register)
     engine.rootContext().setContextProperty("taskHandlerLogin", task_handler_login)
     engine.rootContext().setContextProperty("taskHandlerCreate", task_handler_create)
+    engine.rootContext().setContextProperty("subtaskHandlerCreate", subtask_handler_create)
     engine.rootContext().setContextProperty("taskHandlerUpdate", task_handler_update)
     engine.rootContext().setContextProperty("taskHandlerDelete", task_handler_delete)
     engine.rootContext().setContextProperty("taskHandlerBackend", task_handler_backend)

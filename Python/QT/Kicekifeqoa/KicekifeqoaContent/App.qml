@@ -189,8 +189,30 @@ Window {
                 anchors.margins: 10
                 onClicked: { 
                     if (selectedTaskId !== "") {
-                        console.log("Sous-tâche de (ID " + selectedTaskId + ") va être créée");
+                        var component = Qt.createComponent("PopupCreateSubtask.qml");
 
+                        if (component.status === Component.Ready) {
+                            var PopupCreateSubtask = component.createObject(parent);
+
+                            if (PopupCreateSubtask === null) {
+                                console.error("Erreur lors de la création de PopupCreateSubTask");
+                            } else {
+                                if (taskHandlerCreate) {
+                                    subtaskHandlerCreate.parent_task_id(selectedTaskId);
+                                    PopupCreateSubtask.addTaskName.connect(subtaskHandlerCreate.add_task_name);
+                                    PopupCreateSubtask.addEndDate.connect(subtaskHandlerCreate.add_end_date);
+                                    PopupCreateSubtask.taskCompleted.connect(subtaskHandlerCreate.task_completed);
+                                    PopupCreateSubtask.validateInfo.connect(function () {
+                                        subtaskHandlerCreate.validate_info();
+                                        taskHandlerBackend.fetchTasks();
+                                    });
+                                } else {
+                                    console.error("Erreur : TaskHandler est introuvable.");
+                                }
+                            }
+                        } else {
+                            console.error("Erreur lors du chargement de PopupCreateSubtask.qml");
+                        }
                     } else {
 
                         var component = Qt.createComponent("PopupCreateTask.qml");
@@ -254,7 +276,7 @@ Window {
                     anchors.bottomMargin: 655
                     onClicked: {
                         if (selectedTaskId !== "") {
-                            taskHandlerUpdate.fetch_task_by_id(selectedTaskId);  // Appel pour récupérer les données
+                            taskHandlerUpdate.fetch_task_by_id(selectedTaskId);
                         } else {
                             console.error("Erreur : Aucune tâche sélectionnée.");
                         }
@@ -262,7 +284,6 @@ Window {
                         Connections {
                             target: taskHandlerUpdate
                             onTaskFetched: function (taskData) {
-                                // Créer le composant du popup
                                 var component = Qt.createComponent("PopupUpdateTask.qml");
 
                                 if (component.status === Component.Ready) {
@@ -277,7 +298,6 @@ Window {
                                     if (PopupUpdateTask === null) {
                                         console.error("Erreur lors de la création de PopupUpdateTask");
                                     } else {
-                                        // Assigner les signaux pour gérer les mises à jour
                                         if (taskHandlerUpdate) {
                                             PopupUpdateTask.updateTaskName.connect(taskHandlerUpdate.update_task_name);
                                             PopupUpdateTask.updateTaskPriority.connect(taskHandlerUpdate.update_task_priority);
