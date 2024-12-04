@@ -45,13 +45,3 @@ class TaskHandler(QObject):
                 self.loginPasswdFail.emit()
         else:
             self.loginEmailFail.emit()
-
-    @Slot()
-    def get_user_id(self):
-        """Retourne l'ID de l'utilisateur connecté."""
-        print(f"DEBUG : Récupération de l'ID utilisateur : {self.user_id}")
-        if self.user_id is None:
-            raise ValueError("Erreur : L'utilisateur n'est pas authentifié.")
-        return self.user_id
-
-
