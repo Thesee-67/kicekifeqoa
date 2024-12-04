@@ -62,4 +62,4 @@ checked = 0  # 0 pour non vérifié, 1 pour vérifié
 priority = 2  # Niveau de priorité
 tag = "Travail"  # Exemple de tag
 
-create_group(name)
+create_group("nonon")

@@ -1,29 +1,12 @@
-import mysql.connector
-from mysql.connector import (connection)
 import requests
 import json
+from datetime import datetime
 
-# URL de ton API PHP
-url = "http://kicekifeqoa.alwaysdata.net/api.php"
+from shiboken6.Shiboken import delete
 
-# Configuration de la connexion
-config = {
-    'user': '379269_admin',
-    'password': 'Kicekifeqoa123*',
-    'host': 'mysql-kicekifeqoa.alwaysdata.net',
-    'database': 'kicekifeqoa_todolist',
-}
+url = "https://kicekifeqoa.alwaysdata.net/api.php"
 
-# Connexion à la base de donnée
-conn = connection.MySQLConnection(**config)
-cursor = conn.cursor()
-
-def close_connection_BDD(conn,cursor):
-    cursor.close()
-    conn.close()
-    print("La connexion à la base de données a été fermée.")
-
-def delete_group(table, column, value):
+def delete_data(table, column, value):
     post_data = {
         'table': table,
         'column': column,
@@ -31,6 +14,11 @@ def delete_group(table, column, value):
     }
     response = requests.delete(url, json=post_data)
     print(response.json())
-    close_connection_BDD(conn, cursor)
 
-#delete_group("Group", "id_group", "1")
+def delete_group( value, column = "name"):
+    try :
+        delete_data("Group", column, value)
+    except :
+        print("Impossible to delete check if the Group exist")
+
+delete_group("nonon")
