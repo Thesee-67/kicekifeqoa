@@ -181,7 +181,6 @@ Window {
                 }
             }
 
-
             RoundButton {
                 id: addButton
                 x: 866
@@ -890,5 +889,6 @@ Window {
             style: Text.Outline
             font.family: "Verdana"
         }
+
     }
 }

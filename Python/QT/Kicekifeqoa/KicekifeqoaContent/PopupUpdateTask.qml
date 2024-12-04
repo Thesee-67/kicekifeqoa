@@ -153,6 +153,15 @@ ApplicationWindow {
                 anchors.rightMargin: 8
             }
 
+            TextField {
+                id: tagname
+                x: 15
+                y: 63
+                width: 155
+                height: 30
+                placeholderText: qsTr("Etiquettes")
+            }
+
             // Champ de texte pour entrer le nom de la tâche
             TextField {
                 id: taskname

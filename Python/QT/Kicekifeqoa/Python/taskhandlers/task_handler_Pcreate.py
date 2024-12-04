@@ -3,16 +3,17 @@ from Python.CRUD.Task.Create_Task import create_task
 from Python.CRUD.Task_has_Users.Create_Task_has_Users import create_task_user_association
 
 class TaskHandler(QObject):
-    def __init__(self, engine):
+    def __init__(self, engine, TaskHandlerLogin):
         super().__init__()
         self.engine = engine
+        self.login_handler = TaskHandlerLogin  # Instance de TaskHandlerLogin
         self.task_name = ""
         self.task_priority = 0
         self.tags = []
         self.users = []
         self.end_date = None
         self.checked = 0
-        self.user_id = None
+
 
     @Slot(str)
     def add_task_name(self, taskname):
@@ -84,20 +85,26 @@ class TaskHandler(QObject):
     def task_completed(self, status):
         self.checked = status
 
+    def get_user_id(self):
+        """Récupère l'ID utilisateur depuis TaskHandlerLogin."""
+        user_id = self.login_handler.get_user_id()
+        if user_id is None:
+            raise ValueError("Erreur : L'utilisateur n'est pas authentifié.")
+        return user_id
+
     @Slot()
     def validate_info(self):
         try:
+            # Récupérer l'ID utilisateur depuis TaskHandlerLogin
+            current_user_id = self.get_user_id()
+            print(f"DEBUG : ID utilisateur récupéré : {current_user_id}")
+
             if not self.task_name:
                 raise ValueError("Le nom de la tâche ne peut pas être vide.")
             if not self.end_date:
                 raise ValueError("La date de fin doit être renseignée.")
             self._check_dates_consistency()
             formatted_tags = ", ".join(self.tags)
-
-            # Vérifie si l'ID de l'utilisateur est valide
-            if self.user_id is None:
-                print("Erreur : L'utilisateur n'est pas authentifié.")
-                return
 
             task_id = create_task("Task", {
                 "name": self.task_name,
@@ -107,12 +114,17 @@ class TaskHandler(QObject):
                 "tag": formatted_tags,
             })
 
-            # Associer l'utilisateur à cette tâche dans la table Task_has_Users
-            if self.user_id:
+            # Récupération de l'ID utilisateur
+            try:
+                current_user_id = self.get_user_id()
+                # Associer l'utilisateur à cette tâche dans la table Task_has_Users
                 create_task_user_association("Task_has_Users", {
                     "task_id": task_id,
-                    "user_id": self.user_id,
+                    "user_id": current_user_id,
                 })
+            except ValueError as e:
+                print(e)
+                return
 
             self.task_name = ""
             self.task_priority = 0
