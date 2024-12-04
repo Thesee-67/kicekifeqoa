@@ -94,10 +94,6 @@ class TaskHandler(QObject):
             self._check_dates_consistency()
             formatted_tags = ", ".join(self.tags)
 
-            # Vérifie si l'ID de l'utilisateur est valide
-            if self.user_id is None:
-                print("Erreur : L'utilisateur n'est pas authentifié.")
-                return
 
             task_id = create_task("Task", {
                 "name": self.task_name,
