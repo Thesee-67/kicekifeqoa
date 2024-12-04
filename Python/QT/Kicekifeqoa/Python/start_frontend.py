@@ -43,7 +43,7 @@ if __name__ == '__main__':
     for path in import_paths:
         engine.addImportPath(os.fspath(app_dir / path))
 
-    task_handler_create = TaskHandlerCreate(engine)
+    task_handler_create = TaskHandlerCreate(engine, TaskHandlerLogin)
     task_handler_update = TaskHandlerUpdate(engine)
     task_handler_delete = TaskHandlerDelete(engine)
     task_handler_backend = TaskHandlerBackend(engine)
