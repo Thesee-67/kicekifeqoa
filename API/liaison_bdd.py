@@ -67,6 +67,32 @@ def count_data(table, filter_column, filter_value):
     else:
         print(f"Erreur : {response.status_code} - {response.text}")
 
+def add_recup(data):
+    """
+    Ajoute des données dans une table et récupère l'ID généré.
+
+    :param data: Un dictionnaire avec le nom de la table comme clé
+                 et un autre dictionnaire contenant les colonnes/valeurs à insérer.
+    :example:
+        data = {"Users": {"name": "John Doe", "email": "john.doe@example.com"}}
+    """
+    post_data = {
+        'table': list(data.keys())[0],  # Récupère le nom de la table (clé du dictionnaire)
+        'action': 'add_recup',  # Action à effectuer : ajouter et récupérer l'ID
+        'data': list(data.values())[0]  # Récupère les données associées à la table
+    }
+
+    response = requests.post(url, json=post_data)
+    if response.status_code == 200:
+        result = response.json()
+        print("Données ajoutées avec succès.")
+        return result.get('id')
+    else:
+        print(f"Erreur : {response.status_code} - {response.text}")
+        return None
+
+
+
 # Exemples d'utilisation
 # 1. Récupérer toutes les colonnes d'une table
 #get_data("Group")
@@ -95,3 +121,9 @@ def count_data(table, filter_column, filter_value):
 
 #Compter les Occurences
 #count_data("Group", "name", "ouioui")
+
+#data = {"Task": {"name": "Test", "end_date": "2024/13/22"}}
+#generated_id = add_recup(data)
+#print(f"ID généré : {generated_id}")
+#L'id est dans la variable generated_id
+
