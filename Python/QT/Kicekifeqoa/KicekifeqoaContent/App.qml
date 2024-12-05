@@ -206,8 +206,6 @@ Window {
                                     PopupCreateTask.addTaskPriority.connect(taskHandlerCreate.add_task_priority);
                                     PopupCreateTask.addTag.connect(taskHandlerCreate.add_tag);
                                     PopupCreateTask.removeLastTag.connect(taskHandlerCreate.remove_last_tag);
-                                    PopupCreateTask.addUser.connect(taskHandlerCreate.add_user);
-                                    PopupCreateTask.removeLastUser.connect(taskHandlerCreate.remove_last_user);
                                     PopupCreateTask.addEndDate.connect(taskHandlerCreate.add_end_date);
                                     PopupCreateTask.taskCompleted.connect(taskHandlerCreate.task_completed);
                                     PopupCreateTask.validateInfo.connect(function () {

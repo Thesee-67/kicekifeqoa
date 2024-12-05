@@ -108,27 +108,32 @@ def get_task(id_task=None, name=None, end_date=None, checked=None, priority=None
             return get_data("Task")
 
 
-def get_taskid(name=None, end_date=None):
+def add_recup(data):
     """
-    Permet de récupérer l'ID d'une tâche en fonction du nom et de la date de fin spécifiés.
-    Si plusieurs tâches correspondent à ces critères, retourne les ID des tâches correspondantes.
+    Ajoute des données dans une table et récupère l'ID généré.
+
+    :param data: Un dictionnaire avec le nom de la table comme clé
+                 et un autre dictionnaire contenant les colonnes/valeurs à insérer.
+    :example:
+        data = {"Users": {"name": "John Doe", "email": "john.doe@example.com"}}
     """
-    if name is not None and end_date is not None:
-        # Créer un dictionnaire de filtres
-        filters = [
-            ("name", name),
-            ("end_date", end_date)
-        ]
+    post_data = {
+        'table': list(data.keys())[0],  # Récupère le nom de la table (clé du dictionnaire)
+        'action': 'add_recup',  # Action à effectuer : ajouter et récupérer l'ID
+        'data': list(data.values())[0]  # Récupère les données associées à la table
+    }
 
-        # Appel à get_data avec les filtres passés comme paramètres
-        data = get_data("Task", columns="id_task", filters=filters)
-
-        if data and isinstance(data, list):  # Si des tâches sont trouvées
-            return [task['id_task'] for task in data]  # Retourne les ID des tâches
-        else:
-            return 'no existing links'
+    response = requests.post(url, json=post_data)
+    if response.status_code == 200:
+        result = response.json()
+        print("Données ajoutées avec succès.")
+        return result.get('id')
     else:
-        return 'Nom ou date de fin manquants.'
+        print(f"Erreur : {response.status_code} - {response.text}")
+        return None
+
+
+
 
 
 
