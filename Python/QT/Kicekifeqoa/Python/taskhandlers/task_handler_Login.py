@@ -12,7 +12,7 @@ class TaskHandler(QObject):
     def __init__(self, engine):
         super(TaskHandler, self).__init__()
         self.engine = engine
-        self.user_id = None  # Variable pour stocker l'ID de l'utilisateur
+        self._user_id = None  # Variable pour stocker l'ID de l'utilisateur
 
     def verify_password(self, stored_password, provided_password):
         # Compare le mot de passe fourni avec le hash stocké
@@ -27,12 +27,11 @@ class TaskHandler(QObject):
 
         if result != 'no existing links':
             user_data = result[0]
-            stored_password = (user_data.get("password")).encode("utf-8")  # transforme le hash de str à Bytes
+            stored_password = user_data["password"].encode("utf-8")  # transforme le hash de str à Bytes
 
             if self.verify_password(stored_password, password):
                 # Récupère l'ID de l'utilisateur après une connexion réussie
-                self.user_id = user_data.get("id_user")
-                print(f"Utilisateur connecté : {self.user_id}")
+                self._user_id = user_data["id_user"]
 
                 # Émettre le signal pour fermer la fenêtre de login
                 self.loginSuccess.emit()
@@ -45,3 +44,6 @@ class TaskHandler(QObject):
                 self.loginPasswdFail.emit()
         else:
             self.loginEmailFail.emit()
+
+    def get_user_id(self):
+        return self._user_id

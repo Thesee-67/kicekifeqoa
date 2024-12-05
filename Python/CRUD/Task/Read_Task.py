@@ -106,3 +106,33 @@ def get_task(id_task=None, name=None, end_date=None, checked=None, priority=None
                 return "no existing links"
         else:
             return get_data("Task")
+
+
+def get_taskid(name=None, end_date=None):
+    """
+    Permet de récupérer l'ID d'une tâche en fonction du nom et de la date de fin spécifiés.
+    Si plusieurs tâches correspondent à ces critères, retourne les ID des tâches correspondantes.
+    """
+    if name is not None and end_date is not None:
+        # Créer un dictionnaire de filtres
+        filters = [
+            ("name", name),
+            ("end_date", end_date)
+        ]
+
+        # Appel à get_data avec les filtres passés comme paramètres
+        data = get_data("Task", columns="id_task", filters=filters)
+
+        if data and isinstance(data, list):  # Si des tâches sont trouvées
+            return [task['id_task'] for task in data]  # Retourne les ID des tâches
+        else:
+            return 'no existing links'
+    else:
+        return 'Nom ou date de fin manquants.'
+
+
+
+
+
+
+

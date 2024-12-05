@@ -14,8 +14,6 @@ ApplicationWindow {
     signal addTaskPriority(int priority)
     signal addTag(string tagname)
     signal removeLastTag()
-    signal addUser(string username)
-    signal removeLastUser()
     signal addEndDate(string enddate)
     signal taskCompleted(int status)
     signal validateInfo()
@@ -46,9 +44,6 @@ ApplicationWindow {
         id: tagsListModel
     }
 
-    ListModel {
-        id: usersListModel
-    }
 
     Slider {
         id: priorityslider
@@ -147,37 +142,6 @@ ApplicationWindow {
         placeholderText: qsTr("Etiquettes")
     }
 
-    RoundButton {
-        id: useradd
-        x: 173
-        y: 107
-        width: 20
-        height: 20
-        text: "+"
-        anchors.right: tagadd.right
-        onClicked: {
-            addUser(username.text)
-            usersListModel.append({"user": username.text});
-            username.text = "";
-        }
-    }
-
-    RoundButton {
-        id: userremove
-        x: 199
-        y: 107
-        width: 20
-        height: 20
-        text: "-"
-        anchors.right: tagremove.right
-        onClicked: {
-            if (usersListModel.count > 0) {
-                usersListModel.remove(usersListModel.count - 1)
-                removeLastUser();
-            }
-        }
-    }
-
     TextField {
         id: taskname
         x: 15
@@ -237,31 +201,6 @@ ApplicationWindow {
                 model: tagsListModel
                 delegate: Text {
                     text: model.tag
-                }
-            }
-        }
-    }
-
-
-    Flickable {
-        id: usersFlickable
-        x: 227
-        y: 102
-        width: 150
-        height: 30
-        anchors.right: prioritytext.right
-        anchors.rightMargin: 15
-        contentWidth: usersRow.width
-        contentHeight: usersRow.height
-        clip: true
-
-        Row {
-            id: usersRow
-            spacing: 10
-            Repeater {
-                model: usersListModel
-                delegate: Text {
-                    text: model.user
                 }
             }
         }

@@ -1,11 +1,13 @@
 from PySide6.QtCore import QObject, Slot
 from Python.CRUD.Task.Create_Task import create_task
+from Python.CRUD.Task.Read_Task import get_taskid
 from Python.CRUD.Task_has_Users.Create_Task_has_Users import create_task_user_association
 
 class TaskHandler(QObject):
-    def __init__(self, engine):
+    def __init__(self, engine, TaskHandlerLogin):
         super().__init__()
         self.engine = engine
+        self.login_handler = TaskHandlerLogin
         self.task_name = ""
         self.task_priority = 0
         self.tags = []
@@ -87,6 +89,10 @@ class TaskHandler(QObject):
     @Slot()
     def validate_info(self):
         try:
+            # Récupérer l'ID utilisateur depuis le login_handler
+            self.user_id = self.login_handler.get_user_id()
+            print(self.user_id)
+
             if not self.task_name:
                 raise ValueError("Le nom de la tâche ne peut pas être vide.")
             if not self.end_date:
@@ -94,7 +100,7 @@ class TaskHandler(QObject):
             self._check_dates_consistency()
             formatted_tags = ", ".join(self.tags)
 
-            task_id = create_task("Task", {
+            id_task = create_task("Task", {
                 "name": self.task_name,
                 "end_date": self.end_date,
                 "checked": self.checked,
@@ -102,16 +108,12 @@ class TaskHandler(QObject):
                 "tag": formatted_tags,
             })
 
-            # Vérifie si l'ID de l'utilisateur est valide
-            if self.user_id is None:
-                print("Erreur : L'utilisateur n'est pas authentifié.")
-                return
-            else:
-                # Associer l'utilisateur à cette tâche dans la table Task_has_Users
-                create_task_user_association("Task_has_Users", {
-                    "task_id": task_id,
-                    "user_id": self.user_id,
-                })
+            # Associer l'utilisateur à cette tâche dans la table Task_has_Users
+            create_task_user_association("Task_has_Users", {
+                "task_id": id_task,
+                "user_id": self.user_id,
+            })
+
 
             self.task_name = ""
             self.task_priority = 0
