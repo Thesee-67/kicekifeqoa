@@ -23,7 +23,6 @@ cursor = conn.cursor()
 def close_connection_BDD(conn,cursor):
     cursor.close()
     conn.close()
-    print("La connexion à la base de données a été fermée.")
 
 def create_task_user_association(table, data):
     try:
@@ -33,7 +32,6 @@ def create_task_user_association(table, data):
             'data': data
         }
         response = requests.post(url, json=post_data)
-        print(response.json())
         close_connection_BDD(conn, cursor)
     except Error as e:
         print(f"Erreur lors de l'insertion : {e}")

@@ -30,6 +30,5 @@ def delete_task(table, column, value):
         'value': value
     }
     response = requests.delete(url, json=post_data)
-    print(response.json())
     close_connection_BDD(conn, cursor)
 

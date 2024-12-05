@@ -206,25 +206,6 @@ ApplicationWindow {
         }
     }
 
-    MouseArea {
-        id: mouseArea
-        x: 225
-        y: 65
-        width: 150
-        height: 66
-        anchors.right: tagsFlickable.right
-        enabled: false
-        cursorShape: Qt.DragMoveCursor
-
-        ComboBox {
-            id: username
-            x: -212
-            y: 39
-            width: 155
-            height: 29
-        }
-    }
-
     RoundButton {
         id: close
         x: 352

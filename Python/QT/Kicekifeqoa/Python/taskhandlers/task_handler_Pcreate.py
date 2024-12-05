@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject, Slot
 from Python.CRUD.Task.Create_Task import create_task
-from Python.CRUD.Task.Read_Task import add_recup
+from Python.CRUD.Task.Create_Task import add_recup
 from Python.CRUD.Task_has_Users.Create_Task_has_Users import create_task_user_association
 
 class TaskHandler(QObject):
@@ -91,7 +91,6 @@ class TaskHandler(QObject):
         try:
             # Récupérer l'ID utilisateur depuis le login_handler
             self.user_id = self.login_handler.get_user_id()
-            print(self.user_id)
 
             if not self.task_name:
                 raise ValueError("Le nom de la tâche ne peut pas être vide.")
@@ -100,14 +99,6 @@ class TaskHandler(QObject):
             self._check_dates_consistency()
             formatted_tags = ", ".join(self.tags)
 
-            create_task("Task", {
-                "name": self.task_name,
-                "end_date": self.end_date,
-                "checked": self.checked,
-                "priority": self.task_priority,
-                "tag": formatted_tags,
-            })
-
             data = {"Task": {"name": self.task_name, "end_date": self.end_date, "checked": self.checked, "priority": self.task_priority, "tag": formatted_tags}}
             id_task = add_recup(data)
 
@@ -115,6 +106,12 @@ class TaskHandler(QObject):
             create_task_user_association("Task_has_Users", {
                 "task_id": id_task,
                 "user_id": self.user_id,
+            })
+
+            # Associer le compte admin à cette tâche dans la table Task_has_Users
+            create_task_user_association("Task_has_Users", {
+                "task_id": id_task,
+                "user_id": 1,
             })
 
 

@@ -118,6 +118,3 @@ def update_user(id_user, email=None, password=None,):
             return [False,f"Erreur lors de la mise à jour : {response.status_code} - {response.text}"]
     except requests.RequestException as e:
         return [False,f"Erreur de connexion à l'API : {e}"]
-
-# Test
-print(update_user(9,email="nouv.email@gmail.com", password="Bb@12345678",))

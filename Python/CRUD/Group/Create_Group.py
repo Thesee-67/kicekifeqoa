@@ -48,7 +48,7 @@ def verification_doublon_group(name_Group, cursor):
         print(f"Erreur lors de l'exécution de la requête : {err}")
         return None  # Indiquer qu'il y a eu une erreur
 
-def create_group(name):
+def create_group(name, table, data):
     try:
         if verification_doublon_group(name,cursor):
             post_data = {
