@@ -1,5 +1,5 @@
 
-url = "KicekifeqoaContent/Login.qml"
+url = "KicekifeqoaContent/App.qml"
 import_paths = [
     ".",
 ]

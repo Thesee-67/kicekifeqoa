@@ -187,34 +187,40 @@ Window {
                 y: -101
                 text: "+"
                 anchors.margins: 10
-                onClicked: {
-                    var component = Qt.createComponent("PopupCreateTask.qml");
+                onClicked: { 
+                    if (selectedTaskId !== "") {
+                        console.log("Sous-tâche de (ID " + selectedTaskId + ") va être créée");
 
-                    if (component.status === Component.Ready) {
-                        var PopupCreateTask = component.createObject(parent);
-
-                        if (PopupCreateTask === null) {
-                            console.error("Erreur lors de la création de PopupCreateTask");
-                        } else {
-                            if (taskHandlerCreate) {
-                                PopupCreateTask.addTaskName.connect(taskHandlerCreate.add_task_name);
-                                PopupCreateTask.addTaskPriority.connect(taskHandlerCreate.add_task_priority);
-                                PopupCreateTask.addTag.connect(taskHandlerCreate.add_tag);
-                                PopupCreateTask.removeLastTag.connect(taskHandlerCreate.remove_last_tag);
-                                PopupCreateTask.addUser.connect(taskHandlerCreate.add_user);
-                                PopupCreateTask.removeLastUser.connect(taskHandlerCreate.remove_last_user);
-                                PopupCreateTask.addEndDate.connect(taskHandlerCreate.add_end_date);
-                                PopupCreateTask.taskCompleted.connect(taskHandlerCreate.task_completed);
-                                PopupCreateTask.validateInfo.connect(function() {
-                                    taskHandlerCreate.validate_info();
-                                    taskHandlerBackend.fetchTasks();
-                                });
-                            } else {
-                                console.error("Erreur : TaskHandler est introuvable.");
-                            }
-                        }
                     } else {
-                        console.error("Erreur lors du chargement de PopupCreateTask.qml");
+
+                        var component = Qt.createComponent("PopupCreateTask.qml");
+
+                        if (component.status === Component.Ready) {
+                            var PopupCreateTask = component.createObject(parent);
+
+                            if (PopupCreateTask === null) {
+                                console.error("Erreur lors de la création de PopupCreateTask");
+                            } else {
+                                if (taskHandlerCreate) {
+                                    PopupCreateTask.addTaskName.connect(taskHandlerCreate.add_task_name);
+                                    PopupCreateTask.addTaskPriority.connect(taskHandlerCreate.add_task_priority);
+                                    PopupCreateTask.addTag.connect(taskHandlerCreate.add_tag);
+                                    PopupCreateTask.removeLastTag.connect(taskHandlerCreate.remove_last_tag);
+                                    PopupCreateTask.addUser.connect(taskHandlerCreate.add_user);
+                                    PopupCreateTask.removeLastUser.connect(taskHandlerCreate.remove_last_user);
+                                    PopupCreateTask.addEndDate.connect(taskHandlerCreate.add_end_date);
+                                    PopupCreateTask.taskCompleted.connect(taskHandlerCreate.task_completed);
+                                    PopupCreateTask.validateInfo.connect(function () {
+                                        taskHandlerCreate.validate_info();
+                                        taskHandlerBackend.fetchTasks();
+                                    });
+                                } else {
+                                    console.error("Erreur : TaskHandler est introuvable.");
+                                }
+                            }
+                        } else {
+                            console.error("Erreur lors du chargement de PopupCreateTask.qml");
+                        }
                     }
                 }
             }
@@ -888,5 +894,6 @@ Window {
             style: Text.Outline
             font.family: "Verdana"
         }
+
     }
 }

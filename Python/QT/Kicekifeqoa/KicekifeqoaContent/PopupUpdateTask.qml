@@ -2,21 +2,24 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
+// Fenêtre principale pour le popup de mise à jour d'une tâche
 ApplicationWindow {
     id: popupupdate
-    visible: true
-    color: "#00ffffff"
+    visible: true // La fenêtre est visible dès l'ouverture
+    color: "#00ffffff" // Fond transparent
     width: 420
     height: 220
-    flags: Qt.FramelessWindowHint
+    flags: Qt.FramelessWindowHint // Fenêtre sans bordure (frameless)
 
-    property string taskName: ""            // Propriétés pour pré-remplir les champs
-    property int taskPriority: 0
-    property string taskTags: ""
-    property string taskEndDate: ""
-    property bool taskChecked: false
+    // Déclaration des propriétés pour gérer les informations des tâches
+    property string taskName: ""            // Nom de la tâche
+    property int taskPriority: 0            // Priorité de la tâche (0 = basse, 1 = moyenne, 2 = urgente)
+    property string taskTags: ""           // Etiquettes associées à la tâche
+    property string taskEndDate: ""        // Date de fin de la tâche
+    property bool taskChecked: false       // Statut de la tâche (terminée ou non)
 
-    signal updateTaskName(string taskname)   // Signaux pour envoyer les modifications
+    // Signaux utilisés pour transmettre les modifications à d'autres parties du code
+    signal updateTaskName(string taskname)
     signal updateTaskPriority(int priority)
     signal updateTag(string tagname)
     signal removeLastTag()
@@ -24,16 +27,18 @@ ApplicationWindow {
     signal taskCompleted(int status)
     signal validateUpdateInfo()
 
+    // Rectangle principal du popup, style et disposition
     Rectangle {
         id: background
         x: 0
         y: 0
         width: 420
         height: 220
-        color: Colors.couleur1
-        radius: 10
-        border.width: 0
+        color: Colors.couleur1  // Couleur personnalisée pour le fond
+        radius: 10             // Coins arrondis
+        border.width: 0        // Pas de bordure visible
 
+        // Rectangle intérieur qui contient tous les éléments de la fenêtre
         Rectangle {
             id: rectangle
             x: 10
@@ -43,21 +48,22 @@ ApplicationWindow {
             visible: true
             radius: 10
             anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: 0
-            anchors.horizontalCenterOffset: 0
             anchors.horizontalCenter: parent.horizontalCenter
 
+            // Liste qui contient les étiquettes associées à la tâche
             ListModel {
                 id: tagsListModel
             }
 
+            // Initialisation des tags si la propriété taskTags contient des valeurs
             Component.onCompleted: {
                 if (taskTags && taskTags.length > 0) {
                     const tags = taskTags.split(",");
-                    tags.forEach(tag => tagsListModel.append({"tag": tag.trim()}));
+                    tags.forEach(tag => tagsListModel.append({"tag": tag.trim()})); // On ajoute les tags dans la liste
                 }
             }
 
+            // Slider pour sélectionner la priorité de la tâche (0, 1, ou 2)
             Slider {
                 id: priorityslider
                 x: 273
@@ -74,6 +80,7 @@ ApplicationWindow {
                 topPadding: 6
             }
 
+            // Bouton pour ajouter un tag
             RoundButton {
                 id: tagadd
                 x: 173
@@ -82,12 +89,13 @@ ApplicationWindow {
                 height: 20
                 text: "+"
                 onClicked: {
-                    updateTag(tagname.text)
-                    tagsListModel.append({"tag": tagname.text});
-                    tagname.text = "";
+                    updateTag(tagname.text)  // Envoie le tag ajouté
+                    tagsListModel.append({"tag": tagname.text}); // Ajoute le tag à la liste
+                    tagname.text = "";  // Réinitialise le champ texte
                 }
             }
 
+            // Bouton pour supprimer un tag
             RoundButton {
                 id: tagremove
                 x: 199
@@ -97,17 +105,18 @@ ApplicationWindow {
                 text: "-"
                 onClicked: {
                     if (tagsListModel.count > 0) {
-                        tagsListModel.remove(tagsListModel.count - 1)
-                        removeLastTag();
+                        tagsListModel.remove(tagsListModel.count - 1)  // Supprime le dernier tag ajouté
+                        removeLastTag();  // Signale la suppression du tag
                     }
                 }
             }
 
+            // Bouton pour valider la mise à jour de la tâche
             RoundButton {
                 id: validate
                 x: 306
                 y: 152
-                text: "\u2713"
+                text: "\u2713"  // Symbole de coche
                 anchors.right: close.left
                 anchors.top: close.top
                 anchors.bottom: parent.bottom
@@ -117,15 +126,17 @@ ApplicationWindow {
                 icon.cache: true
                 font.pointSize: 15
                 onClicked: {
+                    // Envoie des modifications
                     updateTaskName(taskname.text);
                     updateTaskPriority(priorityslider.value);
                     updateEndDate(enddate.text);
-                    taskCompleted(checkBox.checked ? 1 : 0);
-                    validateUpdateInfo();
-                    popupupdate.close();
+                    taskCompleted(checkBox.checked ? 1 : 0);  // Envoie le statut de la tâche (terminée ou non)
+                    validateUpdateInfo();  // Confirme la validation des modifications
+                    popupupdate.close();  // Ferme le popup
                 }
             }
 
+            // Texte indiquant le niveau de priorité
             Text {
                 id: prioritytext
                 x: 277
@@ -137,7 +148,7 @@ ApplicationWindow {
                 horizontalAlignment: Text.AlignHCenter
                 text: priorityslider.value === 0 ? "Priorité basse"
                      : priorityslider.value === 1 ? "Priorité moyenne"
-                                                  : "URGENT"
+                                                  : "URGENT" // Affiche "URGENT" si la priorité est 2
                 anchors.right: parent.right
                 anchors.rightMargin: 8
             }
@@ -151,6 +162,7 @@ ApplicationWindow {
                 placeholderText: qsTr("Etiquettes")
             }
 
+            // Champ de texte pour entrer le nom de la tâche
             TextField {
                 id: taskname
                 x: 15
@@ -161,6 +173,7 @@ ApplicationWindow {
                 text: taskName  // Pré-rempli avec le nom de la tâche
             }
 
+            // Champ de texte pour entrer la date de fin de la tâche
             TextField {
                 id: enddate
                 x: 15
@@ -172,6 +185,7 @@ ApplicationWindow {
                 text: taskEndDate  // Pré-rempli avec la date de fin
             }
 
+            // Texte indiquant le champ de date de fin
             Text {
                 id: _text5
                 x: 15
@@ -182,6 +196,7 @@ ApplicationWindow {
                 text: qsTr("Date de fin :")
                 font.pixelSize: 11
 
+                // Case à cocher pour marquer la tâche comme terminée
                 CheckBox {
                     id: checkBox
                     x: 263
@@ -194,6 +209,7 @@ ApplicationWindow {
                 }
             }
 
+            // Zone défilante pour afficher les tags ajoutés à la tâche
             Flickable {
                 id: tagsFlickable
                 x: 227
@@ -210,17 +226,18 @@ ApplicationWindow {
                     Repeater {
                         model: tagsListModel
                         delegate: Text {
-                            text: model.tag
+                            text: model.tag  // Affiche chaque tag dans la liste
                         }
                     }
                 }
             }
 
+            // Bouton pour fermer le popup sans valider
             RoundButton {
                 id: close
                 x: 352
                 y: 152
-                text: "X"
+                text: "X"  // Symbole de fermeture
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.rightMargin: 8
@@ -228,7 +245,7 @@ ApplicationWindow {
                 anchors.bottomMargin: 8
                 font.pointSize: 15
                 onClicked: {
-                    popupupdate.close();
+                    popupupdate.close();  // Ferme le popup
                 }
             }
         }
