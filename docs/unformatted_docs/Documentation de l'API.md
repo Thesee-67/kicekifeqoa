@@ -111,6 +111,42 @@ generated_id = add_recup("Users", data)
 print(f"Nouvel ID : {generated_id}")
 ````
 
+### 6. Compter des Occurrences (COUNT)
+
+**Fonction :** `count_data(table, filter_column, filter_value)`  
+
+- **Paramètres :**  
+  - `table` : Le nom de la table dans laquelle effectuer le comptage.  
+  - `filter_column` : Le nom de la colonne utilisée pour filtrer les données.  
+  - `filter_value` : La valeur de la colonne utilisée pour le filtre.  
+
+**Exemple d'utilisation :**  
+
+```python
+count_data("Group", "name", "ouioui")
+```
+
+Retour :
+
+    Succès :
+        Type : Dictionnaire
+        Contenu : Nombre total d'occurrences correspondant au filtre.
+        Exemple :
+        
+```json
+{
+  "status": "success",
+  "count": 3
+}
+```
+
+Exemple réel :
+
+```python
+result = count_data("Group", "name", "ouioui")
+print(f"Nombre total : {result}")
+```
+
 # Comment utiliser le code
 
 Lorsque vous souhaitez utiliser tout ou partie du code, suivez les étapes ci-dessous :
