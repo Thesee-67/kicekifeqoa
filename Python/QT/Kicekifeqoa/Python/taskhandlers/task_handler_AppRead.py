@@ -91,7 +91,7 @@ class TaskHandler(QObject):
             "end_date": read_date_format(subtask['end_date']),
             "checked": subtask['checked'],
             "priority": task_priorities.get(subtask['id_affected_task'], None),
-            "tag": None,
+            "tag": "",
             "parent_id": subtask['id_affected_task']
         } for subtask in filtered_subtasks]
 
