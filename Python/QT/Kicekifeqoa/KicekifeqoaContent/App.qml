@@ -80,7 +80,7 @@ Window {
                 delegate: Rectangle {
                     id: root
                     width: 200
-                    height: 100
+                    height: 90
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee"
                     border.width: 2
@@ -391,7 +391,7 @@ Window {
                 delegate: Rectangle {
                     id: root2
                     width: 200
-                    height: 100
+                    height: 90
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee" // Change la Colors.couleur si sélectionnée
                     border.width: 2
@@ -535,7 +535,7 @@ Window {
                 delegate: Rectangle {
                     id: root3
                     width: 200
-                    height: 100
+                    height: 90
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee" // Change la Colors.couleur si sélectionnée
                     border.width: 2
@@ -679,7 +679,7 @@ Window {
                 delegate: Rectangle {
                     id: root4
                     width: 200
-                    height: 100
+                    height: 90
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee" // Change la Colors.couleur si sélectionnée
                     border.width: 2
