@@ -22,6 +22,7 @@ Le script contient quatre fonctions principales :
 - `add_data` : Ajouter de nouvelles données.
 - `update_data` : Mettre à jour des données existantes.
 - `delete_data` : Supprimer des données.
+- `add_recup` : Ajouter de nouvelles données et recupérer l'id lié.
 
 ## Fonctions
 
