@@ -81,6 +81,35 @@ update_data("test", {"beta": "test"}, "beta", "fax")
 delete_data("test", "beta", "fax")
 ```
 
+### 5. Ajouter et Récupérer un ID (POST)
+
+**Fonction :** `add_recup(table, data)`  
+
+- **Paramètres :**  
+  - `table` : Le nom de la table où ajouter des données.  
+  - `data` : Un dictionnaire contenant les colonnes et leurs valeurs à insérer.  
+
+**Exemple d'utilisation :**  
+
+```python
+add_recup("test", {"alpha": "tic", "beta": "fax"})
+```
+Retour :
+
+    Succès :
+        L'ID généré par l'insertion sera retourné sous forme de dictionnaire.
+
+    Erreur :
+        Un message d'erreur sera affiché en cas de problème lors de l'ajout.
+
+Exemple réel :
+
+````python
+data = {"name": "John Doe", "email": "john.doe@example.com"}
+generated_id = add_recup("Users", data)
+print(f"Nouvel ID : {generated_id}")
+````
+
 # Comment utiliser le code
 
 Lorsque vous souhaitez utiliser tout ou partie du code, suivez les étapes ci-dessous :
