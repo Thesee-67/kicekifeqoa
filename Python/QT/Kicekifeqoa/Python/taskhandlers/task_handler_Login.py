@@ -33,7 +33,6 @@ class TaskHandlerLogin(QObject):
             if self.verify_password(stored_password, password):
                 # Récupère l'ID de l'utilisateur après une connexion réussie
                 self._user_id = user_data["id_user"]
-
                 # Émettre le signal pour fermer la fenêtre de login
                 self.loginSuccess.emit(self._user_id)
 

@@ -1,5 +1,4 @@
 from PySide6.QtCore import QObject, Slot
-from Python.CRUD.Task.Create_Task import create_task
 from Python.CRUD.Task.Create_Task import add_recup
 from Python.CRUD.Task_has_Users.Create_Task_has_Users import create_task_user_association
 
