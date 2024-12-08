@@ -3,35 +3,39 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 
+// Déclaration de la fenêtre principale
 Window {
     id: root
     visible: true
-    color: Colors.couleur1
+    color: Colors.couleur1  // Utilise une couleur définie par la palette personnalisée
     width: 1000
     height: 800
-    title: "Kicekifeqoa"
+    title: "Kicekifeqoa"    // Titre de la fenêtre principale
     flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowSystemMenuHint | Qt.WindowCloseButtonHint
-    minimumWidth: 1000
-    maximumWidth: 1000
-    minimumHeight: 800
-    maximumHeight: 800
+    minimumWidth: 1000      // Largeur minimale fixe
+    maximumWidth: 1000      // Largeur maximale fixe
+    minimumHeight: 800      // Hauteur minimale fixe
+    maximumHeight: 800      // Hauteur maximale fixe
 
+    // Propriétés pour stocker les informations de la tâche sélectionnée
     property string selectedTaskName: ""
     property string selectedTaskId: ""
     property var selectedDelegate: null
 
+    // Rectangle principal de fond pour l'application
     Rectangle {
         id: rectangle
         x: 26
         y: 22
         width: 955
         height: 754
-        color: Colors.couleur2
-        radius: 5
+        color: Colors.couleur2   // Couleur de fond
+        radius: 5                // Coins arrondis
         border.color: Colors.couleur6
         border.width: 0
         layer.enabled: false
 
+        // Logo de l'application
         Image {
             id: image
             x: 12
@@ -43,15 +47,17 @@ Window {
         }
     }
 
+    // Disposition en grille pour afficher les colonnes de tâches
     GridLayout {
         anchors.fill: parent
         anchors.leftMargin: 39
         anchors.rightMargin: 32
         anchors.topMargin: 142
         anchors.bottomMargin: 34
-        columns: 4
-        columnSpacing: 10
+        columns: 4                // Quatre colonnes pour les priorités
+        columnSpacing: 10         // Espacement entre les colonnes
 
+        // Première colonne - tâches avec priorité élevée
         Rectangle {
             id: taskArea
             color: Colors.couleur5
@@ -59,128 +65,149 @@ Window {
             border.width: 0
             border.color: Colors.couleur6
             width: 225
-            Layout.fillHeight: true
+            Layout.fillHeight: true  // Remplit la hauteur disponible
 
+            // Modèle pour les tâches de cette colonne
             ListModel {
                 id: taskModel
             }
 
+            // Action exécutée au chargement du composant pour récupérer les tâches
             Component.onCompleted: {
                 taskHandlerBackend.fetchTasks()
             }
 
+            // Liste pour afficher les tâches
             ListView {
                 id: taskListView
                 model: taskModel
                 anchors.fill: parent
                 anchors.topMargin: 51
                 anchors.bottomMargin: 12.5
-                spacing: 2
+                spacing: 0  // Espacement par défaut entre les éléments de la liste
 
-                delegate: Rectangle {
-                    id: root
-                    width: 200
-                    height: model.name.startsWith("↳") ? 60 : 90
-                    radius: 5
-                    color: selected ? "#dcdcdc" : "#eeeeee"
-                    border.width: 2
-                    border.color: Colors.couleur2
+                // Délégué pour chaque élément de la liste (tâche)
+                delegate: Column {
+                    spacing: 0
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    property bool selected: false
+                    Rectangle {
+                        id: root
+                        width: 200
+                        height: model.name.startsWith("↳") ? 60 : 90  // Hauteur différente si c'est une sous-tâche
+                        radius: 5
+                        color: selected ? "#dcdcdc" : "#eeeeee" // Change de couleur si sélectionné
+                        border.width: 2
+                        border.color: Colors.couleur2
 
-                    MouseArea {
-                        id: mouseArea
-                        anchors.fill: parent
-                        onClicked: {
-                            if (root.selected) {
-                                root.selected = false
-                                selectedDelegate = null
-                                selectedTaskId = ""
-                                selectedTaskName = ""
+                        // Propriété pour indiquer si l'élément est sélectionné
+                        property bool selected: false
 
-                                console.log("Aucune tâche sélectionnée")
-                            } else {
-                                if (selectedDelegate !== null) {
-                                    selectedDelegate.selected = false
+                        // Zone interactive pour sélectionner/désélectionner la tâche
+                        MouseArea {
+                            id: mouseArea
+                            anchors.fill: parent
+                            onClicked: {
+                                if (root.selected) {
+                                    root.selected = false
+                                    selectedDelegate = null
+                                    selectedTaskId = ""
+                                    selectedTaskName = ""
+
+                                    console.log("Aucune tâche sélectionnée")
+                                } else {
+                                    if (selectedDelegate !== null) {
+                                        selectedDelegate.selected = false
+                                    }
+
+                                    root.selected = true
+                                    selectedDelegate = root
+
+                                    selectedTaskId = taskid.text
+                                    selectedTaskName = taskname.text
+
+                                    console.log("Tâche sélectionnée ID:", selectedTaskId)
+                                    console.log("Tâche sélectionnée Nom:", selectedTaskName)
                                 }
-
-                                root.selected = true
-                                selectedDelegate = root
-
-                                selectedTaskId = taskid.text
-                                selectedTaskName = taskname.text
-
-                                console.log("Tâche sélectionnée ID:", selectedTaskId)
-                                console.log("Tâche sélectionnée Nom:", selectedTaskName)
                             }
+                        }
+
+                        // Texte affichant le nom de la tâche
+                        Text {
+                            id: taskname
+                            x: 4
+                            y: 6
+                            text: qsTr(model.name)
+                            font.pixelSize: model.name.startsWith("↳") ? 15 : 17
+                            font.styleName: "Gras"
+                        }
+
+                        // Texte affichant l'ID de la tâche
+                        Text {
+                            id: taskid
+                            x: 150
+                            y: 25
+                            color: Colors.couleur7
+                            text: model.id_task
+                            font.pixelSize: 17
+                            font.styleName: "Gras"
+                        }
+
+                        // Texte affichant la date d'échéance de la tâche
+                        Text {
+                            id: enddate
+                            x: 4
+                            y: model.name.startsWith("↳") ? 30 : 57
+                            text: model.end_date
+                            font.pixelSize: 12
+                        }
+
+                        // Checkbox pour marquer la tâche comme terminée
+                        CheckBox {
+                            id: checked
+                            x: 152
+                            y: 2
+                            width: 60
+                            height: 30
+                            text: "Fini ?"
+                            checked: model.checked === 1
+                        }
+
+                        // Texte pour afficher l'indicateur de priorité
+                        Text {
+                            id: priority
+                            x: 65
+                            y: 56
+                            font.pixelSize: model.name.startsWith("↳") ? 1 : 12
+                            text: {
+                                if (model.priority === 1) {
+                                    return "🕐";
+                                } else if (model.priority === 2) {
+                                    return "⚠️";
+                                } else {
+                                    return "";
+                                }
+                            }
+                        }
+
+                        // Texte pour afficher les tags associés à la tâche
+                        Text {
+                            id: tag
+                            x: 4
+                            y: 35
+                            text: qsTr(model.tag)
+                            font.pixelSize: 12
                         }
                     }
 
-
-                    Text {
-                        id: taskname
-                        x: 4
-                        y: 6
-                        text: qsTr(model.name)
-                        font.pixelSize: model.name.startsWith("↳") ? 15 : 17
-                        font.styleName: "Gras"
-                    }
-
-                    Text {
-                        id: taskid
-                        x: 150
-                        y: 25
-                        color: Colors.couleur7
-                        text: model.id_task
-                        font.pixelSize: 17
-                        font.styleName: "Gras"
-                    }
-
-                    Text {
-                        id: enddate
-                        x: 4
-                        y: model.name.startsWith("↳") ? 30 : 57
-                        text: model.end_date
-                        font.pixelSize: 12
-                    }
-
-                    CheckBox {
-                        id: checked
-                        x: 152
-                        y: 2
-                        width: 60
-                        height: 30
-                        text: "Fini ?"
-                        checked: model.checked === 1
-                    }
-
-                    Text {
-                        id: priority
-                        x: 65
-                        y: 56
-                        font.pixelSize: model.name.startsWith("↳") ? 1 : 12
-                        text: {
-                            if (model.priority === 1) {
-                                return "🕐";
-                            } else if (model.priority === 2) {
-                                return "⚠️";
-                            } else {
-                                return "";
-                            }
-                        }
-                    }
-
-                    Text {
-                        id: tag
-                        x: 4
-                        y: 35
-                        text: qsTr(model.tag)
-                        font.pixelSize: 12
+                    // Ajoute un espacement supplémentaire après les sous-tâches si l'élément suivant est une tâche principale
+                    Item {
+                        width: 1
+                        height: (index < taskModel.count - 1 && !taskModel.get(index + 1).name.startsWith("↳")) ? 5 : 1
                     }
                 }
             }
-
+            // Bouton pour ajouter une tâche ou une sous-tâche
             RoundButton {
                 id: addButton
                 x: 866
@@ -188,10 +215,12 @@ Window {
                 text: "+"
                 anchors.margins: 10
                 onClicked: {
+                    // Vérifie si une tâche est sélectionnée pour ajouter une sous-tâche
                     if (selectedTaskId !== "") {
                         subtaskHandlerCreate.define_parent_task_id(selectedTaskId);
                         var component = Qt.createComponent("PopupCreateSubtask.qml");
 
+                        // Crée le composant PopupCreateSubtask si le chargement est réussi
                         if (component.status === Component.Ready) {
                             var PopupCreateSubtask = component.createObject(parent);
 
@@ -199,6 +228,7 @@ Window {
                                 console.error("Erreur lors de la création de PopupCreateSubTask");
                             } else {
                                 if (taskHandlerCreate) {
+                                    // Connexions pour transmettre les données à subtaskHandlerCreate
                                     PopupCreateSubtask.addTaskName.connect(subtaskHandlerCreate.add_task_name);
                                     PopupCreateSubtask.addEndDate.connect(subtaskHandlerCreate.add_end_date);
                                     PopupCreateSubtask.taskCompleted.connect(subtaskHandlerCreate.task_completed);
@@ -214,7 +244,7 @@ Window {
                             console.error("Erreur lors du chargement de PopupCreateSubtask.qml");
                         }
                     } else {
-
+                        // Si aucune tâche n'est sélectionnée, crée une nouvelle tâche
                         var component = Qt.createComponent("PopupCreateTask.qml");
 
                         if (component.status === Component.Ready) {
@@ -224,6 +254,7 @@ Window {
                                 console.error("Erreur lors de la création de PopupCreateTask");
                             } else {
                                 if (taskHandlerCreate) {
+                                    // Connexions pour transmettre les données à taskHandlerCreate
                                     PopupCreateTask.addTaskName.connect(taskHandlerCreate.add_task_name);
                                     PopupCreateTask.addTaskPriority.connect(taskHandlerCreate.add_task_priority);
                                     PopupCreateTask.addTag.connect(taskHandlerCreate.add_tag);
@@ -247,6 +278,7 @@ Window {
                 }
             }
 
+            // Connexion pour mettre à jour le modèle avec les tâches récupérées du backend
             Connections {
                 target: taskHandlerBackend
                 onTasksFetchedPriority2: function (tasks) {
@@ -257,68 +289,72 @@ Window {
                             "name": tasks[i].name,
                             "end_date": tasks[i].end_date,
                             "checked": tasks[i].checked,
-                                             "priority": tasks[i].priority,
-                                             "tag": tasks[i].tag
-                                         });
+                            "priority": tasks[i].priority,
+                            "tag": tasks[i].tag
+                        });
                     }
                 }
             }
 
+            // Bouton pour modifier une tâche sélectionnée
             RoundButton {
-                    id: modify
-                    x: 836
-                    y: -71
-                    text: "🖌️"
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                    anchors.margins: 10
-                    anchors.rightMargin: -651
-                    anchors.bottomMargin: 655
-                    onClicked: {
-                        if (selectedTaskId !== "") {
-                            taskHandlerUpdate.fetch_task_by_id(selectedTaskId);
-                        } else {
-                            console.error("Erreur : Aucune tâche sélectionnée.");
-                        }
+                id: modify
+                x: 836
+                y: -71
+                text: "🖌️"
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: 10
+                anchors.rightMargin: -651
+                anchors.bottomMargin: 655
+                onClicked: {
+                    if (selectedTaskId !== "") {
+                        taskHandlerUpdate.fetch_task_by_id(selectedTaskId);
+                    } else {
+                        console.error("Erreur : Aucune tâche sélectionnée.");
                     }
-                        Connections {
-                            target: taskHandlerUpdate
-                            onTaskFetched: function (taskData) {
-                                var component = Qt.createComponent("PopupUpdateTask.qml");
+                }
 
-                                if (component.status === Component.Ready) {
-                                    var PopupUpdateTask = component.createObject(root, {
-                                        "taskName": taskData.task_name,
-                                        "taskPriority": taskData.task_priority,
-                                        "taskTags": taskData.tag ? taskData.tag.join(", ") : "",
-                                        "taskEndDate": taskData.end_date,
-                                        "taskChecked": taskData.checked
+                // Connexion pour afficher le popup de modification avec les données récupérées
+                Connections {
+                    target: taskHandlerUpdate
+                    onTaskFetched: function (taskData) {
+                        var component = Qt.createComponent("PopupUpdateTask.qml");
+
+                        if (component.status === Component.Ready) {
+                            var PopupUpdateTask = component.createObject(root, {
+                                "taskName": taskData.task_name,
+                                "taskPriority": taskData.task_priority,
+                                "taskTags": taskData.tag ? taskData.tag.join(", ") : "",
+                                "taskEndDate": taskData.end_date,
+                                "taskChecked": taskData.checked
+                            });
+
+                            if (PopupUpdateTask === null) {
+                                console.error("Erreur lors de la création de PopupUpdateTask");
+                            } else {
+                                if (taskHandlerUpdate) {
+                                    // Connexions pour transmettre les données à taskHandlerUpdate
+                                    PopupUpdateTask.updateTaskName.connect(taskHandlerUpdate.update_task_name);
+                                    PopupUpdateTask.updateTaskPriority.connect(taskHandlerUpdate.update_task_priority);
+                                    PopupUpdateTask.updateTag.connect(taskHandlerUpdate.add_tag);
+                                    PopupUpdateTask.removeLastTag.connect(taskHandlerUpdate.remove_last_tag);
+                                    PopupUpdateTask.updateEndDate.connect(taskHandlerUpdate.update_end_date);
+                                    PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
+                                    PopupUpdateTask.validateUpdateInfo.connect(function () {
+                                        taskHandlerUpdate.validate_update_info();
+                                        taskHandlerBackend.fetchTasks();
                                     });
-
-                                    if (PopupUpdateTask === null) {
-                                        console.error("Erreur lors de la création de PopupUpdateTask");
-                                    } else {
-                                        if (taskHandlerUpdate) {
-                                            PopupUpdateTask.updateTaskName.connect(taskHandlerUpdate.update_task_name);
-                                            PopupUpdateTask.updateTaskPriority.connect(taskHandlerUpdate.update_task_priority);
-                                            PopupUpdateTask.updateTag.connect(taskHandlerUpdate.add_tag);
-                                            PopupUpdateTask.removeLastTag.connect(taskHandlerUpdate.remove_last_tag);
-                                            PopupUpdateTask.updateEndDate.connect(taskHandlerUpdate.update_end_date);
-                                            PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
-                                            PopupUpdateTask.validateUpdateInfo.connect(function () {
-                                                taskHandlerUpdate.validate_update_info();
-                                                taskHandlerBackend.fetchTasks();
-                                            });
-                                        } else {
-                                            console.error("Erreur : TaskHandler est introuvable.");
-                                        }
-                                    }
                                 } else {
-                                    console.error("Erreur lors du chargement de PopupUpdateTask.qml");
+                                    console.error("Erreur : TaskHandler est introuvable.");
                                 }
                             }
+                        } else {
+                            console.error("Erreur lors du chargement de PopupUpdateTask.qml");
                         }
                     }
+                }
+            }
 
             RoundButton {
                 id: remove
@@ -386,109 +422,121 @@ Window {
                 anchors.fill: parent
                 anchors.topMargin: 51
                 anchors.bottomMargin: 12.5
-                spacing: 2
+                spacing: 0
 
-                delegate: Rectangle {
-                    id: root2
-                    width: 200
-                    height: model.name.startsWith("↳") ? 60 : 90
-                    radius: 5
-                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la Colors.couleur si sélectionnée
-                    border.width: 2
-                    border.color: Colors.couleur2
+                delegate: Column {
+                    spacing: 0
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    property bool selected: false
+                    Rectangle {
+                        id: root2
+                        width: 200
+                        height: model.name.startsWith("↳") ? 60 : 90
+                        radius: 5
+                        color: selected ? "#dcdcdc" : "#eeeeee"
+                        border.width: 2
+                        border.color: Colors.couleur2
 
-                    MouseArea {
-                        id: mouseArea2
-                        anchors.fill: parent
-                        onClicked: {
-                            if (root2.selected) {
-                                root2.selected = false
-                                selectedDelegate = null
-                                selectedTaskId = ""
-                                selectedTaskName = ""
 
-                                console.log("Aucune tâche sélectionnée")
-                            } else {
-                                if (selectedDelegate !== null) {
-                                    selectedDelegate.selected = false
+                        property bool selected: false
+
+                        MouseArea {
+                            id: mouseArea2
+                            anchors.fill: parent
+                            onClicked: {
+                                if (root2.selected) {
+                                    root2.selected = false
+                                    selectedDelegate = null
+                                    selectedTaskId = ""
+                                    selectedTaskName = ""
+
+                                    console.log("Aucune tâche sélectionnée")
+                                } else {
+                                    if (selectedDelegate !== null) {
+                                        selectedDelegate.selected = false
+                                    }
+
+                                    root2.selected = true
+                                    selectedDelegate = root2
+
+                                    selectedTaskId = taskid2.text
+                                    selectedTaskName = taskname2.text
+
+                                    console.log("Tâche sélectionnée ID:", selectedTaskId)
+                                    console.log("Tâche sélectionnée Nom:", selectedTaskName)
                                 }
-
-                                root2.selected = true
-                                selectedDelegate = root2
-
-                                selectedTaskId = taskid2.text
-                                selectedTaskName = taskname2.text
-
-                                console.log("Tâche sélectionnée ID:", selectedTaskId)
-                                console.log("Tâche sélectionnée Nom:", selectedTaskName)
                             }
+                        }
+
+                        Text {
+                            id: taskname2
+                            x: 4
+                            y: 6
+                            text: qsTr(model.name)
+                            font.pixelSize: model.name.startsWith("↳") ? 15 : 17
+                            font.styleName: "Gras"
+                        }
+
+                        Text {
+                            id: taskid2
+                            x: 150
+                            y: 25
+                            color: Colors.couleur7
+                            text: model.id_task
+                            font.pixelSize: 17
+                            font.styleName: "Gras"
+                        }
+
+                        Text {
+                            id: enddate2
+                            x: 4
+                            y: model.name.startsWith("↳") ? 30 : 57
+                            text: model.end_date
+                            font.pixelSize: 12
+                        }
+
+                        CheckBox {
+                            id: checked2
+                            x: 152
+                            y: 2
+                            width: 60
+                            height: 30
+                            text: "Fini ?"
+                            checked: model.checked === 1
+                        }
+
+                        Text {
+                            id: priority2
+                            x: 65
+                            y: 56
+                            font.pixelSize: model.name.startsWith("↳") ? 1 : 12
+                            text: {
+                                if (model.priority === 1) {
+                                    return "🕐";
+                                } else if (model.priority === 2) {
+                                    return "⚠️";
+                                } else {
+                                    return "";
+                                }
+                            }
+                        }
+
+                        Text {
+                            id: tag2
+                            x: 4
+                            y: 35
+                            text: qsTr(model.tag)
+                            font.pixelSize: 12
                         }
                     }
 
-                    Text {
-                        id: taskname2
-                        x: 4
-                        y: 6
-                        text: qsTr(model.name)
-                        font.pixelSize: model.name.startsWith("↳") ? 15 : 17
-                        font.styleName: "Gras"
-                    }
-                    Text {
-                        id: taskid2
-                        x: 150
-                        y: 25
-                        color: Colors.couleur7
-                        text: model.id_task
-                        font.pixelSize: 17
-                        font.styleName: "Gras"
-                    }
-
-                    Text {
-                        id: enddate2
-                        x: 4
-                        y: model.name.startsWith("↳") ? 30 : 57
-                        text: model.end_date
-                        font.pixelSize: 12
-                    }
-
-                    CheckBox {
-                        id: checked2
-                        x: 152
-                        y: 2
-                        width: 60
-                        height: 30
-                        text: "Fini ?"
-                        checked: model.checked === 1
-                    }
-
-                    Text {
-                        id: priority2
-                        x: 65
-                        y: 56
-                        font.pixelSize: model.name.startsWith("↳") ? 1 : 12
-                        text: {
-                            if (model.priority === 1) {
-                                return "🕐";
-                            } else if (model.priority === 2) {
-                                return "⚠️";
-                            } else {
-                                return "";
-                            }
-                        }
-                    }
-
-                    Text {
-                        id: tag2
-                        x: 4
-                        y: 35
-                        text: qsTr(model.tag)
-                        font.pixelSize: 12
+                    Item {
+                        width: 1
+                        height: (index < taskModel2.count - 1 && !taskModel2.get(index + 1).name.startsWith("↳")) ? 5 : 1
                     }
                 }
             }
+
 
             Connections {
                 target: taskHandlerBackend
@@ -530,106 +578,116 @@ Window {
                 anchors.fill: parent
                 anchors.topMargin: 51
                 anchors.bottomMargin: 12.5
-                spacing: 2
+                spacing: 0
 
-                delegate: Rectangle {
-                    id: root3
-                    width: 200
-                    height: model.name.startsWith("↳") ? 60 : 90
-                    radius: 5
-                    color: selected ? "#d0d0d0" : "#eeeeee"
-                    border.width: 2
-                    border.color: Colors.couleur2
+                delegate: Column {
+                    spacing: 0
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    property bool selected: false
+                    Rectangle {
+                        id: root3
+                        width: 200
+                        height: model.name.startsWith("↳") ? 60 : 90
+                        radius: 5
+                        color: selected ? "#d0d0d0" : "#eeeeee"
+                        border.width: 2
+                        border.color: Colors.couleur2
 
-                    MouseArea {
-                        id: mouseArea3
-                        anchors.fill: parent
-                        onClicked: {
-                            if (root3.selected) {
-                                root3.selected = false
-                                selectedDelegate = null
-                                selectedTaskId = ""
-                                selectedTaskName = ""
+                        property bool selected: false
 
-                                console.log("Aucune tâche sélectionnée")
-                            } else {
-                                if (selectedDelegate !== null) {
-                                    selectedDelegate.selected = false
+                        MouseArea {
+                            id: mouseArea3
+                            anchors.fill: parent
+                            onClicked: {
+                                if (root3.selected) {
+                                    root3.selected = false
+                                    selectedDelegate = null
+                                    selectedTaskId = ""
+                                    selectedTaskName = ""
+
+                                    console.log("Aucune tâche sélectionnée")
+                                } else {
+                                    if (selectedDelegate !== null) {
+                                        selectedDelegate.selected = false
+                                    }
+
+                                    root3.selected = true
+                                    selectedDelegate = root3
+
+                                    selectedTaskId = taskid3.text
+                                    selectedTaskName = taskname3.text
+
+                                    console.log("Tâche sélectionnée ID:", selectedTaskId)
+                                    console.log("Tâche sélectionnée Nom:", selectedTaskName)
                                 }
-
-                                root3.selected = true
-                                selectedDelegate = root3
-
-                                selectedTaskId = taskid3.text
-                                selectedTaskName = taskname3.text
-
-                                console.log("Tâche sélectionnée ID:", selectedTaskId)
-                                console.log("Tâche sélectionnée Nom:", selectedTaskName)
                             }
+                        }
+
+                        Text {
+                            id: taskname3
+                            x: 4
+                            y: 6
+                            text: qsTr(model.name)
+                            font.pixelSize: model.name.startsWith("↳") ? 15 : 17
+                            font.styleName: "Gras"
+                        }
+
+                        Text {
+                            id: taskid3
+                            x: 150
+                            y: 25
+                            color: Colors.couleur7
+                            text: model.id_task
+                            font.pixelSize: 17
+                            font.styleName: "Gras"
+                        }
+
+                        Text {
+                            id: enddate3
+                            x: 4
+                            y: model.name.startsWith("↳") ? 30 : 57
+                            text: model.end_date
+                            font.pixelSize: 12
+                        }
+
+                        CheckBox {
+                            id: checked3
+                            x: 152
+                            y: 2
+                            width: 60
+                            height: 30
+                            text: "Fini ?"
+                            checked: model.checked === 1
+                        }
+
+                        Text {
+                            id: priority3
+                            x: 65
+                            y: 56
+                            font.pixelSize: model.name.startsWith("↳") ? 1 : 12
+                            text: {
+                                if (model.priority === 1) {
+                                    return "🕐";
+                                } else if (model.priority === 2) {
+                                    return "⚠️";
+                                } else {
+                                    return "";
+                                }
+                            }
+                        }
+
+                        Text {
+                            id: tag3
+                            x: 4
+                            y: 35
+                            text: qsTr(model.tag)
+                            font.pixelSize: 12
                         }
                     }
 
-                    Text {
-                        id: taskname3
-                        x: 4
-                        y: 6
-                        text: qsTr(model.name)
-                        font.pixelSize: model.name.startsWith("↳") ? 15 : 17
-                        font.styleName: "Gras"
-                    }
-                    Text {
-                        id: taskid3
-                        x: 150
-                        y: 25
-                        color: Colors.couleur7
-                        text: model.id_task
-                        font.pixelSize: 17
-                        font.styleName: "Gras"
-                    }
-
-                    Text {
-                        id: enddate3
-                        x: 4
-                        y: model.name.startsWith("↳") ? 30 : 57
-                        text: model.end_date
-                        font.pixelSize: 12
-                    }
-
-                    CheckBox {
-                        id: checked3
-                        x: 152
-                        y: 2
-                        width: 60
-                        height: 30
-                        text: "Fini ?"
-                        checked: model.checked === 1
-                    }
-
-                    Text {
-                        id: priority3
-                        x: 65
-                        y: 56
-                        font.pixelSize: model.name.startsWith("↳") ? 1 : 12
-                        text: {
-                            if (model.priority === 1) {
-                                return "🕐";
-                            } else if (model.priority === 2) {
-                                return "⚠️";
-                            } else {
-                                return "";
-                            }
-                        }
-                    }
-
-                    Text {
-                        id: tag3
-                        x: 4
-                        y: 35
-                        text: qsTr(model.tag)
-                        font.pixelSize: 12
+                    Item {
+                        width: 1
+                        height: (index < taskModel3.count - 1 && !taskModel3.get(index + 1).name.startsWith("↳")) ? 5 : 1
                     }
                 }
             }
@@ -637,9 +695,9 @@ Window {
             Connections {
                 target: taskHandlerBackend
                 onTasksFetchedPriority0: function (tasks) {
-                    taskModel3.clear();  // Remplacer par taskModelPriority0
+                    taskModel3.clear();
                     for (var i = 0; i < tasks.length; i++) {
-                        taskModel3.append({  // Remplacer taskModel3 par taskModelPriority0
+                        taskModel3.append({
                             "id_task": tasks[i].id_task,
                             "name": tasks[i].name,
                             "end_date": tasks[i].end_date,
@@ -651,6 +709,7 @@ Window {
                 }
             }
         }
+
         Rectangle {
             id: taskArea4
             color: "#eeeeee"
@@ -674,113 +733,124 @@ Window {
                 anchors.fill: parent
                 anchors.topMargin: 51
                 anchors.bottomMargin: 12.5
-                spacing: 2
+                spacing: 0
 
-                delegate: Rectangle {
-                    id: root4
-                    width: 200
-                    height: model.name.startsWith("↳") ? 60 : 90
-                    radius: 5
-                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la Colors.couleur si sélectionnée
-                    border.width: 2
-                    border.color: Colors.couleur2
+                delegate: Column {
+                    spacing: 0
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    property bool selected: false
+                    Rectangle {
+                        id: root4
+                        width: 200
+                        height: model.name.startsWith("↳") ? 60 : 90
+                        radius: 5
+                        color: selected ? "#dcdcdc" : "#eeeeee"
+                        border.width: 2
+                        border.color: Colors.couleur2
 
-                    MouseArea {
-                        id: mouseArea4
-                        anchors.fill: parent
-                        onClicked: {
-                            if (root4.selected) {
-                                root4.selected = false
-                                selectedDelegate = null
-                                selectedTaskId = ""
-                                selectedTaskName = ""
+                        property bool selected: false
 
-                                console.log("Aucune tâche sélectionnée")
-                            } else {
-                                if (selectedDelegate !== null) {
-                                    selectedDelegate.selected = false
+                        MouseArea {
+                            id: mouseArea4
+                            anchors.fill: parent
+                            onClicked: {
+                                if (root4.selected) {
+                                    root4.selected = false
+                                    selectedDelegate = null
+                                    selectedTaskId = ""
+                                    selectedTaskName = ""
+
+                                    console.log("Aucune tâche sélectionnée")
+                                } else {
+                                    if (selectedDelegate !== null) {
+                                        selectedDelegate.selected = false
+                                    }
+
+                                    root4.selected = true
+                                    selectedDelegate = root4
+
+                                    selectedTaskId = taskid4.text
+                                    selectedTaskName = taskname4.text
+
+                                    console.log("Tâche sélectionnée ID:", selectedTaskId)
+                                    console.log("Tâche sélectionnée Nom:", selectedTaskName)
                                 }
-
-                                root4.selected = true
-                                selectedDelegate = root4
-
-                                selectedTaskId = taskid4.text
-                                selectedTaskName = taskname4.text
-
-                                console.log("Tâche sélectionnée ID:", selectedTaskId)
-                                console.log("Tâche sélectionnée Nom:", selectedTaskName)
                             }
+                        }
+
+                        Text {
+                            id: taskname4
+                            x: 4
+                            y: 6
+                            text: qsTr(model.name)
+                            font.pixelSize: model.name.startsWith("↳") ? 15 : 17
+                            font.styleName: "Gras"
+                        }
+
+                        Text {
+                            id: taskid4
+                            x: 150
+                            y: 25
+                            color: Colors.couleur7
+                            text: model.id_task
+                            font.pixelSize: 17
+                            font.styleName: "Gras"
+                        }
+
+                        Text {
+                            id: enddate4
+                            x: 4
+                            y: model.name.startsWith("↳") ? 30 : 57
+                            text: model.end_date
+                            font.pixelSize: 12
+                        }
+
+                        CheckBox {
+                            id: checked4
+                            x: 152
+                            y: 2
+                            width: 60
+                            height: 30
+                            text: "Fini ?"
+                            checked: model.checked === 1
+                        }
+
+                        Text {
+                            id: priority4
+                            x: 65
+                            y: 56
+                            font.pixelSize: model.name.startsWith("↳") ? 1 : 12
+                            text: {
+                                if (model.priority === 1) {
+                                    return "🕐";
+                                } else if (model.priority === 2) {
+                                    return "⚠️";
+                                } else {
+                                    return "";
+                                }
+                            }
+                        }
+
+                        Text {
+                            id: tag4
+                            x: 4
+                            y: 35
+                            text: qsTr(model.tag)
+                            font.pixelSize: 12
                         }
                     }
 
-                    Text {
-                        id: taskname4
-                        x: 4
-                        y: 6
-                        text: qsTr(model.name)
-                        font.pixelSize: model.name.startsWith("↳") ? 15 : 17
-                        font.styleName: "Gras"
-                    }
-                    Text {
-                        id: taskid4
-                        x: 150
-                        y: 25
-                        color: Colors.couleur7
-                        text: model.id_task
-                        font.pixelSize: 17
-                        font.styleName: "Gras"
-                    }
-
-                    Text {
-                        id: enddate4
-                        x: 4
-                        y: model.name.startsWith("↳") ? 30 : 57
-                        text: model.end_date
-                        font.pixelSize: 12
-                    }
-
-                    CheckBox {
-                        id: checked4
-                        x: 152
-                        y: 2
-                        width: 60
-                        height: 30
-                        text: "Fini ?"
-                        checked: model.checked === 1
-                    }
-
-                    Text {
-                        id: priority4
-                        x: 65
-                        y: 56
-                        font.pixelSize: model.name.startsWith("↳") ? 1 : 12
-                        text: {
-                            if (model.priority === 1) {
-                                return "🕐";
-                            } else if (model.priority === 2) {
-                                return "⚠️";
-                            } else {
-                                return "";
-                            }
-                        }
-                    }
-
-                    Text {
-                        id: tag4
-                        x: 4
-                        y: 35
-                        text: qsTr(model.tag)
-                        font.pixelSize: 12
+                    // Ajoute un espacement supplémentaire après les sous-tâches si l'élément suivant est une tâche principale
+                    Item {
+                        width: 1
+                        height: (index < taskModel4.count - 1 && !taskModel4.get(index + 1).name.startsWith("↳")) ? 5 : 1
                     }
                 }
             }
 
             Connections {
                 target: taskHandlerBackend
-                 onTasksFetchedChecked: function (tasks) {
+                onTasksFetchedChecked: function (tasks) {
                     taskModel4.clear();
                     for (var i = 0; i < tasks.length; i++) {
                         taskModel4.append({
@@ -788,11 +858,11 @@ Window {
                             "name": tasks[i].name,
                             "end_date": tasks[i].end_date,
                             "checked": tasks[i].checked,
-                                              "priority": tasks[i].priority,
-                                              "tag": tasks[i].tag
-                                          });
+                            "priority": tasks[i].priority,
+                            "tag": tasks[i].tag
+                        });
                     }
-                 }
+                }
             }
         }
     }
