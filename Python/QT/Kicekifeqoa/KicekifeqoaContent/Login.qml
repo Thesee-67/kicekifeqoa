@@ -201,6 +201,14 @@ Window {
             }
         }
 
+        Connections {
+            target: taskHandlerLogin
+            onLoginSuccess: function(userId) {
+                Qt.application.userId = userId;  // Stocke l'ID utilisateur globalement
+
+            }
+        }
+
         Button {
             id: registerButton
             x: 295

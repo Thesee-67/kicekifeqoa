@@ -9,8 +9,8 @@ from autogen.settings import url, import_paths
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pupdate import TaskHandler as TaskHandlerUpdate
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pdelete import TaskHandler as TaskHandlerDelete
-from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_AppRead import TaskHandler as TaskHandlerBackend
-from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Login import TaskHandler as TaskHandlerLogin
+from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_AppRead import TaskHandlerAppRead as TaskHandlerBackend
+from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Login import TaskHandlerLogin as TaskHandlerLogin
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Register import TaskHandler as TaskHandlerRegister
 from Python.QT.Kicekifeqoa.Python.colors import Colors
 

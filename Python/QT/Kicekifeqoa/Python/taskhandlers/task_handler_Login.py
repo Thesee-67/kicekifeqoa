@@ -2,15 +2,16 @@ from pathlib import Path
 from PySide6.QtCore import QObject, Slot, Signal
 import os
 from Python.CRUD.Users.Read_User import  get_users
+from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_AppRead import TaskHandlerAppRead
 import bcrypt
 
-class TaskHandler(QObject):
-    loginSuccess = Signal()  # Déclaration du signal
+class TaskHandlerLogin(QObject):
+    loginSuccess = Signal(int)  # Déclaration du signal
     loginPasswdFail = Signal()
     loginEmailFail = Signal()
 
     def __init__(self, engine):
-        super(TaskHandler, self).__init__()
+        super(TaskHandlerLogin, self).__init__()
         self.engine = engine
         self._user_id = None  # Variable pour stocker l'ID de l'utilisateur
 
@@ -34,12 +35,16 @@ class TaskHandler(QObject):
                 self._user_id = user_data["id_user"]
 
                 # Émettre le signal pour fermer la fenêtre de login
-                self.loginSuccess.emit()
+                self.loginSuccess.emit(self._user_id)
 
                 # Charger la nouvelle interface App.qml
                 app_qml_path = Path(__file__).resolve().parents[2] / "KicekifeqoaContent" / "App.qml"
                 print(f"Chargement de : {app_qml_path}")
                 self.engine.load(os.fspath(app_qml_path))
+
+                # Créer une instance de TaskHandlerAppRead pour récupérer les tâches de l'utilisateur
+                task_handler_AppRead = TaskHandlerAppRead(self.engine)
+                task_handler_AppRead.fetchTasks(self._user_id)  # Appeler la fonction pour récupérer les tâches de l'utilisateur
             else:
                 self.loginPasswdFail.emit()
         else:

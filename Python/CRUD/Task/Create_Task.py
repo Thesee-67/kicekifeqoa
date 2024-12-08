@@ -1,7 +1,4 @@
-import mysql.connector
 from mysql.connector import (connection)
-from mysql.connector import Error
-from datetime import datetime
 import requests
 import json
 
