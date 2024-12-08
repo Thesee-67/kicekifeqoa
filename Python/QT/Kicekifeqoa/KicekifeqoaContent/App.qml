@@ -80,7 +80,7 @@ Window {
                 delegate: Rectangle {
                     id: root
                     width: 200
-                    height: 90
+                    height: model.name.startsWith("↳") ? 60 : 90
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee"
                     border.width: 2
@@ -123,7 +123,7 @@ Window {
                         x: 4
                         y: 6
                         text: qsTr(model.name)
-                        font.pixelSize: 17
+                        font.pixelSize: model.name.startsWith("↳") ? 15 : 17
                         font.styleName: "Gras"
                     }
 
@@ -140,7 +140,7 @@ Window {
                     Text {
                         id: enddate
                         x: 4
-                        y: 57
+                        y: model.name.startsWith("↳") ? 30 : 57
                         text: model.end_date
                         font.pixelSize: 12
                     }
@@ -159,7 +159,7 @@ Window {
                         id: priority
                         x: 65
                         y: 56
-                        font.pixelSize: 12
+                        font.pixelSize: model.name.startsWith("↳") ? 1 : 12
                         text: {
                             if (model.priority === 1) {
                                 return "🕐";
@@ -391,7 +391,7 @@ Window {
                 delegate: Rectangle {
                     id: root2
                     width: 200
-                    height: 90
+                    height: model.name.startsWith("↳") ? 60 : 90
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee" // Change la Colors.couleur si sélectionnée
                     border.width: 2
@@ -433,7 +433,7 @@ Window {
                         x: 4
                         y: 6
                         text: qsTr(model.name)
-                        font.pixelSize: 17
+                        font.pixelSize: model.name.startsWith("↳") ? 15 : 17
                         font.styleName: "Gras"
                     }
                     Text {
@@ -449,7 +449,7 @@ Window {
                     Text {
                         id: enddate2
                         x: 4
-                        y: 57
+                        y: model.name.startsWith("↳") ? 30 : 57
                         text: model.end_date
                         font.pixelSize: 12
                     }
@@ -468,7 +468,7 @@ Window {
                         id: priority2
                         x: 65
                         y: 56
-                        font.pixelSize: 12
+                        font.pixelSize: model.name.startsWith("↳") ? 1 : 12
                         text: {
                             if (model.priority === 1) {
                                 return "🕐";
@@ -535,9 +535,9 @@ Window {
                 delegate: Rectangle {
                     id: root3
                     width: 200
-                    height: 90
+                    height: model.name.startsWith("↳") ? 60 : 90
                     radius: 5
-                    color: selected ? "#dcdcdc" : "#eeeeee" // Change la Colors.couleur si sélectionnée
+                    color: selected ? "#d0d0d0" : "#eeeeee"
                     border.width: 2
                     border.color: Colors.couleur2
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -577,7 +577,7 @@ Window {
                         x: 4
                         y: 6
                         text: qsTr(model.name)
-                        font.pixelSize: 17
+                        font.pixelSize: model.name.startsWith("↳") ? 15 : 17
                         font.styleName: "Gras"
                     }
                     Text {
@@ -593,7 +593,7 @@ Window {
                     Text {
                         id: enddate3
                         x: 4
-                        y: 57
+                        y: model.name.startsWith("↳") ? 30 : 57
                         text: model.end_date
                         font.pixelSize: 12
                     }
@@ -612,7 +612,7 @@ Window {
                         id: priority3
                         x: 65
                         y: 56
-                        font.pixelSize: 12
+                        font.pixelSize: model.name.startsWith("↳") ? 1 : 12
                         text: {
                             if (model.priority === 1) {
                                 return "🕐";
@@ -679,7 +679,7 @@ Window {
                 delegate: Rectangle {
                     id: root4
                     width: 200
-                    height: 90
+                    height: model.name.startsWith("↳") ? 60 : 90
                     radius: 5
                     color: selected ? "#dcdcdc" : "#eeeeee" // Change la Colors.couleur si sélectionnée
                     border.width: 2
@@ -721,7 +721,7 @@ Window {
                         x: 4
                         y: 6
                         text: qsTr(model.name)
-                        font.pixelSize: 17
+                        font.pixelSize: model.name.startsWith("↳") ? 15 : 17
                         font.styleName: "Gras"
                     }
                     Text {
@@ -737,7 +737,7 @@ Window {
                     Text {
                         id: enddate4
                         x: 4
-                        y: 57
+                        y: model.name.startsWith("↳") ? 30 : 57
                         text: model.end_date
                         font.pixelSize: 12
                     }
@@ -756,7 +756,7 @@ Window {
                         id: priority4
                         x: 65
                         y: 56
-                        font.pixelSize: 12
+                        font.pixelSize: model.name.startsWith("↳") ? 1 : 12
                         text: {
                             if (model.priority === 1) {
                                 return "🕐";
