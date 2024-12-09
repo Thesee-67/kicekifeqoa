@@ -13,7 +13,7 @@ class TaskHandler(QObject):
     @Slot(str)
     def define_parent_task_id(self, parenttaskid):
         if parenttaskid.strip():
-            self.parent_task_id = parenttaskid
+            self.parent_task_id = parenttaskid.split('.')[-1]
         else:
             print("Erreur : Le nom de la tâche ne peut pas être vide.")
 
