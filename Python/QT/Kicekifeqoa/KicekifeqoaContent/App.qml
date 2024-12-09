@@ -385,6 +385,8 @@ Window {
                                         taskHandlerDelete.validate_delete_info();
                                         taskHandlerBackend.fetchTasks();
                                     });
+                                    selectedTaskId = ""
+                                    selectedTaskName = ""
                                 } else {
                                     console.error("Erreur : taskHandlerDelete n'est pas initialisé");
                                 }
