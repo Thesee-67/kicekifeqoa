@@ -19,6 +19,7 @@ Window {
     property string selectedTaskName: ""
     property string selectedTaskId: ""
     property var selectedDelegate: null
+    property int userId: Qt.application.userId
 
     Rectangle {
         id: rectangle
@@ -66,7 +67,7 @@ Window {
             }
 
             Component.onCompleted: {
-                taskHandlerBackend.fetchTasks()
+                taskHandlerBackend.fetchTasks(root.userId);
             }
 
             ListView {
@@ -206,13 +207,11 @@ Window {
                                     PopupCreateTask.addTaskPriority.connect(taskHandlerCreate.add_task_priority);
                                     PopupCreateTask.addTag.connect(taskHandlerCreate.add_tag);
                                     PopupCreateTask.removeLastTag.connect(taskHandlerCreate.remove_last_tag);
-                                    PopupCreateTask.addUser.connect(taskHandlerCreate.add_user);
-                                    PopupCreateTask.removeLastUser.connect(taskHandlerCreate.remove_last_user);
                                     PopupCreateTask.addEndDate.connect(taskHandlerCreate.add_end_date);
                                     PopupCreateTask.taskCompleted.connect(taskHandlerCreate.task_completed);
                                     PopupCreateTask.validateInfo.connect(function () {
                                         taskHandlerCreate.validate_info();
-                                        taskHandlerBackend.fetchTasks();
+                                        taskHandlerBackend.fetchTasks(root.userId);
                                     });
                                 } else {
                                     console.error("Erreur : TaskHandler est introuvable.");
@@ -287,7 +286,7 @@ Window {
                                             PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
                                             PopupUpdateTask.validateUpdateInfo.connect(function () {
                                                 taskHandlerUpdate.validate_update_info();
-                                                taskHandlerBackend.fetchTasks();
+                                                taskHandlerBackend.fetchTasks(root.userId);
                                             });
                                         } else {
                                             console.error("Erreur : TaskHandler est introuvable.");
@@ -327,7 +326,7 @@ Window {
                                     PopupDeleteTask.taskId.connect(taskHandlerDelete.set_task_id);
                                     PopupDeleteTask.validateDeleteInfo.connect(function() {
                                         taskHandlerDelete.validate_delete_info();
-                                        taskHandlerBackend.fetchTasks();
+                                        taskHandlerBackend.fetchTasks(root.userId);
                                     });
                                 } else {
                                     console.error("Erreur : taskHandlerDelete n'est pas initialisé");
@@ -357,7 +356,7 @@ Window {
             }
 
             Component.onCompleted: {
-                taskHandlerBackend.fetchTasks()
+                taskHandlerBackend.fetchTasks(root.userId)
             }
 
             ListView {
@@ -501,7 +500,7 @@ Window {
             }
 
             Component.onCompleted: {
-                taskHandlerBackend.fetchTasks()
+                taskHandlerBackend.fetchTasks(root.userId)
             }
 
             ListView {
@@ -645,7 +644,7 @@ Window {
             }
 
             Component.onCompleted: {
-                taskHandlerBackend.fetchTasks()
+                taskHandlerBackend.fetchTasks(root.userId)
             }
 
             ListView {

@@ -2,43 +2,53 @@ from PySide6.QtCore import QObject, Slot, Signal
 from Python.CRUD.Task.Read_Task import get_data
 from Python.QT.Kicekifeqoa.Python.format_date import read_date_format
 
-class TaskHandler(QObject):
+class TaskHandlerAppRead(QObject):
     tasksFetchedPriority2 = Signal(list, arguments=['tasks'])
     tasksFetchedPriority1 = Signal(list, arguments=['tasks'])
     tasksFetchedPriority0 = Signal(list, arguments=['tasks'])
     tasksFetchedChecked = Signal(list, arguments=['tasks'])  # Nouveau signal pour les tâches cochées
 
-    @Slot()
-    def fetchTasks(self):
-        # Appelle les trois fonctions pour chaque priorité
-        self.fetchTasksPriority2()
-        self.fetchTasksPriority1()
-        self.fetchTasksPriority0()
-        self.fetchTasksChecked()  # Appel de la nouvelle fonction pour les tâches cochées
+    def __init__(self, engine):
+        super(TaskHandlerAppRead, self).__init__()
+        self.engine = engine
 
-    @Slot()
-    def fetchTasksPriority2(self):
-        tasks = self.get_tasks_from_api(priority_filter=2, exclude_checked=True)
-        self.tasksFetchedPriority2.emit(tasks)
+    @Slot(int)
+    def fetchTasks(self, user_id):
+        tasks =  self.get_tasks_from_api(user_id=user_id)
 
-    @Slot()
-    def fetchTasksPriority1(self):
-        tasks = self.get_tasks_from_api(priority_filter=1, exclude_checked=True)
-        self.tasksFetchedPriority1.emit(tasks)
+        # Créer des listes pour chaque catégorie
+        tasks_priority2 = []
+        tasks_priority1 = []
+        tasks_priority0 = []
+        tasks_checked = []
 
-    @Slot()
-    def fetchTasksPriority0(self):
-        tasks = self.get_tasks_from_api(priority_filter=0, exclude_checked=True)
-        self.tasksFetchedPriority0.emit(tasks)
+        # Trier les tâches en fonction de leur priorité et statut
+        for task in tasks:
+            if task['checked'] == 1:
+                tasks_checked.append(task)
+            elif task['priority'] == 2:
+                tasks_priority2.append(task)
+            elif task['priority'] == 1:
+                tasks_priority1.append(task)
+            elif task['priority'] == 0:
+                tasks_priority0.append(task)
 
-    @Slot()
-    def fetchTasksChecked(self):
-        tasks = self.get_tasks_from_api(checked_filter=1)
-        self.tasksFetchedChecked.emit(tasks)
+        # Émettre les tâches groupées
+        self.tasksFetchedPriority2.emit(tasks_priority2)
+        self.tasksFetchedPriority1.emit(tasks_priority1)
+        self.tasksFetchedPriority0.emit(tasks_priority0)
+        self.tasksFetchedChecked.emit(tasks_checked)
 
-    def get_tasks_from_api(self, priority_filter=None, checked_filter=None, exclude_checked=False):
-        # Appel à l'API pour récupérer toutes les tâches
-        response = get_data("Task", columns="id_task, name, end_date, checked, priority, tag")
+    def get_tasks_from_api(self, user_id=None, priority_filter=None, checked_filter=None, exclude_checked=False):
+
+        response = get_data(
+            "Task_has_Users",
+            columns="Task.*",  # Récupérer toutes les colonnes de Task
+            join_table="Task",  # Joindre uniquement la table Task
+            join_condition="Task_has_Users.task_id = Task.id_task",
+            filter_column="Task_has_Users.user_id",  # Filtrer par l'ID utilisateur dans Task_has_Users
+            filter_value=user_id  # ID de l'utilisateur authentifié
+        )
 
         if isinstance(response, str) and response.startswith("Erreur"):
             print(f"Erreur lors de la récupération des tâches : {response}")
@@ -66,3 +76,4 @@ class TaskHandler(QObject):
                      "priority": task['priority'],
                      "tag": task['tag']}
                     for task in filtered_tasks]
+

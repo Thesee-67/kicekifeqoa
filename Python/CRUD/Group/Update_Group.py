@@ -40,5 +40,3 @@ def update_group(id_group, name=None,):
     except requests.RequestException as e:
         return f"Erreur de connexion à l'API : {e}"
 
-# Test
-print(update_group(3, name="Nouveau Groupe", description="Description mise à jour"))

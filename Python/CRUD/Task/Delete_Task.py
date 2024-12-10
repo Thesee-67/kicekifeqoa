@@ -21,7 +21,7 @@ cursor = conn.cursor()
 def close_connection_BDD(conn,cursor):
     cursor.close()
     conn.close()
-    print("La connexion à la base de données a été fermée.")
+
 
 def delete_task(table, column, value):
     post_data = {
@@ -30,7 +30,5 @@ def delete_task(table, column, value):
         'value': value
     }
     response = requests.delete(url, json=post_data)
-    print(response.json())
     close_connection_BDD(conn, cursor)
 
-#delete_task("Task", "id_task", "1")

@@ -62,5 +62,3 @@ def update_subtask(id_subtask,id_affected_task=None, name=None, end_date=None, c
     except requests.RequestException as e:
         return f"Erreur de connexion à l'API : {e}"
 
-# Test
-print(update_subtask(12, name="Nouvelle Sous-Tâche", end_date="2024-10-20 15:30:00", checked=1))

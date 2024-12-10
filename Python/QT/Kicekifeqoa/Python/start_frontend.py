@@ -9,8 +9,8 @@ from autogen.settings import url, import_paths
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pupdate import TaskHandler as TaskHandlerUpdate
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pdelete import TaskHandler as TaskHandlerDelete
-from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_AppRead import TaskHandler as TaskHandlerBackend
-from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Login import TaskHandler as TaskHandlerLogin
+from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_AppRead import TaskHandlerAppRead as TaskHandlerBackend
+from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Login import TaskHandlerLogin as TaskHandlerLogin
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Register import TaskHandler as TaskHandlerRegister
 from Python.QT.Kicekifeqoa.Python.colors import Colors
 
@@ -43,11 +43,11 @@ if __name__ == '__main__':
     for path in import_paths:
         engine.addImportPath(os.fspath(app_dir / path))
 
-    task_handler_create = TaskHandlerCreate(engine)
+    task_handler_login = TaskHandlerLogin(engine)
+    task_handler_create = TaskHandlerCreate(engine, task_handler_login)
     task_handler_update = TaskHandlerUpdate(engine)
     task_handler_delete = TaskHandlerDelete(engine)
     task_handler_backend = TaskHandlerBackend(engine)
-    task_handler_login = TaskHandlerLogin(engine)
     task_handler_register = TaskHandlerRegister(engine)
 
     engine.rootContext().setContextProperty("taskHandlerRegister", task_handler_register)
