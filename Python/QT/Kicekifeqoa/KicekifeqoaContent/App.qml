@@ -236,7 +236,7 @@ Window {
                                     PopupCreateSubtask.taskCompleted.connect(subtaskHandlerCreate.task_completed);
                                     PopupCreateSubtask.validateInfo.connect(function () {
                                         subtaskHandlerCreate.validate_info();
-                                        taskHandlerBackend.fetchTasks();
+                                        taskHandlerBackend.fetchTasks(root.userId);
                                     });
                                 } else {
                                     console.error("Erreur : TaskHandler est introuvable.");
@@ -352,7 +352,7 @@ Window {
                                     PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
                                     PopupUpdateTask.validateUpdateInfo.connect(function () {
                                         taskHandlerUpdate.validate_update_info();
-                                        taskHandlerBackend.fetchTasks();
+                                        taskHandlerBackend.fetchTasks(root.userId);
                                     });
                                 } else {
                                     console.error("Erreur : TaskHandler est introuvable.");
@@ -387,7 +387,7 @@ Window {
                                     PopupUpdateSubtask.taskCompleted.connect(subtaskHandlerUpdate.task_completed);
                                     PopupUpdateSubtask.validateUpdateInfo.connect(function () {
                                         subtaskHandlerUpdate.validate_update_info();
-                                        taskHandlerBackend.fetchTasks();
+                                        taskHandlerBackend.fetchTasks(root.userId);
                                     });
                                     
                                     if (PopupUpdateTask === null) {
