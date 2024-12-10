@@ -17,7 +17,7 @@ class TaskHandler(QObject):
         tasks_priority1 = self.get_tasks_from_api(priority_filter=1, exclude_checked=True)
         tasks_priority0 = self.get_tasks_from_api(priority_filter=0, exclude_checked=True)
         tasks_checked = self.get_tasks_from_api(checked_filter=1)
-        subtasks = self.get_subtasks_from_api(exclude_checked=True)
+        subtasks = self.get_subtasks_from_api(exclude_checked=False)
 
         # Grouper les sous-tâches avec leurs tâches parentes
         grouped_priority2 = self.group_tasks_with_subtasks(tasks_priority2, subtasks)

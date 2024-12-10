@@ -170,6 +170,7 @@ Window {
                             width: 60
                             height: 30
                             text: "Fini ?"
+                            enabled: false
                             checked: model.checked === 1
                         }
 
@@ -548,6 +549,7 @@ Window {
                             width: 60
                             height: 30
                             text: "Fini ?"
+                            enabled: false
                             checked: model.checked === 1
                         }
 
@@ -703,6 +705,7 @@ Window {
                             width: 60
                             height: 30
                             text: "Fini ?"
+                            enabled: false
                             checked: model.checked === 1
                         }
 
@@ -858,6 +861,7 @@ Window {
                             width: 60
                             height: 30
                             text: "Fini ?"
+                            enabled: false
                             checked: model.checked === 1
                         }
 
