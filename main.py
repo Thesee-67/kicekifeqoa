@@ -4,7 +4,7 @@ from pathlib import Path
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import qInstallMessageHandler, QtMsgType
-from autogen.settings import url, import_paths
+from Python.QT.Kicekifeqoa.Python.autogen.settings import url, import_paths
 
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
 from Python.QT.Kicekifeqoa.Python.taskhandlers.subtask_handler_Pcreate import TaskHandler as SubtaskHandlerCreate
@@ -16,6 +16,7 @@ from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Login import TaskHan
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Register import TaskHandler as TaskHandlerRegister
 from Python.QT.Kicekifeqoa.Python.colors import Colors
 
+'''
 def message_handler(mode, context, message):
     if mode == QtMsgType.QtDebugMsg:
         print(f"Debug: {message}")
@@ -27,11 +28,12 @@ def message_handler(mode, context, message):
         print(f"Critical: {message}")
     elif mode == QtMsgType.QtFatalMsg:
         print(f"Fatal: {message}")
+'''
 
 if __name__ == '__main__':
     choix = 1
 
-    qInstallMessageHandler(message_handler)
+#    qInstallMessageHandler(message_handler)
 
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
