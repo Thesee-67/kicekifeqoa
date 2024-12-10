@@ -145,24 +145,40 @@ function handlePost($pdo) {
 
     if ($table && $action) {
         if ($action === 'insert') {
-            // Gérer l'insertion
+            // Gérer l'insertion simple
             $columns = implode(", ", array_keys($data['data']));
             $placeholders = implode(", ", array_fill(0, count($data['data']), '?'));
             $stmt = $pdo->prepare("INSERT INTO `$table` ($columns) VALUES ($placeholders)");
             $stmt->execute(array_values($data['data']));
             echo json_encode(["message" => "Données ajoutées avec succès."]);
+        } elseif ($action === 'add_recup') {
+            // Ajouter et récupérer l'ID généré
+            try {
+                $columns = implode(", ", array_keys($data['data']));
+                $placeholders = implode(", ", array_fill(0, count($data['data']), '?'));
+                $stmt = $pdo->prepare("INSERT INTO `$table` ($columns) VALUES ($placeholders)");
+                $stmt->execute(array_values($data['data']));
+
+                // Récupérer l'ID généré
+                $lastId = $pdo->lastInsertId();
+
+                echo json_encode([
+                    "message" => "Données ajoutées avec succès.",
+                    "id" => $lastId
+                ]);
+            } catch (PDOException $e) {
+                http_response_code(500);
+                echo json_encode(["error" => "Erreur lors de l'insertion : " . $e->getMessage()]);
+            }
         } elseif ($action === 'update') {
             // Gérer la mise à jour
             try {
-                // Vérifier que les paramètres nécessaires sont présents
                 if (empty($data['data']) || empty($data['column']) || !isset($data['value'])) {
-                    error_log("Erreur : données, colonne ou valeur manquantes pour l'opération UPDATE.");
                     http_response_code(400);
                     echo json_encode(["error" => "Données, colonne ou valeur manquantes."]);
                     return;
                 }
 
-                // Préparer la requête SQL
                 $set = [];
                 foreach ($data['data'] as $column => $value) {
                     $set[] = "`$column` = ?";
@@ -172,34 +188,29 @@ function handlePost($pdo) {
                 $value = $data['value'];
                 $query = "UPDATE `$table` SET $set WHERE `$column` = ?";
 
-                // Journaliser la requête et les valeurs pour déboguer
-                error_log("Requête UPDATE générée : $query");
-                error_log("Valeurs pour UPDATE : " . json_encode(array_merge(array_values($data['data']), [$value])));
-
-                // Exécuter la requête
                 $stmt = $pdo->prepare($query);
                 $stmt->execute(array_merge(array_values($data['data']), [$value]));
 
-                // Vérifier le nombre de lignes affectées
                 if ($stmt->rowCount() > 0) {
                     echo json_encode(["message" => "Données mises à jour avec succès."]);
                 } else {
-                    error_log("Aucune ligne mise à jour. Vérifiez les critères de mise à jour.");
                     http_response_code(404);
                     echo json_encode(["error" => "Aucune donnée n'a été mise à jour."]);
                 }
             } catch (PDOException $e) {
-                // Gérer et journaliser les erreurs
-                error_log("Erreur lors de l'exécution de l'UPDATE : " . $e->getMessage());
                 http_response_code(500);
-                echo json_encode(["error" => "Une erreur est survenue lors de la mise à jour."]);
+                echo json_encode(["error" => "Erreur lors de la mise à jour : " . $e->getMessage()]);
             }
         } else {
             http_response_code(400);
             echo json_encode(["error" => "Action non reconnue."]);
         }
+    } else {
+        http_response_code(400);
+        echo json_encode(["error" => "Nom de table ou action manquante."]);
     }
 }
+
 
 function handleDelete($pdo) {
     $data = json_decode(file_get_contents("php://input"), true);

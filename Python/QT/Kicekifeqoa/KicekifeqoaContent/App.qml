@@ -21,6 +21,7 @@ Window {
     property string selectedTaskName: ""
     property string selectedTaskId: ""
     property var selectedDelegate: null
+    property int userId: Qt.application.userId
 
     // Rectangle principal de fond pour l'application
     Rectangle {
@@ -74,7 +75,7 @@ Window {
 
             // Action exécutée au chargement du composant pour récupérer les tâches
             Component.onCompleted: {
-                taskHandlerBackend.fetchTasks()
+                taskHandlerBackend.fetchTasks(root.userId);
             }
 
             // Liste pour afficher les tâches
@@ -260,13 +261,11 @@ Window {
                                     PopupCreateTask.addTaskPriority.connect(taskHandlerCreate.add_task_priority);
                                     PopupCreateTask.addTag.connect(taskHandlerCreate.add_tag);
                                     PopupCreateTask.removeLastTag.connect(taskHandlerCreate.remove_last_tag);
-                                    PopupCreateTask.addUser.connect(taskHandlerCreate.add_user);
-                                    PopupCreateTask.removeLastUser.connect(taskHandlerCreate.remove_last_user);
                                     PopupCreateTask.addEndDate.connect(taskHandlerCreate.add_end_date);
                                     PopupCreateTask.taskCompleted.connect(taskHandlerCreate.task_completed);
                                     PopupCreateTask.validateInfo.connect(function () {
                                         taskHandlerCreate.validate_info();
-                                        taskHandlerBackend.fetchTasks();
+                                        taskHandlerBackend.fetchTasks(root.userId);
                                     });
                                 } else {
                                     console.error("Erreur : TaskHandler est introuvable.");
@@ -364,7 +363,7 @@ Window {
                         }
                     }
                 }
-
+                
                 // Connexion pour afficher le popup de modification de sous-tache avec les données récupérées
                 Connections {
                     target: subtaskHandlerUpdate
@@ -390,6 +389,26 @@ Window {
                                         subtaskHandlerUpdate.validate_update_info();
                                         taskHandlerBackend.fetchTasks();
                                     });
+                                    
+                                    if (PopupUpdateTask === null) {
+                                        console.error("Erreur lors de la création de PopupUpdateTask");
+                                    } else {
+                                        // Assigner les signaux pour gérer les mises à jour
+                                        if (taskHandlerUpdate) {
+                                            PopupUpdateTask.updateTaskName.connect(taskHandlerUpdate.update_task_name);
+                                            PopupUpdateTask.updateTaskPriority.connect(taskHandlerUpdate.update_task_priority);
+                                            PopupUpdateTask.updateTag.connect(taskHandlerUpdate.add_tag);
+                                            PopupUpdateTask.removeLastTag.connect(taskHandlerUpdate.remove_last_tag);
+                                            PopupUpdateTask.updateEndDate.connect(taskHandlerUpdate.update_end_date);
+                                            PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
+                                            PopupUpdateTask.validateUpdateInfo.connect(function () {
+                                                taskHandlerUpdate.validate_update_info();
+                                                taskHandlerBackend.fetchTasks(root.userId);
+                                            });
+                                        } else {
+                                            console.error("Erreur : TaskHandler est introuvable.");
+                                        }
+                                    }
                                 } else {
                                     console.error("Erreur : TaskHandler est introuvable.");
                                 }
@@ -428,7 +447,7 @@ Window {
                                     PopupDeleteTask.taskId.connect(taskHandlerDelete.set_task_id);
                                     PopupDeleteTask.validateDeleteInfo.connect(function() {
                                         taskHandlerDelete.validate_delete_info();
-                                        taskHandlerBackend.fetchTasks();
+                                        taskHandlerBackend.fetchTasks(root.userId);
                                     });
                                     selectedTaskId = ""
                                     selectedTaskName = ""
@@ -460,7 +479,7 @@ Window {
             }
 
             Component.onCompleted: {
-                taskHandlerBackend.fetchTasks()
+                taskHandlerBackend.fetchTasks(root.userId)
             }
 
             ListView {
@@ -617,7 +636,7 @@ Window {
             }
 
             Component.onCompleted: {
-                taskHandlerBackend.fetchTasks()
+                taskHandlerBackend.fetchTasks(root.userId)
             }
 
             ListView {
@@ -773,7 +792,7 @@ Window {
             }
 
             Component.onCompleted: {
-                taskHandlerBackend.fetchTasks()
+                taskHandlerBackend.fetchTasks(root.userId)
             }
 
             ListView {
@@ -1034,5 +1053,6 @@ Window {
             style: Text.Outline
             font.family: "Verdana"
         }
+
     }
 }

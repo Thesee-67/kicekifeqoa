@@ -96,8 +96,3 @@ def create_user (E_mail,Password):
     return [True, 'User OK']
 
 
-""" Exemple d'utilisation 
-E_mail = "Mich@gmail.com"
-Password = "Aa@2345678"
-print(create_user(E_mail,Password))"""
-

@@ -3,16 +3,22 @@ from Python.CRUD.Task.Read_Task import get_data
 from Python.CRUD.Subtask.Read_Subtask import get_data as get_subtask_data
 from Python.QT.Kicekifeqoa.Python.format_date import read_date_format
 
-class TaskHandler(QObject):
-    # Signaux pour chaque colonne
+
+class TaskHandlerAppRead(QObject):
     tasksFetchedPriority2 = Signal(list, arguments=['tasks'])
     tasksFetchedPriority1 = Signal(list, arguments=['tasks'])
     tasksFetchedPriority0 = Signal(list, arguments=['tasks'])
     tasksFetchedChecked = Signal(list, arguments=['tasks'])
 
-    @Slot()
-    def fetchTasks(self):
-        # Récupérer les tâches principales et les sous-tâches
+    def __init__(self, engine):
+        super(TaskHandlerAppRead, self).__init__()
+        self.engine = engine
+
+    @Slot(int)
+    def fetchTasks(self, user_id):
+        tasks =  self.get_tasks_from_api(user_id=user_id)
+
+       # Récupérer les tâches principales et les sous-tâches
         tasks_priority2 = self.get_tasks_from_api(priority_filter=2, exclude_checked=True)
         tasks_priority1 = self.get_tasks_from_api(priority_filter=1, exclude_checked=True)
         tasks_priority0 = self.get_tasks_from_api(priority_filter=0, exclude_checked=True)
@@ -31,9 +37,16 @@ class TaskHandler(QObject):
         self.tasksFetchedPriority0.emit(grouped_priority0)
         self.tasksFetchedChecked.emit(grouped_checked)
 
-    def get_tasks_from_api(self, priority_filter=None, checked_filter=None, exclude_checked=False):
-        # Appel à l'API pour récupérer toutes les tâches principales
-        response = get_data("Task", columns="id_task, name, end_date, checked, priority, tag")
+    def get_tasks_from_api(self, user_id=None, priority_filter=None, checked_filter=None, exclude_checked=False):
+
+        response = get_data(
+            "Task_has_Users",
+            columns="Task.*",  # Récupérer toutes les colonnes de Task
+            join_table="Task",  # Joindre uniquement la table Task
+            join_condition="Task_has_Users.task_id = Task.id_task",
+            filter_column="Task_has_Users.user_id",  # Filtrer par l'ID utilisateur dans Task_has_Users
+            filter_value=user_id  # ID de l'utilisateur authentifié
+        )
 
         if isinstance(response, str) and response.startswith("Erreur"):
             print(f"Erreur lors de la récupération des tâches : {response}")
