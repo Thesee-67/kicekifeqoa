@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject, Slot, Signal
 from Python.CRUD.Subtask.Update_Subtask import update_subtask
-from Python.CRUD.Task.Read_Task import get_task
+from Python.CRUD.Subtask.Read_Subtask import get_subtask
 from Python.QT.Kicekifeqoa.Python.format_date import read_date_format
 
 class TaskHandler(QObject):
@@ -18,12 +18,12 @@ class TaskHandler(QObject):
     @Slot(str)
     def fetch_task_by_id(self, task_id):
         try:
-            task_data = get_task(id_subtask=task_id)
+            task_data = get_subtask(id_subtask=task_id)
 
             if isinstance(task_data, list) and len(task_data) > 0:
                 task = task_data[0]
                 self.task_id = task_id
-                self.parent_task_id = parent_task_id
+                self.parent_task_id = task.get("id_affected_task", "")
                 self.task_name = task.get("name", "")
                 raw_end_date = task.get("end_date", None)
 

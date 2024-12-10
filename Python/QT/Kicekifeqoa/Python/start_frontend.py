@@ -9,6 +9,7 @@ from autogen.settings import url, import_paths
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
 from Python.QT.Kicekifeqoa.Python.taskhandlers.subtask_handler_Pcreate import TaskHandler as SubtaskHandlerCreate
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pupdate import TaskHandler as TaskHandlerUpdate
+from Python.QT.Kicekifeqoa.Python.taskhandlers.subtask_handler_Pupdate import TaskHandler as SubtaskHandlerUpdate
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pdelete import TaskHandler as TaskHandlerDelete
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_AppRead import TaskHandler as TaskHandlerBackend
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Login import TaskHandler as TaskHandlerLogin
@@ -47,6 +48,7 @@ if __name__ == '__main__':
     task_handler_create = TaskHandlerCreate(engine)
     subtask_handler_create = SubtaskHandlerCreate(engine)
     task_handler_update = TaskHandlerUpdate(engine)
+    subtask_handler_update = SubtaskHandlerUpdate(engine)
     task_handler_delete = TaskHandlerDelete(engine)
     task_handler_backend = TaskHandlerBackend(engine)
     task_handler_login = TaskHandlerLogin(engine)
@@ -57,6 +59,7 @@ if __name__ == '__main__':
     engine.rootContext().setContextProperty("taskHandlerCreate", task_handler_create)
     engine.rootContext().setContextProperty("subtaskHandlerCreate", subtask_handler_create)
     engine.rootContext().setContextProperty("taskHandlerUpdate", task_handler_update)
+    engine.rootContext().setContextProperty("subtaskHandlerUpdate", subtask_handler_update)
     engine.rootContext().setContextProperty("taskHandlerDelete", task_handler_delete)
     engine.rootContext().setContextProperty("taskHandlerBackend", task_handler_backend)
 

@@ -309,7 +309,16 @@ Window {
                 anchors.bottomMargin: 655
                 onClicked: {
                     if (selectedTaskId !== "") {
-                        taskHandlerUpdate.fetch_task_by_id(selectedTaskId);
+                        var ids = selectedTaskId.split("."); // Divise l'ID par le séparateur "."
+                        if (ids.length === 1) {
+                            // Cas où l'ID est sous la forme "XX"
+                            taskHandlerUpdate.fetch_task_by_id(selectedTaskId);
+                        } else if (ids.length === 2) {
+                            // Cas où l'ID est sous la forme "YY.XX"
+                            subtaskHandlerUpdate.fetch_task_by_id(ids[0]); // Utilise "YY"
+                        } else {
+                            console.error("Erreur : Format de l'ID non valide.");
+                        }
                     } else {
                         console.error("Erreur : Aucune tâche sélectionnée.");
                     }
@@ -343,6 +352,41 @@ Window {
                                     PopupUpdateTask.taskCompleted.connect(taskHandlerUpdate.task_completed);
                                     PopupUpdateTask.validateUpdateInfo.connect(function () {
                                         taskHandlerUpdate.validate_update_info();
+                                        taskHandlerBackend.fetchTasks();
+                                    });
+                                } else {
+                                    console.error("Erreur : TaskHandler est introuvable.");
+                                }
+                            }
+                        } else {
+                            console.error("Erreur lors du chargement de PopupUpdateTask.qml");
+                        }
+                    }
+                }
+
+                // Connexion pour afficher le popup de modification de sous-tache avec les données récupérées
+                Connections {
+                    target: subtaskHandlerUpdate
+                    onTaskFetched: function (taskData) {
+                        var component = Qt.createComponent("PopupUpdateSubtask.qml");
+
+                        if (component.status === Component.Ready) {
+                            var PopupUpdateSubtask = component.createObject(root, {
+                                "taskName": taskData.task_name,
+                                "taskEndDate": taskData.end_date,
+                                "taskChecked": taskData.checked
+                            });
+
+                            if (PopupUpdateSubtask === null) {
+                                console.error("Erreur lors de la création de PopupUpdateTask");
+                            } else {
+                                if (subtaskHandlerUpdate) {
+                                    // Connexions pour transmettre les données à taskHandlerUpdate
+                                    PopupUpdateSubtask.updateTaskName.connect(subtaskHandlerUpdate.update_task_name);
+                                    PopupUpdateSubtask.updateEndDate.connect(subtaskHandlerUpdate.update_end_date);
+                                    PopupUpdateSubtask.taskCompleted.connect(subtaskHandlerUpdate.task_completed);
+                                    PopupUpdateSubtask.validateUpdateInfo.connect(function () {
+                                        subtaskHandlerUpdate.validate_update_info();
                                         taskHandlerBackend.fetchTasks();
                                     });
                                 } else {

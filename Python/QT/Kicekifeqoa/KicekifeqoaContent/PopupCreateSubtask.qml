@@ -74,7 +74,7 @@ Window {
         y: 12
         width: 181
         height: 30
-        placeholderText: qsTr("Nom de la tâche")
+        placeholderText: qsTr("Nom de la sous-tâche")
     }
 
     TextField {
