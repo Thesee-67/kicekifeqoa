@@ -14,7 +14,7 @@ Window {
     property string taskName: ""
     property string taskID: ""
 
-    signal taskId(int taskID);
+    signal taskId(string taskID);
     signal validateDeleteInfo();
 
     Rectangle {
