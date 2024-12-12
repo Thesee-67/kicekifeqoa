@@ -7,6 +7,12 @@ Window {
     visible: true
     width: 400
     height: 400
+    title: "Kicekifeqoa - Register"    // Titre de la fenêtre principale
+    flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowSystemMenuHint | Qt.WindowCloseButtonHint
+    minimumWidth: 400      // Largeur minimale fixe
+    maximumWidth: 400      // Largeur maximale fixe
+    minimumHeight: 400      // Hauteur minimale fixe
+    maximumHeight: 400      // Hauteur maximale fixe
 
     Connections {
         target: taskHandlerRegister

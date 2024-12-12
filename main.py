@@ -1,9 +1,9 @@
 import os
 import sys
 from pathlib import Path
-from PySide6.QtGui import QGuiApplication
+from PySide6.QtGui import QGuiApplication,QIcon
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import qInstallMessageHandler, QtMsgType
+#from PySide6.QtCore import qInstallMessageHandler, QtMsgType
 from Python.QT.Kicekifeqoa.Python.autogen.settings import url, import_paths
 
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
@@ -32,14 +32,14 @@ def message_handler(mode, context, message):
 
 if __name__ == '__main__':
     choix = 1
-
 #    qInstallMessageHandler(message_handler)
-
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
 
     app_dir = Path(__file__).parent.parent
     engine.addImportPath(os.fspath(app_dir))
+
+    app.setWindowIcon(QIcon(str(app_dir / "kicekifeqoa/Python/QT/Kicekifeqoa/KicekifeqoaContent/images/logo.png")))
 
     colors = Colors(style=choix)
     engine.rootContext().setContextProperty("Colors", colors)

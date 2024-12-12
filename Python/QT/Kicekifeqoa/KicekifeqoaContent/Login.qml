@@ -8,7 +8,12 @@ Window {
     color: Colors.couleur1
     width: 600
     height: 580
-    title: qsTr("Login")
+    title: "Kicekifeqoa - Login"    // Titre de la fenêtre principale
+    flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowSystemMenuHint | Qt.WindowCloseButtonHint
+    minimumWidth: 600      // Largeur minimale fixe
+    maximumWidth: 600      // Largeur maximale fixe
+    minimumHeight: 580      // Hauteur minimale fixe
+    maximumHeight: 580      // Hauteur maximale fixe
 
     Component.onCompleted: {
         openingAnimation.start(); // Lance l'animation d'ouverture dès que la fenêtre est créée

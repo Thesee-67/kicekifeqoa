@@ -2,17 +2,21 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 Window {
+    property string taskName: ""
+    property string taskID: ""
+
     id: popupdelete
     visible: true
     color: "#00ffffff"
     width: 200
     height: 100
     opacity: 1
-    title: "Supprimer Tâche"
-    flags: Qt.FramelessWindowHint
-
-    property string taskName: ""
-    property string taskID: ""
+    title: "Suppression d'une tâche"   // Titre de la fenêtre principale
+    flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowSystemMenuHint | Qt.WindowCloseButtonHint
+    minimumWidth: 200      // Largeur minimale fixe
+    maximumWidth: 200      // Largeur maximale fixe
+    minimumHeight: 100      // Hauteur minimale fixe
+    maximumHeight: 100      // Hauteur maximale fixe
 
     signal taskId(string taskID);
     signal validateDeleteInfo();

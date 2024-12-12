@@ -8,7 +8,12 @@ Window {
     color: "#00ffffff"
     width: 420
     height: 150
-    flags: Qt.FramelessWindowHint
+    title: "Ajout d'une sous-tâche"    // Titre de la fenêtre principale
+    flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowSystemMenuHint | Qt.WindowCloseButtonHint
+    minimumWidth: 420      // Largeur minimale fixe
+    maximumWidth: 420      // Largeur maximale fixe
+    minimumHeight: 150      // Hauteur minimale fixe
+    maximumHeight: 150      // Hauteur maximale fixe
 
     signal addTaskName(string taskname)
     signal addEndDate(string enddate)

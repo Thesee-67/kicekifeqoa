@@ -4,19 +4,24 @@ import QtQuick.Layouts 1.15
 
 // Fenêtre principale pour le popup de mise à jour d'une tâche
 ApplicationWindow {
-    id: popupupdate
-    visible: true // La fenêtre est visible dès l'ouverture
-    color: "#00ffffff" // Fond transparent
-    width: 420
-    height: 220
-    flags: Qt.FramelessWindowHint // Fenêtre sans bordure (frameless)
-
     // Déclaration des propriétés pour gérer les informations des tâches
     property string taskName: ""            // Nom de la tâche
     property int taskPriority: 0            // Priorité de la tâche (0 = basse, 1 = moyenne, 2 = urgente)
     property string taskTags: ""           // Etiquettes associées à la tâche
     property string taskEndDate: ""        // Date de fin de la tâche
     property bool taskChecked: false       // Statut de la tâche (terminée ou non)
+
+    id: popupupdate
+    visible: true // La fenêtre est visible dès l'ouverture
+    color: "#00ffffff" // Fond transparent
+    width: 420
+    height: 220
+    title: "Modification de " + taskName   // Titre de la fenêtre principale
+    flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowSystemMenuHint | Qt.WindowCloseButtonHint
+    minimumWidth: 420      // Largeur minimale fixe
+    maximumWidth: 420      // Largeur maximale fixe
+    minimumHeight: 220      // Hauteur minimale fixe
+    maximumHeight: 220      // Hauteur maximale fixe
 
     // Signaux utilisés pour transmettre les modifications à d'autres parties du code
     signal updateTaskName(string taskname)

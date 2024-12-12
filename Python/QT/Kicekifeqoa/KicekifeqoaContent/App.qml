@@ -5,13 +5,15 @@ import QtQuick.Window 2.15
 
 // Déclaration de la fenêtre principale
 Window {
+
+    property int userId: Qt.application.userId
+
     id: root
     visible: true
     color: Colors.couleur1  // Utilise une couleur définie par la palette personnalisée
     width: 1000
     height: 800
-    title: "Kicekifeqoa"    // Titre de la fenêtre principale
-    flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowSystemMenuHint | Qt.WindowCloseButtonHint
+    title: "Kicekifeqoa - " + userId    // Titre de la fenêtre principale
     minimumWidth: 1000      // Largeur minimale fixe
     maximumWidth: 1000      // Largeur maximale fixe
     minimumHeight: 800      // Hauteur minimale fixe
@@ -21,7 +23,6 @@ Window {
     property string selectedTaskName: ""
     property string selectedTaskId: ""
     property var selectedDelegate: null
-    property int userId: Qt.application.userId
 
     // Rectangle principal de fond pour l'application
     Rectangle {
