@@ -9,7 +9,6 @@ Window {
     width: 600
     height: 580
     title: "Kicekifeqoa - Login"    // Titre de la fenêtre principale
-    flags: Qt.Window | Qt.WindowTitleHint | Qt.WindowSystemMenuHint | Qt.WindowCloseButtonHint
     minimumWidth: 600      // Largeur minimale fixe
     maximumWidth: 600      // Largeur maximale fixe
     minimumHeight: 580      // Hauteur minimale fixe
