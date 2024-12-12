@@ -29,7 +29,7 @@ Window {
             _text3.text = "Mot de passe trop court (8 caractères min)";  // Affiche un message d'erreur pour le mdp
         }
          onLongPass: {
-            _text3.text = "Mot de passe trop long (72 caractères max)";  // Affiche un message d'erreur pour le mdp
+            _text3.text = "Mot de passe trop long (24 caractères max)";  // Affiche un message d'erreur pour le mdp
         }
         onUppercasePass: {
             _text3.text = "Le mot de passe doit contenir une majuscule";  // Affiche un message d'erreur pour le mdp
@@ -198,30 +198,31 @@ Window {
     }
 
     TextInput {
-        id: textInput2
+        id: textInputmail
         x: 65
         y: 172
         width: 264
         height: 36
         text: qsTr("")
-        font.pixelSize: 20
+        font.pixelSize: 18
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
+        maximumLength: 24
 
 
     TextInput {
-        id: textInput3
+        id: textInputpasswd
         x: 0
         y: 89
         width: 264
         height: 35
         text: qsTr("")
         anchors.left: parent.left
-        anchors.leftMargin: 0
-        font.pixelSize: 20
+        font.pixelSize: 18
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         anchors.horizontalCenter: parent.horizontalCenter
+        maximumLength: 24
     }
 }
 }

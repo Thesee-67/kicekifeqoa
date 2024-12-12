@@ -39,6 +39,7 @@ Window {
             Qt.createComponent("Login.qml").createObject(null); // Crée une nouvelle instance de la fenêtre
         }
 
+
     Rectangle {
         id: rectangle
         x: 20
@@ -135,12 +136,19 @@ Window {
             text: qsTr("")
             anchors.top: rectangle2.top
             anchors.bottom: rectangle2.bottom
-            font.pixelSize: 20
+            font.pixelSize: 18
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             anchors.horizontalCenter: parent.horizontalCenter
             selectedTextColor: Colors.couleur2
-            selectionColor: "#f94b7cd9"
+            maximumLength: 24
+
+            Keys.onReturnPressed: {
+                loginButton.clicked()
+            }
+            Keys.onTabPressed: {
+                textInput2.forceActiveFocus()
+            }
         }
 
         Text {
@@ -175,18 +183,21 @@ Window {
             y: 313
             width: 300
             height: 36
-            opacity: 1
             text: qsTr("")
             anchors.top: _text2.bottom
             anchors.topMargin: 6
-            font.pixelSize: 20
+            font.pixelSize: 18
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             anchors.horizontalCenterOffset: 0
             anchors.horizontalCenter: rectangle2.horizontalCenter
-            selectionColor: "#f94b7cd9"
             selectedTextColor: Colors.couleur2
             echoMode: TextInput.Password
+            maximumLength: 24
+
+            Keys.onReturnPressed: {
+                loginButton.clicked()
+            }
         }
 
         Button {
