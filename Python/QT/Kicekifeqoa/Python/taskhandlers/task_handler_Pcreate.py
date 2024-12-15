@@ -1,8 +1,11 @@
-from PySide6.QtCore import QObject, Slot
+from PySide6.QtCore import QObject, Slot, Signal
 from Python.CRUD.Task.Create_Task import add_recup
 from Python.CRUD.Task_has_Users.Create_Task_has_Users import create_task_user_association
 
 class TaskHandler(QObject):
+    # Signal pour informer le QML en cas de succès
+    validationSuccess = Signal()
+
     # Initialise le gestionnaire de tâches avec les attributs par défaut
     def __init__(self, engine, TaskHandlerLogin):
         super().__init__()
@@ -140,6 +143,8 @@ class TaskHandler(QObject):
                 "task_id": id_task,
                 "user_id": 1,
             })
+
+            self.validationSuccess.emit()
 
             # Réinitialise les attributs après la création de la tâche
             self.task_name = ""

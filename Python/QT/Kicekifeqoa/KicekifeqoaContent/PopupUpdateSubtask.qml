@@ -73,7 +73,6 @@ ApplicationWindow {
                     updateEndDate(enddate.text);
                     taskCompleted(checkBox.checked ? 1 : 0);  // Envoie le statut de la tâche (terminée ou non)
                     validateUpdateInfo();  // Confirme la validation des modifications
-                    popupupdate.close();  // Ferme le popup
                 }
             }
 
@@ -140,6 +139,12 @@ ApplicationWindow {
                     popupupdate.close();  // Ferme le popup
                 }
             }
+        }
+    }
+    Connections {
+        target: subtaskHandlerUpdate
+        function onValidationSuccess() {
+            popupupdate.close();  // Ferme le popup uniquement en cas de succès
         }
     }
 }

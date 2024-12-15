@@ -1,8 +1,11 @@
-from PySide6.QtCore import QObject, Slot
+from PySide6.QtCore import QObject, Slot, Signal
 from Python.CRUD.Subtask.Create_Subtask import create_subtask
 
 
 class TaskHandler(QObject):
+    # Signal pour informer le QML en cas de succès
+    validationSuccess = Signal()
+
     # Initialise le gestionnaire de sous-tâches avec les attributs par défaut
     def __init__(self, engine):
         super().__init__()
@@ -72,5 +75,6 @@ class TaskHandler(QObject):
                 "checked": self.checked,
             })
 
+            self.validationSuccess.emit()
         except ValueError as e:
             print(f"Erreur de validation : {e}")

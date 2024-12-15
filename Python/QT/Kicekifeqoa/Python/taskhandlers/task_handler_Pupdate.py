@@ -4,6 +4,9 @@ from Python.CRUD.Task.Read_Task import get_task
 from Python.QT.Kicekifeqoa.Python.format_date import read_date_format
 
 class TaskHandler(QObject):
+    # Signal pour informer le QML en cas de succès
+    validationSuccess = Signal()
+
     # Signal pour transmettre les données de la tâche au QML
     taskFetched = Signal(dict)
 
@@ -123,11 +126,14 @@ class TaskHandler(QObject):
     def validate_update_info(self):
         # Valide et enregistre les mises à jour de la tâche
         try:
+            # Vérifie d'abord les conditions de validation
             if not self.task_name.strip():
                 raise ValueError("Le nom de la tâche est obligatoire.")
             if not self.end_date.strip():
                 raise ValueError("La date de fin est obligatoire.")
+            self._check_dates_consistency()
 
+            # Si les validations passent, appelle update_task
             response = update_task(
                 id_task=self.task_id,
                 name=self.task_name,
@@ -137,11 +143,16 @@ class TaskHandler(QObject):
                 tag=", ".join(self.tags)
             )
 
+            # Vérifie la réponse après l'appel à update_task
             if "succès" in response.lower():
                 print("Mise à jour réussie :", response)
+                self.validationSuccess.emit()
             else:
                 print("Erreur lors de la mise à jour :", response)
+
         except ValueError as ve:
+            # Affiche l'erreur de validation
             print("Erreur de validation :", ve)
         except Exception as e:
+            # Gère les erreurs inattendues
             print("Erreur inattendue :", e)

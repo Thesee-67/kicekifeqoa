@@ -137,7 +137,6 @@ ApplicationWindow {
                     updateEndDate(enddate.text);
                     taskCompleted(checkBox.checked ? 1 : 0);  // Envoie le statut de la tâche (terminée ou non)
                     validateUpdateInfo();  // Confirme la validation des modifications
-                    popupupdate.close();  // Ferme le popup
                 }
             }
 
@@ -164,7 +163,7 @@ ApplicationWindow {
                 y: 63
                 width: 155
                 height: 30
-                placeholderText: qsTr("Etiquettes")
+                placeholderText: "Etiquettes"
             }
 
             // Champ de texte pour entrer le nom de la tâche
@@ -174,7 +173,7 @@ ApplicationWindow {
                 y: 12
                 width: 181
                 height: 30
-                placeholderText: qsTr("Nom de la tâche")
+                placeholderText: "Nom de la tâche"
                 text: taskName  // Pré-rempli avec le nom de la tâche
             }
 
@@ -186,7 +185,7 @@ ApplicationWindow {
                 width: 95
                 height: 30
                 horizontalAlignment: Text.AlignHCenter
-                placeholderText: qsTr("--/--/----")
+                placeholderText: "--/--/----"
                 text: taskEndDate  // Pré-rempli avec la date de fin
             }
 
@@ -198,7 +197,7 @@ ApplicationWindow {
                 width: 95
                 height: 15
                 color: Colors.couleur1
-                text: qsTr("Date de fin :")
+                text: "Date de fin :"
                 font.pixelSize: 11
 
                 // Case à cocher pour marquer la tâche comme terminée
@@ -208,7 +207,7 @@ ApplicationWindow {
                     y: -106
                     width: 150
                     height: 30
-                    text: qsTr("Tâche Terminée")
+                    text: "Tâche Terminée"
                     scale: 0.8
                     checked: taskChecked  // Pré-rempli avec le statut de la tâche
                 }
@@ -255,4 +254,10 @@ ApplicationWindow {
             }
         }
     }
+    Connections {
+    target: taskHandlerUpdate
+    function onValidationSuccess() {
+        popupupdate.close();  // Ferme le popup uniquement en cas de succès
+    }
+}
 }

@@ -118,7 +118,6 @@ ApplicationWindow {
             addEndDate(enddate.text);
             taskCompleted(checkBox.checked ? 1 : 0);
             validateInfo();
-            popupcreate.close();
         }
     }
 
@@ -226,6 +225,13 @@ ApplicationWindow {
             popupcreate.close();
         }
     }
+    }
+}
+// Connexion pour fermer le popup après une validation réussie
+Connections {
+    target: taskHandlerCreate
+    function onValidationSuccess() {
+        popupcreate.close();  // Ferme le popup uniquement en cas de succès
     }
 }
 }
