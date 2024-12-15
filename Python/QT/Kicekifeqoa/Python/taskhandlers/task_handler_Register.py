@@ -1,12 +1,9 @@
-from pathlib import Path
 from PySide6.QtCore import QObject, Slot, Signal
-import os
-from Python.CRUD.Users.Read_User import get_users
 from Python.CRUD.Users.Create_User import create_user
 
 class TaskHandler(QObject):
-    registerSuccess = Signal()  # Déclaration du signal
-    alreadyMail = Signal()  # Déclaration du signal
+    registerSuccess = Signal()
+    alreadyMail = Signal()
     badMail = Signal()
     shortPass = Signal()
     longPass = Signal()
