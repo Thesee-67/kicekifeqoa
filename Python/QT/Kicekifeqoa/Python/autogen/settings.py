@@ -1,4 +1,4 @@
-url = "Kicekifeqoa/Python/QT/Kicekifeqoa/KicekifeqoaContent/App.qml"
+url = "Kicekifeqoa/Python/QT/Kicekifeqoa/KicekifeqoaContent/Login.qml"
 import_paths = [
     ".",
 ]
