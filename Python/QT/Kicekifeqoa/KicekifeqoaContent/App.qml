@@ -31,8 +31,8 @@ Window {
         y: 22
         width: 955
         height: 754
-        color: Colors.couleur2   // Couleur de fond
-        radius: 5                // Coins arrondis
+        color: Colors.couleur2
+        radius: 5
         border.color: Colors.couleur6
         border.width: 0
         layer.enabled: false
@@ -67,7 +67,7 @@ Window {
             border.width: 0
             border.color: Colors.couleur6
             width: 225
-            Layout.fillHeight: true  // Remplit la hauteur disponible
+            Layout.fillHeight: true
 
             // Modèle pour les tâches de cette colonne
             ListModel {
@@ -86,7 +86,7 @@ Window {
                 anchors.fill: parent
                 anchors.topMargin: 51
                 anchors.bottomMargin: 12.5
-                spacing: 0  // Espacement par défaut entre les éléments de la liste
+                spacing: 0
 
                 // Délégué pour chaque élément de la liste (tâche)
                 delegate: Column {
@@ -139,7 +139,7 @@ Window {
                             id: taskname
                             x: 4
                             y: 6
-                            text: qsTr(model.name)
+                            text: model.name
                             font.pixelSize: model.name.startsWith("↳") ? 15 : 17
                             font.styleName: "Gras"
                         }
@@ -198,7 +198,7 @@ Window {
                             id: tag
                             x: 4
                             y: 35
-                            text: qsTr(model.tag)
+                            text: model.tag
                             font.pixelSize: 12
                         }
                     }
@@ -364,7 +364,7 @@ Window {
                         }
                     }
                 }
-                
+
                 // Connexion pour afficher le popup de modification de sous-tache avec les données récupérées
                 Connections {
                     target: subtaskHandlerUpdate
@@ -390,7 +390,7 @@ Window {
                                         subtaskHandlerUpdate.validate_update_info();
                                         taskHandlerBackend.fetchTasks(root.userId);
                                     });
-                                    
+
                                     if (PopupUpdateTask === null) {
                                         console.error("Erreur lors de la création de PopupUpdateTask");
                                     } else {
@@ -445,6 +445,7 @@ Window {
                                 console.error("Erreur lors de la création de PopupDeleteTask");
                             } else {
                                 if (taskHandlerDelete) {
+                                    // Connexions pour transmettre les données à taskHandlerUpdate
                                     PopupDeleteTask.taskId.connect(taskHandlerDelete.set_task_id);
                                     PopupDeleteTask.validateDeleteInfo.connect(function() {
                                         taskHandlerDelete.validate_delete_info();
@@ -466,23 +467,27 @@ Window {
             }
         }
 
+        // Deuxième colonne - tâches avec priorité moyenne
         Rectangle {
             id: taskArea2
-            color: Colors.couleur4
+            color: Colors.couleur4  // Couleur de fond pour la deuxième colonne
             radius: 5
             border.width: 0
             border.color: Colors.couleur6
             width: 225
-            Layout.fillHeight: true
+            Layout.fillHeight: true  // La hauteur de l'élément s'adapte à la hauteur du parent
 
+            // Modèle pour stocker les tâches de priorité moyenne
             ListModel {
                 id: taskModel2
             }
 
+            // Chargement des tâches de priorité moyenne lorsque le composant est créé
             Component.onCompleted: {
                 taskHandlerBackend.fetchTasks(root.userId)
             }
 
+            // Liste pour afficher les tâches du modèle
             ListView {
                 id: taskListView2
                 model: taskModel2
@@ -491,22 +496,25 @@ Window {
                 anchors.bottomMargin: 12.5
                 spacing: 0
 
+                // Délégué pour afficher chaque tâche dans la liste
                 delegate: Column {
                     spacing: 0
                     anchors.horizontalCenter: parent.horizontalCenter
 
+                    // Rectangle pour chaque tâche
                     Rectangle {
                         id: root2
                         width: 200
-                        height: model.name.startsWith("↳") ? 60 : 90
+                        height: model.name.startsWith("↳") ? 60 : 90  // Hauteur ajustée si c'est une sous-tâche
                         radius: 5
-                        color: selected ? "#dcdcdc" : "#eeeeee"
+                        color: selected ? "#dcdcdc" : "#eeeeee"  // Couleur différente si l'élément est sélectionné
                         border.width: 2
                         border.color: Colors.couleur2
 
-
+                        // Propriété pour savoir si l'élément est sélectionné
                         property bool selected: false
 
+                        // Zone cliquable pour sélectionner/désélectionner une tâche
                         MouseArea {
                             id: mouseArea2
                             anchors.fill: parent
@@ -516,34 +524,32 @@ Window {
                                     selectedDelegate = null
                                     selectedTaskId = ""
                                     selectedTaskName = ""
-
                                     console.log("Aucune tâche sélectionnée")
                                 } else {
                                     if (selectedDelegate !== null) {
                                         selectedDelegate.selected = false
                                     }
-
                                     root2.selected = true
                                     selectedDelegate = root2
-
                                     selectedTaskId = taskid2.text
                                     selectedTaskName = taskname2.text
-
                                     console.log("Tâche sélectionnée ID:", selectedTaskId)
                                     console.log("Tâche sélectionnée Nom:", selectedTaskName)
                                 }
                             }
                         }
 
+                        // Nom de la tâche
                         Text {
                             id: taskname2
                             x: 4
                             y: 6
-                            text: qsTr(model.name)
+                            text: model.name
                             font.pixelSize: model.name.startsWith("↳") ? 15 : 17
                             font.styleName: "Gras"
                         }
 
+                        // ID de la tâche
                         Text {
                             id: taskid2
                             x: 150
@@ -554,6 +560,7 @@ Window {
                             font.styleName: "Gras"
                         }
 
+                        // Date d'échéance de la tâche
                         Text {
                             id: enddate2
                             x: 4
@@ -562,6 +569,7 @@ Window {
                             font.pixelSize: 12
                         }
 
+                        // Checkbox pour indiquer si la tâche est terminée
                         CheckBox {
                             id: checked2
                             x: 152
@@ -573,6 +581,7 @@ Window {
                             checked: model.checked === 1
                         }
 
+                        // Indicateur de priorité avec des icônes
                         Text {
                             id: priority2
                             x: 65
@@ -589,15 +598,17 @@ Window {
                             }
                         }
 
+                        // Tags associés à la tâche
                         Text {
                             id: tag2
                             x: 4
                             y: 35
-                            text: qsTr(model.tag)
+                            text: model.tag
                             font.pixelSize: 12
                         }
                     }
 
+                    // Espacement supplémentaire après les sous-tâches si l'élément suivant est une tâche principale
                     Item {
                         width: 1
                         height: (index < taskModel2.count - 1 && !taskModel2.get(index + 1).name.startsWith("↳")) ? 5 : 1
@@ -605,13 +616,13 @@ Window {
                 }
             }
 
-
+            // Connexion pour récupérer les tâches de priorité moyenne depuis le backend
             Connections {
                 target: taskHandlerBackend
                 onTasksFetchedPriority1: function (tasks) {
-                    taskModel2.clear();  // Remplacer par taskModelPriority1
+                    taskModel2.clear();  // Efface les anciennes tâches avant de charger les nouvelles
                     for (var i = 0; i < tasks.length; i++) {
-                        taskModel2.append({  // Remplacer taskModel2 par taskModelPriority1
+                        taskModel2.append({  // Ajoute chaque tâche au modèle
                             "id_task": tasks[i].id_task,
                             "name": tasks[i].name,
                             "end_date": tasks[i].end_date,
@@ -623,23 +634,28 @@ Window {
                 }
             }
         }
+
+        // Troisième colonne - tâches avec priorité basse
         Rectangle {
             id: taskArea3
-            color: Colors.couleur3
+            color: Colors.couleur3  // Couleur de fond pour la troisième colonne (priorité basse)
             radius: 5
             border.width: 0
             border.color: Colors.couleur6
             width: 225
-            Layout.fillHeight: true
+            Layout.fillHeight: true  // La hauteur s'adapte à celle du parent
 
+            // Modèle pour stocker les tâches de priorité basse
             ListModel {
                 id: taskModel3
             }
 
+            // Chargement des tâches de priorité basse lorsque le composant est créé
             Component.onCompleted: {
                 taskHandlerBackend.fetchTasks(root.userId)
             }
 
+            // Liste pour afficher les tâches du modèle
             ListView {
                 id: taskListView3
                 model: taskModel3
@@ -648,21 +664,25 @@ Window {
                 anchors.bottomMargin: 12.5
                 spacing: 0
 
+                // Délégué pour afficher chaque tâche
                 delegate: Column {
                     spacing: 0
                     anchors.horizontalCenter: parent.horizontalCenter
 
+                    // Rectangle pour chaque tâche affichée
                     Rectangle {
                         id: root3
                         width: 200
-                        height: model.name.startsWith("↳") ? 60 : 90
+                        height: model.name.startsWith("↳") ? 60 : 90  // Hauteur ajustée pour les sous-tâches
                         radius: 5
-                        color: selected ? "#d0d0d0" : "#eeeeee"
+                        color: selected ? "#d0d0d0" : "#eeeeee"  // Change de couleur si l'élément est sélectionné
                         border.width: 2
                         border.color: Colors.couleur2
 
+                        // Propriété pour savoir si l'élément est sélectionné
                         property bool selected: false
 
+                        // Zone cliquable pour sélectionner/désélectionner une tâche
                         MouseArea {
                             id: mouseArea3
                             anchors.fill: parent
@@ -672,34 +692,32 @@ Window {
                                     selectedDelegate = null
                                     selectedTaskId = ""
                                     selectedTaskName = ""
-
                                     console.log("Aucune tâche sélectionnée")
                                 } else {
                                     if (selectedDelegate !== null) {
                                         selectedDelegate.selected = false
                                     }
-
                                     root3.selected = true
                                     selectedDelegate = root3
-
                                     selectedTaskId = taskid3.text
                                     selectedTaskName = taskname3.text
-
                                     console.log("Tâche sélectionnée ID:", selectedTaskId)
                                     console.log("Tâche sélectionnée Nom:", selectedTaskName)
                                 }
                             }
                         }
 
+                        // Texte affichant le nom de la tâche
                         Text {
                             id: taskname3
                             x: 4
                             y: 6
-                            text: qsTr(model.name)
+                            text: model.name
                             font.pixelSize: model.name.startsWith("↳") ? 15 : 17
                             font.styleName: "Gras"
                         }
 
+                        // Texte affichant l'ID de la tâche
                         Text {
                             id: taskid3
                             x: 150
@@ -710,6 +728,7 @@ Window {
                             font.styleName: "Gras"
                         }
 
+                        // Texte affichant la date d'échéance
                         Text {
                             id: enddate3
                             x: 4
@@ -718,6 +737,7 @@ Window {
                             font.pixelSize: 12
                         }
 
+                        // Checkbox pour indiquer si la tâche est terminée
                         CheckBox {
                             id: checked3
                             x: 152
@@ -729,6 +749,7 @@ Window {
                             checked: model.checked === 1
                         }
 
+                        // Texte affichant l'indicateur de priorité
                         Text {
                             id: priority3
                             x: 65
@@ -745,15 +766,17 @@ Window {
                             }
                         }
 
+                        // Texte affichant les tags associés à la tâche
                         Text {
                             id: tag3
                             x: 4
                             y: 35
-                            text: qsTr(model.tag)
+                            text: model.tag
                             font.pixelSize: 12
                         }
                     }
 
+                    // Espacement après chaque tâche pour les séparer visuellement
                     Item {
                         width: 1
                         height: (index < taskModel3.count - 1 && !taskModel3.get(index + 1).name.startsWith("↳")) ? 5 : 1
@@ -761,10 +784,11 @@ Window {
                 }
             }
 
+            // Connexion au backend pour récupérer les tâches de priorité basse
             Connections {
                 target: taskHandlerBackend
                 onTasksFetchedPriority0: function (tasks) {
-                    taskModel3.clear();
+                    taskModel3.clear();  // Efface les anciennes tâches avant d'ajouter les nouvelles
                     for (var i = 0; i < tasks.length; i++) {
                         taskModel3.append({
                             "id_task": tasks[i].id_task,
@@ -779,6 +803,7 @@ Window {
             }
         }
 
+        // Quatrième colonne - tâches fini
         Rectangle {
             id: taskArea4
             color: "#eeeeee"
@@ -851,7 +876,7 @@ Window {
                             id: taskname4
                             x: 4
                             y: 6
-                            text: qsTr(model.name)
+                            text: model.name
                             font.pixelSize: model.name.startsWith("↳") ? 15 : 17
                             font.styleName: "Gras"
                         }
@@ -905,7 +930,7 @@ Window {
                             id: tag4
                             x: 4
                             y: 35
-                            text: qsTr(model.tag)
+                            text: model.tag
                             font.pixelSize: 12
                         }
                     }
@@ -1008,7 +1033,7 @@ Window {
             width: 213
             height: 38
             color: Colors.couleur5
-            text: qsTr("Urgent")
+            text: "Urgent"
             font.pixelSize: 28
             horizontalAlignment: Text.AlignHCenter
             font.family: "Verdana"
@@ -1021,7 +1046,7 @@ Window {
             width: 213
             height: 38
             color: Colors.couleur4
-            text: qsTr("En cours")
+            text: "En cours"
             font.pixelSize: 28
             horizontalAlignment: Text.AlignHCenter
             font.family: "Verdana"
@@ -1034,7 +1059,7 @@ Window {
             width: 213
             height: 38
             color: Colors.couleur3
-            text: qsTr("A Faire")
+            text: "A Faire"
             font.pixelSize: 28
             horizontalAlignment: Text.AlignHCenter
             font.family: "Verdana"
@@ -1047,7 +1072,7 @@ Window {
             width: 213
             height: 38
             color: "#afafafaf"
-            text: qsTr("Fini")
+            text: "Fini"
             font.pixelSize: 28
             horizontalAlignment: Text.AlignHCenter
             styleColor: "#afafafaf"

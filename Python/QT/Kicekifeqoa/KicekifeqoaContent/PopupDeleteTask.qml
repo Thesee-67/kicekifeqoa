@@ -42,7 +42,7 @@ Window {
             x: 19
             y: 3
             color: Colors.couleur1
-            text: qsTr("Vous allez supprimer la tâche :")
+            text: "Vous allez supprimer la tâche :"
             font.pixelSize: 12
             anchors.horizontalCenter: parent.horizontalCenter
         }

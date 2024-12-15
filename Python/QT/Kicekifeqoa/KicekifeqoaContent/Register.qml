@@ -102,7 +102,7 @@ Window {
             width: 227
             height: 33
             color: Colors.couleur2
-            text: qsTr("Password :")
+            text: "Password :"
             font.pixelSize: 25
             horizontalAlignment: Text.AlignHCenter
             font.bold: true
@@ -116,7 +116,7 @@ Window {
             width: 227
             height: 33
             color: Colors.couleur2
-            text: qsTr("E-mail :")
+            text: "E-mail :"
             font.pixelSize: 25
             horizontalAlignment: Text.AlignHCenter
             font.bold: true
@@ -129,7 +129,7 @@ Window {
             y: 320
             width: 98
             height: 40
-            text: qsTr("Register")
+            text: "Register"
             anchors.horizontalCenter: _text2.horizontalCenter
             flat: true
             onClicked: {
@@ -144,7 +144,7 @@ Window {
             width: 307
             height: 40
             color: Colors.couleur2
-            text: qsTr("Créer un compte")
+            text: "Créer un compte"
             font.pixelSize: 30
             horizontalAlignment: Text.AlignHCenter
             font.bold: true
@@ -184,7 +184,7 @@ Window {
             y: 293
             width: 285
             height: 27
-            text: qsTr("")
+            text: ""
             anchors.top: rectangle2.bottom
             anchors.topMargin: 6
             anchors.bottomMargin: 6
@@ -192,9 +192,6 @@ Window {
             font.pixelSize: 20
             anchors.horizontalCenter: parent.horizontalCenter
         }
-
-
-
     }
 
     TextInput {
@@ -203,27 +200,27 @@ Window {
         y: 172
         width: 264
         height: 36
-        text: qsTr("")
+        text: ""
         font.pixelSize: 18
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         maximumLength: 24
 
 
-    TextInput {
-        id: textInputpasswd
-        x: 0
-        y: 89
-        width: 264
-        height: 35
-        text: qsTr("")
-        anchors.left: parent.left
-        font.pixelSize: 18
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        anchors.horizontalCenter: parent.horizontalCenter
-        maximumLength: 24
+        TextInput {
+            id: textInputpasswd
+            x: 0
+            y: 89
+            width: 264
+            height: 35
+            text: ""
+            anchors.left: parent.left
+            font.pixelSize: 18
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            maximumLength: 24
+        }
     }
-}
-}
+    }
 }

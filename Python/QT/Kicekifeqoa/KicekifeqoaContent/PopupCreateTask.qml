@@ -144,7 +144,7 @@ ApplicationWindow {
         y: 63
         width: 155
         height: 30
-        placeholderText: qsTr("Etiquettes")
+        placeholderText: "Etiquettes"
     }
 
     TextField {
@@ -153,7 +153,7 @@ ApplicationWindow {
         y: 12
         width: 181
         height: 30
-        placeholderText: qsTr("Nom de la tâche")
+        placeholderText: "Nom de la tâche"
     }
 
     TextField {
@@ -163,7 +163,7 @@ ApplicationWindow {
         width: 95
         height: 30
         horizontalAlignment: Text.AlignHCenter
-        placeholderText: qsTr("--/--/----")
+        placeholderText: "--/--/----"
     }
 
     Text {
@@ -173,7 +173,7 @@ ApplicationWindow {
         width: 95
         height: 15
         color: Colors.couleur1
-        text: qsTr("Date de fin :")
+        text: "Date de fin :"
         font.pixelSize: 11
 
         CheckBox {
@@ -182,7 +182,7 @@ ApplicationWindow {
             y: -106
             width: 150
             height: 30
-            text: qsTr("Tache Terminée")
+            text: "Tache Terminée"
             scale: 0.8
             checkState: Qt.Unchecked
         }

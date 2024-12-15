@@ -79,7 +79,7 @@ Window {
         y: 12
         width: 181
         height: 30
-        placeholderText: qsTr("Nom de la sous-tâche")
+        placeholderText: "Nom de la sous-tâche"
     }
 
     TextField {
@@ -89,7 +89,7 @@ Window {
         width: 95
         height: 30
         horizontalAlignment: Text.AlignHCenter
-        placeholderText: qsTr("--/--/----")
+        placeholderText: "--/--/----"
     }
 
     Text {
@@ -99,7 +99,7 @@ Window {
         width: 95
         height: 15
         color: Colors.couleur1
-        text: qsTr("Date de fin :")
+        text: "Date de fin :"
         font.pixelSize: 11
 
         CheckBox {
@@ -108,7 +108,7 @@ Window {
             y: -72
             width: 150
             height: 30
-            text: qsTr("Tache Terminée")
+            text: "Tache Terminée"
             scale: 0.8
             checkState: Qt.Unchecked
         }

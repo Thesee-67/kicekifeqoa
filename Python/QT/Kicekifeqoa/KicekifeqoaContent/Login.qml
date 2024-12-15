@@ -2,44 +2,51 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
+// Fenêtre principale de login
 Window {
-    id: loginWindow  // Définition de l'identifiant
-    visible: true
-    color: Colors.couleur1
+    id: loginWindow  // Identifiant unique pour la fenêtre
+    visible: true    // Rend la fenêtre visible au lancement
+    color: Colors.couleur1  // Couleur de fond définie par la palette de couleurs personnalisée
     width: 600
     height: 580
-    title: "Kicekifeqoa - Login"    // Titre de la fenêtre principale
-    minimumWidth: 600      // Largeur minimale fixe
-    maximumWidth: 600      // Largeur maximale fixe
+    title: "Kicekifeqoa - Login"  // Titre de la fenêtre
+    minimumWidth: 600       // Largeur minimale fixe pour éviter le redimensionnement
+    maximumWidth: 600       // Largeur maximale fixe
     minimumHeight: 580      // Hauteur minimale fixe
     maximumHeight: 580      // Hauteur maximale fixe
 
+    // Lance l'animation d'ouverture au chargement de la fenêtre
     Component.onCompleted: {
-        openingAnimation.start(); // Lance l'animation d'ouverture dès que la fenêtre est créée
+        openingAnimation.start();
     }
 
-    // Connexion du signal de succès de login pour fermer la fenêtre
+    // Connexions pour gérer les différents états de login
     Connections {
         target: taskHandlerLogin
+
+        // Ferme la fenêtre en cas de succès du login
         function onLoginSuccess() {
-            loginWindow.close();  // Fermer la fenêtre login
+            loginWindow.close();
         }
 
+        // Affiche un message d'erreur si le mot de passe est incorrect
         function onLoginPasswdFail() {
-            _text3.text = "Mot de passe incorrect";  // Affiche un message d'erreur pour le mot de passe
+            _text3.text = "Mot de passe incorrect";
         }
 
+        // Affiche un message d'erreur si l'email est incorrect
         function onLoginEmailFail() {
-            _text3.text = "Email incorrect";  // Affiche un message d'erreur pour l'email
+            _text3.text = "Email incorrect";
         }
     }
 
+    // Fonction pour recharger la fenêtre de login
     function reloadWindow() {
-            loginWindow.close(); // Ferme la fenêtre actuelle
-            Qt.createComponent("Login.qml").createObject(null); // Crée une nouvelle instance de la fenêtre
-        }
+        loginWindow.close();  // Ferme la fenêtre actuelle
+        Qt.createComponent("Login.qml").createObject(null);  // Crée une nouvelle instance de la fenêtre
+    }
 
-
+    // Conteneur principal pour les éléments de l'interface utilisateur
     Rectangle {
         id: rectangle
         x: 20
@@ -54,6 +61,7 @@ Window {
         anchors.horizontalCenterOffset: 0
         anchors.horizontalCenter: parent.horizontalCenter
 
+        // Conteneur pour les boutons de login et d'enregistrement
         Rectangle {
             id: rectangle4
             x: 153
@@ -101,6 +109,7 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
         }
 
+        // Étiquette pour le champ d'email
         Text {
             id: _text1
             x: 229
@@ -108,13 +117,14 @@ Window {
             width: 103
             height: 42
             color: Colors.couleur2
-            text: qsTr("E-mail :")
+            text: "E-mail :"
             font.pixelSize: 30
             horizontalAlignment: Text.AlignHCenter
             font.bold: true
             font.family: "Verdana"
         }
 
+        // Rectangle de fond pour le champ de saisie de l'email
         Rectangle {
             id: rectangle2
             x: 123
@@ -127,13 +137,14 @@ Window {
             clip: false
         }
 
+        // Champ de saisie pour l'email
         TextInput {
             id: textInput1
             x: 128
             y: 208
             width: 304
             height: 36
-            text: qsTr("")
+            text: ""
             anchors.top: rectangle2.top
             anchors.bottom: rectangle2.bottom
             font.pixelSize: 18
@@ -151,6 +162,7 @@ Window {
             }
         }
 
+        // Étiquette pour le champ de mot de passe
         Text {
             id: _text2
             x: 208
@@ -158,12 +170,13 @@ Window {
             width: 144
             height: 43
             color: Colors.couleur2
-            text: qsTr("Password :")
+            text: "Password :"
             font.pixelSize: 30
             horizontalAlignment: Text.AlignHCenter
             font.bold: true
             font.family: "Verdana"
 
+            // Rectangle de fond pour le champ de mot de passe
             Rectangle {
                 id: rectangle1
                 x: -84
@@ -177,29 +190,31 @@ Window {
             }
         }
 
+        // Champ de saisie pour le mot de passe
         TextInput {
             id: textInput2
             x: 202
             y: 313
             width: 300
             height: 36
-            text: qsTr("")
+            text: ""
             anchors.top: _text2.bottom
             anchors.topMargin: 6
             font.pixelSize: 18
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            anchors.horizontalCenterOffset: 0
             anchors.horizontalCenter: rectangle2.horizontalCenter
             selectedTextColor: Colors.couleur2
-            echoMode: TextInput.Password
+            echoMode: TextInput.Password  // Cache le texte pour le mot de passe
             maximumLength: 24
 
+            // Déclenche le clic sur le bouton de login en appuyant sur Entrée
             Keys.onReturnPressed: {
-                loginButton.clicked()
+                loginButton.clicked();
             }
         }
 
+        // Bouton pour soumettre le login
         Button {
             id: loginButton
             x: 168
@@ -207,68 +222,72 @@ Window {
             width: 100
             height: 40
             visible: true
-            text: qsTr("Login")
+            text: "Login"
             highlighted: false
             flat: true
             icon.color: "#b6d4f2"
+
+            // Appel à la fonction de vérification des identifiants
             onClicked: {
-                taskHandlerLogin.checkCredentials(textInput1.text, textInput2.text)
+                taskHandlerLogin.checkCredentials(textInput1.text, textInput2.text);
             }
         }
 
+        // Connexion pour gérer le succès du login
         Connections {
             target: taskHandlerLogin
             onLoginSuccess: function(userId) {
                 Qt.application.userId = userId;  // Stocke l'ID utilisateur globalement
-
             }
         }
 
+        // Bouton pour ouvrir la page d'enregistrement
         Button {
             id: registerButton
             x: 295
             y: 474
             width: 100
             height: 40
-            text: qsTr("Register")
+            text: "Register"
             flat: true
+
+            // Chargement dynamique du fichier Register.qml
             onClicked: {
-                // Chargement dynamique de l'élément PopupCreateTask à partir de Register.qml
                 var component = Qt.createComponent("Register.qml");
 
-                // Vérification que le fichier QML a été chargé correctement
+                // Vérifie si le composant est prêt avant de le créer
                 if (component.status === Component.Ready) {
-                    // Création d'une instance de l'élément Register
-                    var Register = component.createObject(parent);
+                    component.createObject(parent);
                 }
             }
         }
 
-
+        // Logo de l'application
         Image {
             id: image
             x: 230
             y: 18
             width: 102
             height: 101
-            source: "images/logo.png"
+            source: "images/logo.png"  // Chemin vers le logo de l'application
         }
 
+        // Texte pour afficher les messages d'erreur de login
         Text {
-        id: _text3
-        x: 112
-        y: 417
-        width: 338
-        height: 30
-        color: Colors.couleur2
-        font.pixelSize: 20
-        horizontalAlignment: Text.AlignHCenter
-        font.styleName: "Gras"
-        font.family: "Verdana"
-        anchors.horizontalCenter: rectangle2.horizontalCenter
+            id: _text3
+            x: 112
+            y: 417
+            width: 338
+            height: 30
+            color: Colors.couleur2
+            font.pixelSize: 20
+            horizontalAlignment: Text.AlignHCenter
+            font.styleName: "Gras"
+            font.family: "Verdana"
+            anchors.horizontalCenter: rectangle2.horizontalCenter
         }
 
-
+        // Bouton pour changer le thème de l'application
         Button {
             id: colorButton
             x: 520
@@ -276,52 +295,64 @@ Window {
             width: 40
             height: 40
 
+            // Fond transparent pour le bouton
             background: Rectangle {
-                    color: "transparent" // Pas de couleur de fond
-                }
-                contentItem: Image {
-                    source: "images/Cwheel.png" // Chemin vers votre image
-                    width: 40
-                    height: 40
-                    anchors.centerIn: parent
-                }
+                color: "transparent"
+            }
+
+            // Image du sélecteur de couleur
+            contentItem: Image {
+                source: "images/Cwheel.png"  // Chemin vers l'image du sélecteur
+                width: 40
+                height: 40
+                anchors.centerIn: parent
+            }
+
+            // Change le thème et lance l'animation
             onClicked: {
                 Colors.changeStyle();
-                animation.start(); // Lance l'animation
+                animation.start();
             }
         }
 
+        // Animation pour le changement de thème
         SequentialAnimation {
             id: animation
+
+            // Animation pour réduire l'opacité de la fenêtre
             PropertyAnimation {
                 target: loginWindow
                 property: "opacity"
                 from: 1
                 to: 0
-                duration: 500
+                duration: 500  // Durée de l'animation
             }
+
+            // Action pour recharger la fenêtre après l'animation
             ScriptAction {
                 script: {
-                    loginWindow.reloadWindow(); // Ferme et rouvre la fenêtre
+                    loginWindow.reloadWindow();
                 }
             }
         }
 
-
+        // Animation pour l'ouverture de la fenêtre
         PropertyAnimation {
             id: openingAnimation
             target: loginWindow
             property: "opacity"
             from: 0
             to: 1
-            duration: 500 // Durée de l'animation d'ouverture
+            duration: 500  // Durée de l'animation d'ouverture
         }
 
+        // État de la fenêtre
         states: [
             State {
-                name: "clicked"
+                name: "clicked"  // État nommé "clicked" (placeholder pour des extensions futures)
             }
         ]
+
     }
 
 }
