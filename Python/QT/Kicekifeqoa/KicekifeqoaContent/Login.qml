@@ -147,12 +147,12 @@ Window {
             text: ""
             anchors.top: rectangle2.top
             anchors.bottom: rectangle2.bottom
-            font.pixelSize: 18
+            font.pixelSize: 16
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             anchors.horizontalCenter: parent.horizontalCenter
             selectedTextColor: Colors.couleur2
-            maximumLength: 24
+            clip: true
 
             Keys.onReturnPressed: {
                 loginButton.clicked()
@@ -200,13 +200,13 @@ Window {
             text: ""
             anchors.top: _text2.bottom
             anchors.topMargin: 6
-            font.pixelSize: 18
+            font.pixelSize: 16
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             anchors.horizontalCenter: rectangle2.horizontalCenter
             selectedTextColor: Colors.couleur2
             echoMode: TextInput.Password  // Cache le texte pour le mot de passe
-            maximumLength: 24
+            clip: true
 
             // Déclenche le clic sur le bouton de login en appuyant sur Entrée
             Keys.onReturnPressed: {

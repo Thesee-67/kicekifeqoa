@@ -23,7 +23,7 @@ Window {
             _text3.text = "Mail déjà existant";  // Affiche un message d'erreur pour le email
         }
         onBadMail: {
-            _text3.text = "Ce mail n'existe pas";  // Affiche un message d'erreur pour le email
+            _text3.text = "Adresse mail non valide";  // Affiche un message d'erreur pour le email
         }
         onShortPass: {
             _text3.text = "Mot de passe trop court";  // Affiche un message d'erreur pour le mdp
@@ -145,7 +145,7 @@ Window {
             height: 40
             color: Colors.couleur2
             text: "Créer un compte"
-            font.pixelSize: 18
+            font.pixelSize: 20
             horizontalAlignment: Text.AlignHCenter
             font.bold: true
             font.family: "Verdana"
@@ -204,23 +204,21 @@ Window {
         font.pixelSize: 18
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        maximumLength: 24
+        clip: true  // Coupe le texte dépassant la largeur définie
+    }
 
-
-        TextInput {
-            id: textInputpasswd
-            x: 0
-            y: 89
-            width: 264
-            height: 35
-            text: ""
-            anchors.left: parent.left
-            font.pixelSize: 18
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            maximumLength: 24
-        }
+    TextInput {
+        id: textInputpasswd
+        x: 65
+        y: 262
+        width: 264
+        height: 36
+        text: ""
+        font.pixelSize: 18
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        echoMode: TextInput.Password  // Cache le texte pour le champ de mot de passe
+        clip: true  // Coupe le texte dépassant la largeur définie
     }
     }
 }
