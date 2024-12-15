@@ -26,22 +26,22 @@ Window {
             _text3.text = "Ce mail n'existe pas";  // Affiche un message d'erreur pour le email
         }
         onShortPass: {
-            _text3.text = "Mot de passe trop court (8 caractères min)";  // Affiche un message d'erreur pour le mdp
+            _text3.text = "Mot de passe trop court";  // Affiche un message d'erreur pour le mdp
         }
          onLongPass: {
-            _text3.text = "Mot de passe trop long (24 caractères max)";  // Affiche un message d'erreur pour le mdp
+            _text3.text = "Mot de passe trop long";  // Affiche un message d'erreur pour le mdp
         }
         onUppercasePass: {
-            _text3.text = "Le mot de passe doit contenir une majuscule";  // Affiche un message d'erreur pour le mdp
+            _text3.text = "Majuscule requise";  // Affiche un message d'erreur pour le mdp
         }
         onLowercasePass: {
-            _text3.text = "Le mot de passe doit contenir une minuscule";  // Affiche un message d'erreur pour le mdp
+            _text3.text = "Minuscule requise";  // Affiche un message d'erreur pour le mdp
         }
         onNumberPass: {
-            _text3.text = "Le mot de passe doit contenir un nombre";  // Affiche un message d'erreur pour le mdp
+            _text3.text = "Nombre requis";  // Affiche un message d'erreur pour le mdp
         }
         onSpecialPass: {
-            _text3.text = "Le mot de passe doit contenir (!@#$%^&*(),.?{}|<>) ";  // Affiche un message d'erreur pour le mdp
+            _text3.text = "Symbole spécial requis";  // Affiche un message d'erreur pour le mdp
         }
         onUnknownError: {
             _text3.text = "Une erreur inconnu s'est produite";  // Affiche un message d'erreur pour le mdp
@@ -133,7 +133,7 @@ Window {
             anchors.horizontalCenter: _text2.horizontalCenter
             flat: true
             onClicked: {
-                taskHandlerRegister.checkCredentials(textInput2.text, textInput3.text)
+                taskHandlerRegister.checkCredentials(textInputmail.text, textInputpasswd.text)
             }
         }
 
@@ -145,7 +145,7 @@ Window {
             height: 40
             color: Colors.couleur2
             text: "Créer un compte"
-            font.pixelSize: 30
+            font.pixelSize: 18
             horizontalAlignment: Text.AlignHCenter
             font.bold: true
             font.family: "Verdana"
