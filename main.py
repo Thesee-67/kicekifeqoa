@@ -4,7 +4,7 @@ from pathlib import Path
 from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtQml import QQmlApplicationEngine
 # from PySide6.QtCore import qInstallMessageHandler, QtMsgType
-from Python.QT.Kicekifeqoa.Python.autogen.settings import url, import_paths
+from Python.QT.Kicekifeqoa.Python.settings import url, import_paths
 
 # Importation des gestionnaires de tâches depuis différents modules
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
