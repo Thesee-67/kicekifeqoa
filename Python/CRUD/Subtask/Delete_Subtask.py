@@ -32,5 +32,3 @@ def delete_subtask(table, column, value):
     response = requests.delete(url, json=post_data)
     print(response.json())
     close_connection_BDD(conn, cursor)
-
-#delete_subtask("Subtask", "id_subtask", "1")
