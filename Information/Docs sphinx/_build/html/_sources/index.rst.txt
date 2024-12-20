@@ -4,6 +4,12 @@ Documentation des fonctionnalités CRUD
 
 .. toctree::
    :maxdepth: 2
+   :caption: ADMIN
+
+   Identifiants
+
+.. toctree::
+   :maxdepth: 2
    :caption: CRUD
 
    CRUD/Group/CreateGroup
@@ -27,9 +33,3 @@ Documentation des fonctionnalités CRUD
    CRUD/Users/DeleteUser
    CRUD/Users/ReadUser
    CRUD/Users/UpdateUser
-
-.. toctree::
-   :maxdepth: 2
-   :caption: QML
-
-   QML/index

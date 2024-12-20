@@ -4,6 +4,12 @@ Documentation des fonctionnalités CRUD
 
 .. toctree::
    :maxdepth: 2
+   :caption: ADMIN
+
+   Identifiants
+
+.. toctree::
+   :maxdepth: 2
    :caption: CRUD
 
    CRUD/Group/CreateGroup
