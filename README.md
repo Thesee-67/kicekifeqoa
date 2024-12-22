@@ -19,6 +19,10 @@ Kicékiféqoa est un outil de gestion de tâches conçu pour faciliter l'organis
 
 - **Docker** : Déployez facilement Kicékiféqoa grâce à Docker pour un environnement de développement et de production simplifié.
 
+## Execution Via interpréteur 
+
+Démarer le programe avec main.py dans le dossier Python
+
 ## Installation
 
-Pour lancer Kicékiféqoa, assurez-vous d'avoir Docker installé sur votre machine.
+Documentation d'instalation,utilisation et technique disponible dans le dossier Docs

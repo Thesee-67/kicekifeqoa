@@ -4,7 +4,7 @@ from pathlib import Path
 from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtQml import QQmlApplicationEngine
 # from PySide6.QtCore import qInstallMessageHandler, QtMsgType
-from Python.QT.Kicekifeqoa.Python.autogen.settings import url, import_paths
+from Python.QT.Kicekifeqoa.Python.settings import url, import_paths
 
 # Importation des gestionnaires de tâches depuis différents modules
 from Python.QT.Kicekifeqoa.Python.taskhandlers.task_handler_Pcreate import TaskHandler as TaskHandlerCreate
@@ -41,11 +41,11 @@ if __name__ == '__main__':
     engine = QQmlApplicationEngine()
 
     # Configuration du chemin de l'application
-    app_dir = Path(__file__).parent.parent
+    app_dir = Path(__file__).parent
     engine.addImportPath(os.fspath(app_dir))
 
     # Définition de l'icône de l'application
-    app.setWindowIcon(QIcon(str(app_dir / "kicekifeqoa/Python/QT/Kicekifeqoa/KicekifeqoaContent/images/logo.png")))
+    app.setWindowIcon(QIcon(str(app_dir / "Python/QT/Kicekifeqoa/KicekifeqoaContent/images/logo.png")))
 
     # Configuration des couleurs avec le style spécifié
     colors = Colors(style=choix)
@@ -74,6 +74,7 @@ if __name__ == '__main__':
     engine.rootContext().setContextProperty("subtaskHandlerUpdate", subtask_handler_update)
     engine.rootContext().setContextProperty("taskHandlerDelete", task_handler_delete)
     engine.rootContext().setContextProperty("taskHandlerBackend", task_handler_backend)
+
 
     # Chargement du fichier QML principal
     engine.load(os.fspath(app_dir / url))
