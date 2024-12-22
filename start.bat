@@ -1,6 +1,6 @@
 @echo off
 echo Démarrage du serveur X11 avec VcXsrv...
-start "" "C:\Program Files\VcXsrv\vcxsrv.exe" :0 -ac
+start "" "C:\Program Files\VcXsrv\vcxsrv.exe" :0 -ac -multiwindow
 
 echo Se déplacer dans le répertoire du projet...
 cd C:\Users\toto\document\Kicekifeqoa
